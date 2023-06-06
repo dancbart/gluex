@@ -5,32 +5,43 @@
 #include <TH1F.h>
 #include <TCanvas.h>
 #include <TH1D.h>
-#include <RDataFrame.h>
+//#include <RDataFrame.h>
 
-void createHistogram() {
-  // Open the ROOT file
-  ROOT::RDataFrame df("pipkmks__B4_M16", "pipkmks_flat_bestX2_2017.root");
+#include <ROOT/RDataFrame.hxx>
+#include <TFile.h>
+#include <TCanvas.h>
+#include <TH1F.h>
 
-  // Define the variable and binning for the histogram
-  std::string variable = "e_beam";  // Replace with the actual variable name
-  int numBins = 100;  // Number of bins
-  double binMin = 0.0;  // Minimum value of the bins
-  double binMax = 10.0;  // Maximum value of the bins
+void ROOT_hist_beamX4meas() {
+    // Open the ROOT file containing the data tree of interest:
+    TFile* file = new TFile("pipkmks_flat_bestX2_2017.root");
 
-  // Create the histogram using RDataFrame
-  auto hist = df.Histo1D({variable.c_str(), variable.c_str(), numBins, binMin, binMax}, variable.c_str());
+    // Get the data tree from the file:
+    ROOT::RDataFrame df("pipkmks__B4_M16", "pipkmks_flat_bestX2_2017.root");
 
-  // Create a canvas to display the histogram
-  ROOT::TCanvas canvas("canvas", "Histogram", 800, 600);
+    // Create a histogram object and fill it with the data from the column "e_beam":
+    TH1F* h1 = new TH1F("Beam Energy", "Energy (x4 measured)", 10, 1.0, 1.7);
+    df.Histo1D<float>(h1, "e_beam");
 
-  // Draw the histogram on the canvas
-  hist->Draw();
+    // Customize the appearance of the histogram:
+    h1->SetFillColor(kBlue);
+    h1->SetLineWidth(20);
+    h1->SetFillColor(kOrange);
+    h1->GetYaxis()->SetRangeUser(0.0, 1.0);
 
-  // Save the canvas as an image file
-  canvas.SaveAs("histogram.png");
+    // Draw the histogram on a canvas:
+    TCanvas* c1 = new TCanvas("Canvas", "Canvas: Beam Energy", 800, 600);
+    h1->Draw();
+    c1->Update();
+    c1->SaveAs("beamX4meas.png");
+    c1->SaveAs("beamX4meas.pdf");
+    c1->SaveAs("beamX4meas.root");
+
+    // Close the ROOT file:
+    file->Close();
 }
 
 int main() {
-  createHistogram();
-  return 0;
+    ROOT_hist_beamX4meas();
+    return 0;
 }
