@@ -5,7 +5,7 @@
 #include <TH1F.h>
 #include <TCanvas.h>
 
-//Open the ROOT file containing the data tree you want:
+//Open the ROOT file containing the data tree:
 TFile* file = new TFile("pipkmks_flat_bestX2_2017.root");
 
 //Get the data tree from the file:
