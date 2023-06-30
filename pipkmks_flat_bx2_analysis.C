@@ -68,28 +68,26 @@ void pipkmks_flat_bx2_analysis() {
 
     auto cut_df = df2.Filter("pathlength_sig > 5")
                      .Filter("pip1p_m > 1.4") // delta++ cut
-                     .Filter("pkm_m > 1.9") // lambda cut (1500, 1900?)
-                     .Filter("kspip1_m <= 0.8 || kspip1_m >= 1.0") // kspip1 cut
-                     .Filter("kmpip1_m <= 0.8 || kmpip1_m >= 1.0"); // kmpip1 cut
-                     //.Filter("kspip1_m > 1.0 && kspip1_m < 0.8") // kspip1 cut
-                     //.Filter("kmpip1_m > 1.0 && kmpip1_m < 0.8"); // kmpip1 cut
+                     .Filter("pkm_m > 1.9"); // lambda cut (1500, 1900?)
+                     //.Filter("kspip1_m >= 0.8 && kspip1_m <= 1.0") // kspip1 cut
+                     //.Filter("kmpip1_m <= 0.8 || kmpip1_m >= 1.0"); // kmpip1 cut
 
     // Histogram - use for investigating various resonances to reject (cut)
     //auto h1 = df2.Histo1D({"h1", "kmpip1_m", 100, 0.0, 3.0}, "kmpip1_m");
     
     //Histogram with cuts
-    auto h1 = cut_df.Histo1D({"h1", "f1", 100, 0.8, 3.8}, "f1_m");
-    //auto h2 = df2.Histo1D({"h2", "f1", 100, 0.8, 3.8}, "f1_m");
+    auto h1 = cut_df.Filter("kspip1_m >= 0.8 && kspip1_m <= 1.0").Histo1D({"h1", "f1", 60, 1.1, 1.7}, "f1_m");
+    auto h2 = cut_df.Filter("kmpip1_m <= 0.8 || kmpip1_m >= 1.0").Histo1D({"h2", "f1", 60, 1.1, 1.7}, "f1_m");
 
     TCanvas* c1 = new TCanvas("Canvas1", "f1_m", 800, 600); // Draw the histogram on a canvas
-    h1->SetLineColor(kGreen);
+    h1->SetLineColor(kBlue);
     h1->Draw();
-    //h2->SetLineColor(kRed);
-    //h2->Draw("same");
+    h2->SetLineColor(kRed);
+    h2->Draw("same");
     
     auto legend1 = new TLegend(0.77, 0.68, .98, 0.76);
-    legend1->AddEntry("h1", "f1_m with cuts", "l");
-    //legend1->AddEntry("h2", "f1_m without cuts", "l");
+    legend1->AddEntry("h1", "f1_m rejectKM_acceptKS", "l");
+    legend1->AddEntry("h2", "f1_m acceptKM_rejectKS", "l");
     legend1->Draw();
 
     c1->Update();
