@@ -66,28 +66,41 @@ void pipkmks_flat_bx2_analysis() {
                  .Define("pipkmks_m", "sqrt(pipkmks_E*pipkmks_E - pipkmks_px*pipkmks_px - pipkmks_py*pipkmks_py - pipkmks_pz*pipkmks_pz)")
                      .Alias("f1_m", "pipkmks_m");
 
-    auto cut_df = df2.Filter("pathlength_sig > 5")
-                     .Filter("pip1p_m > 1.4") // delta++ cut
-                     .Filter("pkm_m > 1.9"); // lambda cut (1500, 1900?)
-                     //.Filter("kspip1_m >= 0.8 && kspip1_m <= 1.0") // kspip1 cut
-                     //.Filter("kmpip1_m <= 0.8 || kmpip1_m >= 1.0"); // kmpip1 cut
+    // Cuts
+    auto reject_delta = "pip1p_m > 1.4"; // delta++ cut
+    auto reject_lambda = "pkm_m > 1.9"; // lambda cut
+    auto keep_kstar_plus = "kspip1_m >= 0.8 && kspip1_m <= 1.0";
+    auto keep_kstar_zero = "kmpip1_m >= 0.8 && kmpip1_m <= 1.0";
+    auto reject_kstar_plus = "kspip1_m <= 0.8 || kspip1_m >= 1.0";
+    auto reject_kstar_zero = "kmpip1_m <= 0.8 || kmpip1_m >= 1.0";
 
-    // Histogram - use for investigating various resonances to reject (cut)
-    //auto h1 = df2.Histo1D({"h1", "kmpip1_m", 100, 0.0, 3.0}, "kmpip1_m");
+    auto cut_df = df2.Filter("pathlength_sig > 5")
+                     .Filter(reject_delta)
+                     .Filter(reject_lambda);
     
     //Histogram with cuts
-    auto h1 = cut_df.Filter("kspip1_m >= 0.8 && kspip1_m <= 1.0").Histo1D({"h1", "f1", 60, 1.1, 1.7}, "f1_m");
-    auto h2 = cut_df.Filter("kmpip1_m <= 0.8 || kmpip1_m >= 1.0").Histo1D({"h2", "f1", 60, 1.1, 1.7}, "f1_m");
+    auto h1 = cut_df.Filter(keep_kstar_plus).Filter(keep_kstar_zero).Histo1D({"h1", "f1", 60, 1.1, 1.7}, "f1_m");
+    auto h2 = cut_df.Filter(reject_kstar_plus).Filter(reject_kstar_zero).Histo1D({"h2", "f1", 60, 1.1, 1.7}, "f1_m");
+    auto xMin = 1.0;
+    auto xMax = 5.0;
+    auto yMin = 0;
+    auto yMax = 3500;
 
     TCanvas* c1 = new TCanvas("Canvas1", "f1_m", 800, 600); // Draw the histogram on a canvas
     h1->SetLineColor(kBlue);
+    h1->GetXaxis()->SetRangeUser(xMin,xMax);
+    h1->GetYaxis()->SetRangeUser(yMin,yMax);
     h1->Draw();
     h2->SetLineColor(kRed);
+    h2->GetXaxis()->SetRangeUser(xMin,xMax);
+    h2->GetYaxis()->SetRangeUser(yMin,yMax);
     h2->Draw("same");
     
-    auto legend1 = new TLegend(0.77, 0.68, .98, 0.76);
-    legend1->AddEntry("h1", "f1_m rejectKM_acceptKS", "l");
-    legend1->AddEntry("h2", "f1_m acceptKM_rejectKS", "l");
+
+    //auto legend1 = new TLegend(0.77, 0.68, .98, 0.76);
+    auto legend1 = new TLegend(0.1, 0.95, .45, 0.8); //(x_topLeft, y_topLeft, x_bottomRight, y_bottomRight)
+    legend1->AddEntry("h1", "keep_kstar_plus; keep_kstar_zero", "l");
+    legend1->AddEntry("h2", "reject_kstar_plus; reject_kstar_zero", "l");
     legend1->Draw();
 
     c1->Update();
