@@ -74,11 +74,46 @@ void ks_flat_bx2_fits() {
                      .Filter(reject_lambda);
     
     //Histogram with cuts
-    auto h1 = cut_df.Filter(keep_kstar_plus).Filter(keep_kstar_zero).Histo1D({"h1", "f1", 60, 1.1, 1.7}, "f1_m");
-    auto h2 = cut_df.Filter(reject_kstar_plus).Filter(reject_kstar_zero).Histo1D({"h2", "f1", 60, 1.1, 1.7}, "f1_m");
+    auto h1 = cut_df.Filter(reject_kstar_plus).Filter(reject_kstar_zero).Histo1D({"h1", "f1", 60, 1.1, 1.7}, "f1_m");
+    //auto h2 = cut_df.Filter(keep_kstar_plus).Filter(keep_kstar_zero).Histo1D({"h2", "f1", 60, 1.1, 1.7}, "f1_m");
     auto xMin = 1.0;
     auto xMax = 5.0;
     auto yMin = 0;
     auto yMax = 3500;
 
+    // fits
+    TF1 *fitFcn = new TF1("f1_m", "gaus", "", 1.1, 1.7);
+    fitFcn->SetNpx(500);
+    fitFcn->SetLineWidth(4);
+    fitFcn->SetLineColor(kMagenta);
+    fitFcn->Draw("same");
+    
+    // Standard method: instantiate an instance of 'TCanvas' class and asign it to variable named 'c1'
+    //TCanvas *c1 = new TCanvas("Canvas1", "f1_m_fitGauss", 800, 600); // Draw the histogram on a canvas
+    
+    // Smart pointer method: instantiate an instance of 'TCanvas' class and asign it to variable named 'c1'
+    std::shared_ptr<TCanvas> c1 = std::make_shared<TCanvas>("Canvas1", "f1_m_fitGauss", 800, 600); //Draw the histogram on a canvas
+    h1->SetLineColor(kBlue);
+    h1->GetXaxis()->SetRangeUser(xMin,xMax);
+    h1->GetYaxis()->SetRangeUser(yMin,yMax);
+    h1->Draw();
+    // h2->SetLineColor(kRed);
+    // h2->GetXaxis()->SetRangeUser(xMin,xMax);
+    // h2->GetYaxis()->SetRangeUser(yMin,yMax);
+    // h2->Draw("same");
+    
+
+    //auto legend1 = new TLegend(0.77, 0.68, .98, 0.76);
+    auto legend1 = new TLegend(0.1, 0.95, .45, 0.8); //(x_topLeft, y_topLeft, x_bottomRight, y_bottomRight)
+    legend1->AddEntry("h1", "reject_kstar_plus; reject_kstar_zero", "l");
+    //legend1->AddEntry("h2", "keep_kstar_plus; keep_kstar_zero", "l");
+    legend1->Draw();
+
+    c1->Update();
+    c1->SaveAs("plots/f1_m_fitGauss.png");
+}
+
+int main() {
+    ks_flat_bx2_fits();
+    return 0;
 }
