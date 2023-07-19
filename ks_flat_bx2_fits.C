@@ -82,7 +82,7 @@ void ks_flat_bx2_fits() {
     auto yMax = 3500;
 
     // fits
-    TF1 *fitFcn = new TF1("f1_m", "gaus", "", 1.1, 1.7);
+    TF1 *fitFcn = new TF1("f1_m", "gaus", 1.1, 1.7);
     fitFcn->SetNpx(500);
     fitFcn->SetLineWidth(4);
     fitFcn->SetLineColor(kMagenta);
