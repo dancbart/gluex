@@ -81,45 +81,19 @@ void ks_flat_bx2_fits() {
     //auto yMin = 0;
     //auto yMax = 12500;
 
-    // Standard method: 
-    // TF1 *fitFcn = new TF1("f1_m", "gaus", 1.1, 1.7);
-    // Smart pointer method (smart pointers require fitFin.get() instead of fitFcn)):
-    // Adding '.get()' turns it into a raw pointer, which is what 'Fit' constructor requires
-    std::unique_ptr<TF1> fitFcn = std::make_unique<TF1>("ks_m", "gaus", 0.3, 0.7);
-    std::unique_ptr<TF1> fitFcn2 = std::make_unique<TF1>("ks_m", "pol1", 0.3, 0.7);
     
-    h1->Fit(fitFcn.get(), "R");
-    fitFcn->SetNpx(500);
-    fitFcn->SetLineWidth(2);
-    fitFcn->SetLineColor(kMagenta);
+    // Composite function
+    std::unique_ptr<TF1> fitFcn = std::make_unique<TF1>("ks_m", "gauss" + "pol1", 0.3, 0.7);
 
-    h1->Fit(fitFcn2.get(), "R+");   
-    fitFcn2->SetNpx(500);
-    fitFcn2->SetLineWidth(2);
-    fitFcn2->SetLineColor(kRed);
-
-
-    // Standard method: instantiate an instance of 'TCanvas' class and asign it to variable named 'c1'
-    //TCanvas *c1 = new TCanvas("Canvas1", "f1_m_fitGauss", 800, 600); // Draw the histogram on a canvas
-    
-    // Smart pointer method: instantiate an instance of 'TCanvas' class and asign it to variable named 'c1'
     std::shared_ptr<TCanvas> c1 = std::make_shared<TCanvas>("Canvas1", "ks_m_fitGauss", 800, 600); //Draw the histogram on a canvas
     h1->SetLineColor(kBlue);
     //h1->GetXaxis()->SetRangeUser(xMin,xMax);
     //h1->GetYaxis()->SetRangeUser(yMin,yMax);
     h1->Draw();
     fitFcn->Draw("same");
-    fitFcn2->Draw("same");
-    // h2->SetLineColor(kRed);
-    // h2->GetXaxis()->SetRangeUser(xMin,xMax);
-    // h2->GetYaxis()->SetRangeUser(yMin,yMax);
-    // h2->Draw("same");
     
-
-    //auto legend1 = new TLegend(0.77, 0.68, .98, 0.76);
     auto legend1 = new TLegend(0.1, 0.95, .45, 0.8); //(x_topLeft, y_topLeft, x_bottomRight, y_bottomRight)
     legend1->AddEntry("h1", "ks_m", "l");
-    //legend1->AddEntry("h2", "keep_kstar_plus; keep_kstar_zero", "l");
     legend1->Draw();
 
     c1->Update();
