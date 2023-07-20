@@ -83,11 +83,11 @@ void ks_flat_bx2_fits() {
 
     // fits
     TF1 *fitFcn = new TF1("f1_m", "gaus", 1.1, 1.7);
+    h1->Fit(fitFcn);
     fitFcn->SetNpx(500);
     fitFcn->SetLineWidth(4);
     fitFcn->SetLineColor(kMagenta);
-    fitFcn->Draw("same");
-    
+        
     // Standard method: instantiate an instance of 'TCanvas' class and asign it to variable named 'c1'
     //TCanvas *c1 = new TCanvas("Canvas1", "f1_m_fitGauss", 800, 600); // Draw the histogram on a canvas
     
@@ -97,6 +97,7 @@ void ks_flat_bx2_fits() {
     h1->GetXaxis()->SetRangeUser(xMin,xMax);
     h1->GetYaxis()->SetRangeUser(yMin,yMax);
     h1->Draw();
+    fitFcn->Draw("same");
     // h2->SetLineColor(kRed);
     // h2->GetXaxis()->SetRangeUser(xMin,xMax);
     // h2->GetYaxis()->SetRangeUser(yMin,yMax);
