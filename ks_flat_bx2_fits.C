@@ -81,9 +81,12 @@ void ks_flat_bx2_fits() {
     auto yMin = 0;
     auto yMax = 3500;
 
-    // fits
-    TF1 *fitFcn = new TF1("f1_m", "gaus", 1.1, 1.7);
-    h1->Fit(fitFcn);
+    // Standard method: 
+    // TF1 *fitFcn = new TF1("f1_m", "gaus", 1.1, 1.7);
+    // Smart pointer method (smart pointers require fitFin.get() instead of fitFcn)):
+    // Adding '.get()' turns it into a raw pointer, which is what 'Fit' constructor requires
+    std::unique_ptr<TF1> fitFcn = std::make_unique<TF1>("f1_m", "gaus", 1.1, 1.7);
+    h1->Fit(fitFcn.get());
     fitFcn->SetNpx(500);
     fitFcn->SetLineWidth(4);
     fitFcn->SetLineColor(kMagenta);
