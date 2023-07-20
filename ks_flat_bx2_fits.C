@@ -69,38 +69,47 @@ void ks_flat_bx2_fits() {
     auto reject_kstar_plus = "kspip1_m <= 0.8 || kspip1_m >= 1.0";
     auto reject_kstar_zero = "kmpip1_m <= 0.8 || kmpip1_m >= 1.0";
 
-    auto cut_df = df2.Filter("pathlength_sig > 5")
-                     .Filter(reject_delta)
-                     .Filter(reject_lambda);
+    auto cut_df = df2.Filter("pathlength_sig > 5");
+                     //.Filter(reject_delta);
+                     //.Filter(reject_lambda);
     
     //Histogram with cuts
-    auto h1 = cut_df.Filter(reject_kstar_plus).Filter(reject_kstar_zero).Histo1D({"h1", "f1", 60, 1.1, 1.7}, "f1_m");
+    auto h1 = cut_df.Histo1D({"h1", "ks_m", 300, 0.3, 0.7}, "ks_m");
     //auto h2 = cut_df.Filter(keep_kstar_plus).Filter(keep_kstar_zero).Histo1D({"h2", "f1", 60, 1.1, 1.7}, "f1_m");
-    auto xMin = 1.0;
-    auto xMax = 5.0;
-    auto yMin = 0;
-    auto yMax = 3500;
+    //auto xMin = 1.0;
+    //auto xMax = 5.0;
+    //auto yMin = 0;
+    //auto yMax = 12500;
 
     // Standard method: 
     // TF1 *fitFcn = new TF1("f1_m", "gaus", 1.1, 1.7);
     // Smart pointer method (smart pointers require fitFin.get() instead of fitFcn)):
     // Adding '.get()' turns it into a raw pointer, which is what 'Fit' constructor requires
-    std::unique_ptr<TF1> fitFcn = std::make_unique<TF1>("f1_m", "gaus", 1.1, 1.7);
-    h1->Fit(fitFcn.get());
+    std::unique_ptr<TF1> fitFcn = std::make_unique<TF1>("ks_m", "gaus", 0.3, 0.7);
+    std::unique_ptr<TF1> fitFcn2 = std::make_unique<TF1>("ks_m", "pol1", 0.3, 0.7);
+    
+    h1->Fit(fitFcn.get(), "R");
     fitFcn->SetNpx(500);
-    fitFcn->SetLineWidth(4);
+    fitFcn->SetLineWidth(2);
     fitFcn->SetLineColor(kMagenta);
-        
+
+    h1->Fit(fitFcn2.get(), "R+");   
+    fitFcn2->SetNpx(500);
+    fitFcn2->SetLineWidth(2);
+    fitFcn2->SetLineColor(kRed);
+
+
     // Standard method: instantiate an instance of 'TCanvas' class and asign it to variable named 'c1'
     //TCanvas *c1 = new TCanvas("Canvas1", "f1_m_fitGauss", 800, 600); // Draw the histogram on a canvas
     
     // Smart pointer method: instantiate an instance of 'TCanvas' class and asign it to variable named 'c1'
-    std::shared_ptr<TCanvas> c1 = std::make_shared<TCanvas>("Canvas1", "f1_m_fitGauss", 800, 600); //Draw the histogram on a canvas
+    std::shared_ptr<TCanvas> c1 = std::make_shared<TCanvas>("Canvas1", "ks_m_fitGauss", 800, 600); //Draw the histogram on a canvas
     h1->SetLineColor(kBlue);
-    h1->GetXaxis()->SetRangeUser(xMin,xMax);
-    h1->GetYaxis()->SetRangeUser(yMin,yMax);
+    //h1->GetXaxis()->SetRangeUser(xMin,xMax);
+    //h1->GetYaxis()->SetRangeUser(yMin,yMax);
     h1->Draw();
     fitFcn->Draw("same");
+    fitFcn2->Draw("same");
     // h2->SetLineColor(kRed);
     // h2->GetXaxis()->SetRangeUser(xMin,xMax);
     // h2->GetYaxis()->SetRangeUser(yMin,yMax);
@@ -109,12 +118,12 @@ void ks_flat_bx2_fits() {
 
     //auto legend1 = new TLegend(0.77, 0.68, .98, 0.76);
     auto legend1 = new TLegend(0.1, 0.95, .45, 0.8); //(x_topLeft, y_topLeft, x_bottomRight, y_bottomRight)
-    legend1->AddEntry("h1", "reject_kstar_plus; reject_kstar_zero", "l");
+    legend1->AddEntry("h1", "ks_m", "l");
     //legend1->AddEntry("h2", "keep_kstar_plus; keep_kstar_zero", "l");
     legend1->Draw();
 
     c1->Update();
-    c1->SaveAs("plots/f1_m_fitGauss.png");
+    c1->SaveAs("plots/ks_m_fitGauss.png");
 }
 
 int main() {
