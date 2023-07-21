@@ -75,7 +75,7 @@ void f1_flat_bx2_analysis() {
                      .Filter(reject_lambda);
     
     // Making Histogram
-    auto h1 = cut_df.Filter(reject_kstar_plus).Filter(keep_kstar_zero).Histo1D({"h1", "f1_m (aka pipkmks_m)", 70, 1.1, 2.2}, "f1_m");
+    auto h1 = cut_df.Filter(reject_kstar_plus).Filter(keep_kstar_zero).Histo1D({"h1", "f1_m (aka pipkmks_m)", 70, 1.2, 2.8}, "f1_m");
     //auto h2 = cut_df.Filter(keep_kstar_plus).Filter(keep_kstar_zero).Histo1D({"h2", "f1", 60, 1.1, 1.7}, "f1_m");
     //auto xMin = 1.0;
     //auto xMax = 5.0;
@@ -86,14 +86,27 @@ void f1_flat_bx2_analysis() {
     // 'gaus(0)' is a substitute for: [0]*exp(-0.5*((x-[1])/[2])**2) and (0) means start numbering parameters at 0
     // 'expo(3)' is a substitute for: exp([3]+[4]*x)
     // 'pol1(3)' is a substitute for: [3]+[4]*x ??need to check
-    std::unique_ptr<TF1> fitFcn = std::make_unique<TF1>("fitFcn", "gaus(0) + pol1(3)", 1.1, 2.2);
-    fitFcn->SetParameter(0, 1000); // amplitude (put approx. 1/2 of total events, i.e. y-axis)
-    fitFcn->SetParameter(1, 1.4); // mass
-    fitFcn->SetParameter(2, 0.011); // ?
-    fitFcn->SetParameter(3, 0.1); // ?
-    fitFcn->SetParameter(4, 1); // ?
-    fitFcn->SetLineColor(kRed);
-    h1->Fit(fitFcn.get());
+    std::unique_ptr<TF1> fitFcn1 = std::make_unique<TF1>("fitFcn1", "breitwigner(0) + pol1(3)", 1.2, 1.8);
+    fitFcn1->SetParameter(0, 1500); // amplitude (put approx. 1/2 of total events, i.e. y-axis)
+    fitFcn1->SetParameter(1, 1.4); // mass
+    fitFcn1->SetParameter(2, 0.05); // ?
+    fitFcn1->SetParameter(3, 0.1); // ?
+    fitFcn1->SetParameter(4, 1); // ?
+    fitFcn1->SetLineColor(kRed);
+    h1->Fit(fitFcn1.get());
+
+    std::unique_ptr<TF1> fitFcn2 = std::make_unique<TF1>("fitFcn2", "breitwigner(0)", 1.2, 1.8);
+    fitFcn2->SetParameter(0, 1500); // amplitude (put approx. 1/2 of total events, i.e. y-axis)
+    fitFcn2->SetParameter(1, 1.4); // mass
+    fitFcn2->SetParameter(2, 0.05); // ?
+    fitFcn2->SetLineColor(kMagenta);
+    h1->Fit(fitFcn2.get());
+
+    std::unique_ptr<TF1> fitFcn3 = std::make_unique<TF1>("fitFcn3", "pol1(3)", 1.2, 1.8);
+    fitFcn3->SetParameter(3, -10); // ?
+    fitFcn3->SetParameter(4, -4); // ?
+    fitFcn3->SetLineColor(kGreen);
+    h1->Fit(fitFcn3.get());
 
     // Painting canvas
     std::shared_ptr<TCanvas> c1 = std::make_shared<TCanvas>("c1", "f1_m_fit", 800, 600);
@@ -101,13 +114,15 @@ void f1_flat_bx2_analysis() {
     //h1->GetXaxis()->SetRangeUser(xMin,xMax);
     //h1->GetYaxis()->SetRangeUser(yMin,yMax);
     h1->Draw();
-    // fitFcn1->Draw("same");
-    // fitFcn2->Draw("same");    
-    fitFcn->Draw("same");
+    fitFcn1->Draw("same");
+    fitFcn2->Draw("same");    
+    fitFcn3->Draw("same");
     
     auto legend1 = new TLegend(0.15, 0.95, .35, 0.85); //(x_topLeft, y_topLeft, x_bottomRight, y_bottomRight)
     legend1->AddEntry("h1", "ks_m", "l");
-    legend1->AddEntry(fitFcn.get(), "fit: Breit-Wigner + pol1", "l");
+    legend1->AddEntry(fitFcn1.get(), "fit: Breit-Wigner + pol1", "l");
+    legend1->AddEntry(fitFcn2.get(), "fit: Breit-Wigner", "l");
+    legend1->AddEntry(fitFcn3.get(), "fit: pol1", "l");
     legend1->Draw();
 
     c1->Update();
