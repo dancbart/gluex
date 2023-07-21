@@ -73,7 +73,7 @@ void ks_flat_bx2_fits() {
                      //.Filter(reject_delta);
                      //.Filter(reject_lambda);
     
-    //Histogram with cuts
+    // Making Histogram
     auto h1 = cut_df.Histo1D({"h1", "ks_m", 300, 0.3, 0.7}, "ks_m");
     //auto h2 = cut_df.Filter(keep_kstar_plus).Filter(keep_kstar_zero).Histo1D({"h2", "f1", 60, 1.1, 1.7}, "f1_m");
     //auto xMin = 1.0;
@@ -81,10 +81,14 @@ void ks_flat_bx2_fits() {
     //auto yMin = 0;
     //auto yMax = 12500;
 
-    
-    // Composite function
-    std::unique_ptr<TF1> fitFcn = std::make_unique<TF1>("ks_m", "gauss" + "pol1", 0.3, 0.7);
+    // Function fit
+    std::unique_ptr<TF1> fitFcn = std::make_unique<TF1>("ks_m", "gaus", 0.3, 0.7);
+    h1->Fit(fitFcn.get(), "R"); // def. of 'fitFcn' uses smart pointer, so must use 'get()' to access the pointer 
+    fitFcn->SetNpx(500);
+    fitFcn->SetLineWidth(2);
+    fitFcn->SetLineColor(kRed);
 
+    // Painting canvas
     std::shared_ptr<TCanvas> c1 = std::make_shared<TCanvas>("Canvas1", "ks_m_fitGauss", 800, 600); //Draw the histogram on a canvas
     h1->SetLineColor(kBlue);
     //h1->GetXaxis()->SetRangeUser(xMin,xMax);
