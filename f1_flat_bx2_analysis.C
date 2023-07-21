@@ -121,8 +121,6 @@ void f1_flat_bx2_analysis() {
     
     auto legend1 = new TLegend(0.15, 0.95, .35, 0.85); //(x_topLeft, y_topLeft, x_bottomRight, y_bottomRight)
     legend1->AddEntry("h1", "ks_m", "l");
-    // legend1->AddEntry(fitFcn1.get(), "fit: gaus", "l");
-    // legend1->AddEntry(fitFcn2.get(), "fit: pol1", "l");
     legend1->AddEntry(fitFcn3.get(), "fit: gaus + pol1", "l");
     legend1->Draw();
 
