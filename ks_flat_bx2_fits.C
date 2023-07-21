@@ -2,6 +2,7 @@ void ks_flat_bx2_fits() {
 
     ROOT::RDataFrame df("pipkmks__B4_M16", "pipkmks_flat_bestX2_2017.root");
 
+    // Define resonances, add columns to dataframe for each (using '.Define')
     auto df2 = df
                  // k_short (pip2 & pim)
                  .Define("pip2pim_E", "pip2_E + pim_E") // 4-momentum
@@ -74,19 +75,33 @@ void ks_flat_bx2_fits() {
                      //.Filter(reject_lambda);
     
     // Making Histogram
-    auto h1 = cut_df.Histo1D({"h1", "ks_m", 300, 0.3, 0.7}, "ks_m");
+    auto h1 = cut_df.Histo1D({"h1", "ks_m (pip2pim_m)", 300, 0.3, 0.7}, "ks_m");
     //auto h2 = cut_df.Filter(keep_kstar_plus).Filter(keep_kstar_zero).Histo1D({"h2", "f1", 60, 1.1, 1.7}, "f1_m");
     //auto xMin = 1.0;
     //auto xMax = 5.0;
     //auto yMin = 0;
     //auto yMax = 12500;
 
-    // Function fit
-    std::unique_ptr<TF1> fitFcn = std::make_unique<TF1>("ks_m", "gaus", 0.3, 0.7);
-    h1->Fit(fitFcn.get(), "R"); // def. of 'fitFcn' uses smart pointer, so must use 'get()' to access the pointer 
-    fitFcn->SetNpx(500);
-    fitFcn->SetLineWidth(2);
-    fitFcn->SetLineColor(kRed);
+    // Function fits
+    std::unique_ptr<TF1> fitFcn1 = std::make_unique<TF1>("ks_m", "gaus", 0.3, 0.7);
+    // fitFcn->SetNpx(500);
+    // fitFcn->SetLineWidth(2);
+    // fitFcn1->SetLineColor(kMagenta);
+    h1->Fit(fitFcn1.get(), "R");
+
+    std::unique_ptr<TF1> fitFcn2 = std::make_unique<TF1>("ks_m", "pol1", 0.3, 0.7);
+    // fitFcn2->SetNpx(500);
+    // fitFcn2->SetLineWidth(2);
+    // fitFcn2->SetLineColor(kBlack);
+    h1->Fit(fitFcn2.get(), "R");
+
+    // Build composite fit function
+    // std::unique_ptr<TF1> fitFcn3 = std::make_unique<TF1>("ks_m", "gaus(0) + pol1(1)", 0.3, 0.7);
+    std::unique_ptr<TF1> fitFcn3 = std::make_unique<TF1>("ks_m", "fitFcn1(0) + fitFcn2(1)", 0.3, 0.7);
+    fitFcn3->SetParameter(0, fitFcn1->GetParameter(0));
+    fitFcn3->SetParameter(1, fitFcn2->GetParameter(1));
+    fitFcn3->SetLineColor(kRed);
+    h1->Fit(fitFcn3.get());
 
     // Painting canvas
     std::shared_ptr<TCanvas> c1 = std::make_shared<TCanvas>("Canvas1", "ks_m_fitGauss", 800, 600); //Draw the histogram on a canvas
@@ -94,10 +109,15 @@ void ks_flat_bx2_fits() {
     //h1->GetXaxis()->SetRangeUser(xMin,xMax);
     //h1->GetYaxis()->SetRangeUser(yMin,yMax);
     h1->Draw();
-    fitFcn->Draw("same");
+    // fitFcn1->Draw("same");
+    // fitFcn2->Draw("same");    
+    fitFcn3->Draw("same");
     
-    auto legend1 = new TLegend(0.1, 0.95, .45, 0.8); //(x_topLeft, y_topLeft, x_bottomRight, y_bottomRight)
+    auto legend1 = new TLegend(0.15, 0.95, .35, 0.85); //(x_topLeft, y_topLeft, x_bottomRight, y_bottomRight)
     legend1->AddEntry("h1", "ks_m", "l");
+    // legend1->AddEntry(fitFcn1.get(), "fit: gaus", "l");
+    // legend1->AddEntry(fitFcn2.get(), "fit: pol1", "l");
+    legend1->AddEntry(fitFcn3.get(), "fit: gaus + pol1", "l");
     legend1->Draw();
 
     c1->Update();
