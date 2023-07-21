@@ -100,10 +100,10 @@ void f1_flat_bx2_analysis() {
     // 'expo(3)' is a substitute for: exp([3]+[4]*x)
     // 'pol1(3)' is a substitute for: [3]+[4]*x ??need to check
     // std::unique_ptr<TF1> fitFcn3 = std::make_unique<TF1>("fitFcn3", "gaus(0)*expo(3)", 0.3, 0.7);
-    std::unique_ptr<TF1> fitFcn3 = std::make_unique<TF1>("fitFcn3", "gaus(0)*pol1(3)", 0.3, 0.7);
-    fitFcn3->SetParameter(0, 1);
-    fitFcn3->SetParameter(1, 1);
-    fitFcn3->SetParameter(2, 1);
+    std::unique_ptr<TF1> fitFcn3 = std::make_unique<TF1>("fitFcn3", "gaus(0) + pol1(3)", 0.3, 0.7);
+    fitFcn3->SetParameter(0, 30000);
+    fitFcn3->SetParameter(1, 0.55);
+    fitFcn3->SetParameter(2, 0.011);
     fitFcn3->SetParameter(3, 0.1);
     fitFcn3->SetParameter(4, 1);
     fitFcn3->SetLineColor(kRed);
@@ -123,7 +123,7 @@ void f1_flat_bx2_analysis() {
     legend1->AddEntry("h1", "ks_m", "l");
     // legend1->AddEntry(fitFcn1.get(), "fit: gaus", "l");
     // legend1->AddEntry(fitFcn2.get(), "fit: pol1", "l");
-    legend1->AddEntry(fitFcn3.get(), "fit: gaus*expo", "l");
+    legend1->AddEntry(fitFcn3.get(), "fit: gaus + pol1", "l");
     legend1->Draw();
 
     c1->Update();
