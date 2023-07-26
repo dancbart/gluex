@@ -1,8 +1,13 @@
+// Description: Analysis of f1(1285) resonance in flat bx2 data.
+
 void f1_flat_bx2_analysis() {
 
     ROOT::RDataFrame df("pipkmks__B4_M16", "pipkmks_flat_bestX2_2017.root");
 
-    // Define resonances, add columns to dataframe for each (using '.Define')
+   
+   // ********** DEFINITIONS **********
+
+    // Define resonances; add columns to dataframe for each....using '.Define' method
     auto df2 = df
                  // k_short (pip2 & pim)
                  .Define("pip2pim_E", "pip2_E + pim_E") // 4-momentum
@@ -62,7 +67,10 @@ void f1_flat_bx2_analysis() {
                  .Define("pipkmks_m", "sqrt(pipkmks_E*pipkmks_E - pipkmks_px*pipkmks_px - pipkmks_py*pipkmks_py - pipkmks_pz*pipkmks_pz)")
                      .Alias("f1_m", "pipkmks_m");
 
-    // Cuts
+    
+    
+    // ********** CUTS **********
+    
     auto reject_delta = "pip1p_m > 1.4"; // delta++ cut
     auto reject_lambda = "pkm_m > 1.9"; // lambda cut
     auto keep_kstar_plus = "kspip1_m >= 0.8 && kspip1_m <= 1.0";
@@ -70,65 +78,124 @@ void f1_flat_bx2_analysis() {
     auto reject_kstar_plus = "kspip1_m <= 0.8 || kspip1_m >= 1.0";
     auto reject_kstar_zero = "kmpip1_m <= 0.8 || kmpip1_m >= 1.0";
 
+    // Apply cuts; make new dataframe
     auto cut_df = df2.Filter("pathlength_sig > 5")
                      .Filter(reject_delta)
                      .Filter(reject_lambda);
     
-    // Making Histogram
+    
+    
+    // ********** HISTOGRAMS **********
+    
     auto h1 = cut_df.Filter(reject_kstar_plus).Filter(keep_kstar_zero).Histo1D({"h1", "f1_m (aka pipkmks_m)", 70, 1.2, 2.8}, "f1_m");
     //auto h2 = cut_df.Filter(keep_kstar_plus).Filter(keep_kstar_zero).Histo1D({"h2", "f1", 60, 1.1, 1.7}, "f1_m");
-    //auto xMin = 1.0;
-    //auto xMax = 5.0;
-    //auto yMin = 0;
-    //auto yMax = 12500;
+    // auto xMin = 1.0;
+    // auto xMax = 1.8;
+    // auto yMin = 0;
+    // auto yMax = 15000;
 
-    // Function fits
-    // 'gaus(0)' is a substitute for: [0]*exp(-0.5*((x-[1])/[2])**2) and (0) means start numbering parameters at 0
-    // 'expo(3)' is a substitute for: exp([3]+[4]*x)
-    // 'pol1(3)' is a substitute for: [3]+[4]*x ??need to check
-    std::unique_ptr<TF1> fitFcn1 = std::make_unique<TF1>("fitFcn1", "breitwigner(0) + pol1(3)", 1.2, 1.8);
-    fitFcn1->SetParameter(0, 1500); // amplitude (put approx. 1/2 of total events, i.e. y-axis)
-    fitFcn1->SetParameter(1, 1.4); // mass
-    fitFcn1->SetParameter(2, 0.05); // ?
-    fitFcn1->SetParameter(3, 0.1); // ?
-    fitFcn1->SetParameter(4, 1); // ?
-    fitFcn1->SetLineColor(kRed);
-    h1->Fit(fitFcn1.get());
 
-    std::unique_ptr<TF1> fitFcn2 = std::make_unique<TF1>("fitFcn2", "breitwigner(0)", 1.2, 1.8);
-    fitFcn2->SetParameter(0, 1500); // amplitude (put approx. 1/2 of total events, i.e. y-axis)
-    fitFcn2->SetParameter(1, 1.4); // mass
-    fitFcn2->SetParameter(2, 0.05); // ?
-    fitFcn2->SetLineColor(kMagenta);
-    h1->Fit(fitFcn2.get());
+    // ********** FITTING **********
 
-    std::unique_ptr<TF1> fitFcn3 = std::make_unique<TF1>("fitFcn3", "pol1(3)", 1.2, 1.8);
-    fitFcn3->SetParameter(3, -10); // ?
-    fitFcn3->SetParameter(4, -4); // ?
-    fitFcn3->SetLineColor(kGreen);
-    h1->Fit(fitFcn3.get());
+    // // 'pol1(3)' is a substitute for: [3]+[4]*x ??need to check
+    // std::unique_ptr<TF1> fitPol1 = std::make_unique<TF1>("fitPol1", "pol1(3)", 1.2, 1.8);
+    // fitPol1->SetParameter(3, 0.1); // ?
+    // fitPol1->SetParameter(4, 1); // ?
+    // fitPol1->SetLineColor(kGreen);
+    // h1->Fit(fitPol1.get());
 
-    // Painting canvas
+    // // 'pol2(3)' is a substitute for: [3]+[4]*x+[5]*x*x
+    // std::unique_ptr<TF1> fitPol2 = std::make_unique<TF1>("fitPol2", "pol2(3)", 1.2, 1.8);
+    // fitPol2->SetParameter(3, 0.1); // ?
+    // fitPol2->SetParameter(4, 1); // ?
+    // fitPol2->SetParameter(5, 1); // ?
+    // fitPol2->SetLineColor(kOrange+7);
+    // h1->Fit(fitPol2.get());
+
+    // // 'gaus(0)' is a substitute for: [0]*exp(-0.5*((x-[1])/[2])**2) and (0) means start numbering parameters at 0
+    // std::unique_ptr<TF1> fitGaus = std::make_unique<TF1>("fitGaus", "gaus(0)", 1.2, 1.8);
+    // fitGaus->SetParameter(0, 1500); // amplitude
+    // fitGaus->SetParameter(1, 1.4); // ?
+    // fitGaus->SetParameter(2, 0.05); // ?
+    // fitGaus->SetLineColor(kCyan+3);
+    // //h1->Fit(fitGaus.get());
+
+    // // 'expo(3)' is a substitute for: exp([3]+[4]*x).  Not used here.
+    // std::unique_ptr<TF1> fitExpo = std::make_unique<TF1>("fitExpo", "expo(3)", 1.2, 1.8);
+    // fitExpo->SetParameter(3, 0.1); // ?
+    // fitExpo->SetParameter(4, 1); // ?
+    // fitExpo->SetLineColor(kBlue);
+    // //h1->Fit(fitExpo.get());
+
+    // // 'breitwigner(0)' is a substitute for??: [0]/(pow(x*x-[1]*[1],2)+[1]*[1]*[2]*[2]) ? Need to check.
+    // std::unique_ptr<TF1> fitBW = std::make_unique<TF1>("fitBW", "breitwigner(0)", 1.2, 1.8);
+    // fitBW->SetParameter(0, 1000); // amplitude (put approx. 1/2 of total events, i.e. y-axis)
+    // fitBW->SetParameter(1, 1.42); // mass
+    // fitBW->SetParameter(2, 0.05); // width
+    // fitBW->SetLineColor(kCyan+3);
+    // h1->Fit(fitBW.get(), "B");
+
+    // 'breitwigner(0)' is a substitute for??: [0]/(pow(x*x-[1]*[1],2)+[1]*[1]*[2]*[2]) ? Need to check.
+    // 'pol2(3)' is a substitute for: [3]+[4]*x+[5]*x*x ? Need to check.
+    std::unique_ptr<TF1> fitFcnCombined = std::make_unique<TF1>("fitFcnCombined", "breitwigner(0) + pol2(3)", 1.2, 1.8);
+    fitFcnCombined->FixParameter(0, 1500); // amplitude (put approx. 1/2 of total events, i.e. y-axis)
+    fitFcnCombined->FixParameter(1, 1.4); // mass
+    fitFcnCombined->FixParameter(2, 0.21); // ?
+    fitFcnCombined->SetParameter(3, 0.1); // ?
+    fitFcnCombined->SetParameter(4, 1); // ?
+    fitFcnCombined->SetParameter(5, 1); // ?
+    fitFcnCombined->SetLineColor(kRed);
+    h1->Fit(fitFcnCombined.get(), "B");
+
+    // 'breitwigner(0)' is a substitute for??: [0]/(pow(x*x-[1]*[1],2)+[1]*[1]*[2]*[2]) ? Need to check.
+    std::unique_ptr<TF1> fitBWgetPar = std::make_unique<TF1>("fitBWgetPar", "breitwigner(0)", 1.2, 1.8);
+    fitBWgetPar->SetParameter(0, fitFcnCombined->GetParameter(0)); // amplitude (put approx. 1/2 of total events, i.e. y-axis)
+    fitBWgetPar->SetParameter(1, fitFcnCombined->GetParameter(1)); // mass
+    fitBWgetPar->SetParameter(2, fitFcnCombined->GetParameter(2)); // ?
+    fitBWgetPar->SetLineColor(kMagenta);
+    //h1->Fit(fitBWgetPar.get(), "B");
+
+    // 'pol2(3)' is a substitute for: [3]+[4]*x+[5]*x*x
+    std::unique_ptr<TF1> fitPol2getPar = std::make_unique<TF1>("fitPol2getPar", "pol2(3)", 1.2, 1.8);
+    fitPol2getPar->SetParameter(3, fitFcnCombined->GetParameter(3)); // ?
+    fitPol2getPar->SetParameter(4, fitFcnCombined->GetParameter(4)); // ?
+    fitPol2getPar->SetParameter(5, fitFcnCombined->GetParameter(5)); // ?
+    fitPol2getPar->SetLineColor(kOrange+7);
+    h1->Fit(fitPol2getPar.get(), "B");
+
+    // ******** PLOTTING ********
+
     std::shared_ptr<TCanvas> c1 = std::make_shared<TCanvas>("c1", "f1_m_fit", 800, 600);
     h1->SetLineColor(kBlue);
     //h1->GetXaxis()->SetRangeUser(xMin,xMax);
     //h1->GetYaxis()->SetRangeUser(yMin,yMax);
     h1->Draw();
-    fitFcn1->Draw("same");
-    fitFcn2->Draw("same");    
-    fitFcn3->Draw("same");
+    //fitPol1->Draw("same");
+    //fitPol2->Draw("same");
+    //fitGaus->Draw("same");
+    //fitBW->Draw("same");
+    fitFcnCombined->Draw("same"); // bw + pol2
+    fitBWgetPar->Draw("same");
+    fitPol2getPar->Draw("same");
     
     auto legend1 = new TLegend(0.15, 0.95, .35, 0.85); //(x_topLeft, y_topLeft, x_bottomRight, y_bottomRight)
     legend1->AddEntry("h1", "ks_m", "l");
-    legend1->AddEntry(fitFcn1.get(), "fit: Breit-Wigner + pol1", "l");
-    legend1->AddEntry(fitFcn2.get(), "fit: Breit-Wigner", "l");
-    legend1->AddEntry(fitFcn3.get(), "fit: pol1", "l");
+    //legend1->AddEntry(fitPol1.get(), "fit: pol1", "l");
+    //legend1->AddEntry(fitPol2.get(), "fit: pol2", "l");
+    //legend1->AddEntry(fitGaus.get(), "fit: gaus", "l");
+    //legend1->AddEntry(fitBW.get(), "fit: bw", "l");
+    legend1->AddEntry(fitBWgetPar.get(), "fitBWgetPar", "l");
+    legend1->AddEntry(fitPol2getPar.get(), "fitPol2getPar", "l");
+    legend1->AddEntry(fitFcnCombined.get(), "fit: bw + pol2", "l");
     legend1->Draw();
 
     c1->Update();
     c1->SaveAs("plots/f1_m_fit.png");
 }
 
+// ********** MAIN FUNCTION **********
+
+// Runs above analysis:
 int main() {
     f1_flat_bx2_analysis();
     return 0;
