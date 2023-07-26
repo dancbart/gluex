@@ -88,6 +88,7 @@ void f1_flat_bx2_analysis() {
     // ********** HISTOGRAMS **********
     
     auto h1 = cut_df.Filter(reject_kstar_plus).Filter(keep_kstar_zero).Histo1D({"h1", "f1_m (aka pipkmks_m)", 70, 1.2, 2.8}, "f1_m");
+    h1->SetLineColor(kBlack);
     //auto h2 = cut_df.Filter(keep_kstar_plus).Filter(keep_kstar_zero).Histo1D({"h2", "f1", 60, 1.1, 1.7}, "f1_m");
     // auto xMin = 1.0;
     // auto xMax = 1.8;
@@ -96,21 +97,6 @@ void f1_flat_bx2_analysis() {
 
 
     // ********** FITTING **********
-
-    // // 'pol1(3)' is a substitute for: [3]+[4]*x ??need to check
-    // std::unique_ptr<TF1> fitPol1 = std::make_unique<TF1>("fitPol1", "pol1(3)", 1.2, 1.8);
-    // fitPol1->SetParameter(3, 0.1); // ?
-    // fitPol1->SetParameter(4, 1); // ?
-    // fitPol1->SetLineColor(kGreen);
-    // h1->Fit(fitPol1.get());
-
-    // // 'pol2(3)' is a substitute for: [3]+[4]*x+[5]*x*x
-    // std::unique_ptr<TF1> fitPol2 = std::make_unique<TF1>("fitPol2", "pol2(3)", 1.2, 1.8);
-    // fitPol2->SetParameter(3, 0.1); // ?
-    // fitPol2->SetParameter(4, 1); // ?
-    // fitPol2->SetParameter(5, 1); // ?
-    // fitPol2->SetLineColor(kOrange+7);
-    // h1->Fit(fitPol2.get());
 
     // // 'gaus(0)' is a substitute for: [0]*exp(-0.5*((x-[1])/[2])**2) and (0) means start numbering parameters at 0
     // std::unique_ptr<TF1> fitGaus = std::make_unique<TF1>("fitGaus", "gaus(0)", 1.2, 1.8);
@@ -124,73 +110,105 @@ void f1_flat_bx2_analysis() {
     // std::unique_ptr<TF1> fitExpo = std::make_unique<TF1>("fitExpo", "expo(3)", 1.2, 1.8);
     // fitExpo->SetParameter(3, 0.1); // ?
     // fitExpo->SetParameter(4, 1); // ?
-    // fitExpo->SetLineColor(kBlue);
+    // fitExpo->SetLineColor(kGreen+3);
     // //h1->Fit(fitExpo.get());
 
-    // // 'breitwigner(0)' is a substitute for??: [0]/(pow(x*x-[1]*[1],2)+[1]*[1]*[2]*[2]) ? Need to check.
-    // std::unique_ptr<TF1> fitBW = std::make_unique<TF1>("fitBW", "breitwigner(0)", 1.2, 1.8);
-    // fitBW->SetParameter(0, 1000); // amplitude (put approx. 1/2 of total events, i.e. y-axis)
-    // fitBW->SetParameter(1, 1.42); // mass
-    // fitBW->SetParameter(2, 0.05); // width
-    // fitBW->SetLineColor(kCyan+3);
-    // h1->Fit(fitBW.get(), "B");
+    // // 'pol1(3)' is a substitute for: [3]+[4]*x ??need to check
+    // std::unique_ptr<TF1> fitPol1 = std::make_unique<TF1>("fitPol1", "pol1(3)", 1.2, 1.8);
+    // fitPol1->SetParameter(3, 0.1); // ?
+    // fitPol1->SetParameter(4, 1); // ?
+    // fitPol1->SetLineColor(kOrange-6);
+    // h1->Fit(fitPol1.get());
+
+    // 'pol2(3)' is a substitute for: [3]+[4]*x+[5]*x*x
+    std::unique_ptr<TF1> fitPol2 = std::make_unique<TF1>("fitPol2", "pol2(3)", 1.2, 2.8);
+    fitPol2->SetParameter(3, 0.1); // ?
+    fitPol2->SetParameter(4, 1); // ?
+    fitPol2->SetParameter(5, 1); // ?
+    fitPol2->SetLineColor(kGreen-3);
+    h1->Fit(fitPol2.get(), "PBVR");
+
+    // 'breitwigner(0)' is a substitute for??: [0]/(pow(x*x-[1]*[1],2)+[1]*[1]*[2]*[2]) ? Need to check.
+    std::unique_ptr<TF1> fitBW = std::make_unique<TF1>("fitBW", "breitwigner(0)", 1.2, 2.8);
+    fitBW->SetParameter(0, 1000); // amplitude (put approx. 1/2 of total events, i.e. y-axis)
+    fitBW->SetParameter(1, 1.42); // mass
+    fitBW->SetParameter(2, 0.05); // width
+    fitBW->SetLineColor(kCyan-3);
+    h1->Fit(fitBW.get(), "B");
 
     // 'breitwigner(0)' is a substitute for??: [0]/(pow(x*x-[1]*[1],2)+[1]*[1]*[2]*[2]) ? Need to check.
     // 'pol2(3)' is a substitute for: [3]+[4]*x+[5]*x*x ? Need to check.
-    std::unique_ptr<TF1> fitFcnCombined = std::make_unique<TF1>("fitFcnCombined", "breitwigner(0) + pol2(3)", 1.2, 1.8);
-    fitFcnCombined->FixParameter(0, 1500); // amplitude (put approx. 1/2 of total events, i.e. y-axis)
-    fitFcnCombined->FixParameter(1, 1.4); // mass
-    fitFcnCombined->FixParameter(2, 0.21); // ?
+    std::unique_ptr<TF1> fitFcnCombined = std::make_unique<TF1>("fitFcnCombined", "breitwigner(0) + pol2(3)", 1.2, 2.8);
+    fitFcnCombined->FixParameter(0, 1000); // amplitude (put approx. 1/2 of total events, i.e. y-axis)
+    fitFcnCombined->FixParameter(1, 1.42); // mass
+    fitFcnCombined->FixParameter(2, 0.05); // width
     fitFcnCombined->SetParameter(3, 0.1); // ?
     fitFcnCombined->SetParameter(4, 1); // ?
     fitFcnCombined->SetParameter(5, 1); // ?
-    fitFcnCombined->SetLineColor(kRed);
-    h1->Fit(fitFcnCombined.get(), "B");
+    fitFcnCombined->SetLineColor(kMagenta);
+    h1->Fit(fitFcnCombined.get(), "PBRV");
 
     // 'breitwigner(0)' is a substitute for??: [0]/(pow(x*x-[1]*[1],2)+[1]*[1]*[2]*[2]) ? Need to check.
-    std::unique_ptr<TF1> fitBWgetPar = std::make_unique<TF1>("fitBWgetPar", "breitwigner(0)", 1.2, 1.8);
+    std::unique_ptr<TF1> fitBWgetPar = std::make_unique<TF1>("fitBWgetPar", "breitwigner(0)", 1.2, 2.8);
     fitBWgetPar->SetParameter(0, fitFcnCombined->GetParameter(0)); // amplitude (put approx. 1/2 of total events, i.e. y-axis)
     fitBWgetPar->SetParameter(1, fitFcnCombined->GetParameter(1)); // mass
-    fitBWgetPar->SetParameter(2, fitFcnCombined->GetParameter(2)); // ?
-    fitBWgetPar->SetLineColor(kMagenta);
-    //h1->Fit(fitBWgetPar.get(), "B");
+    fitBWgetPar->SetParameter(2, fitFcnCombined->GetParameter(2)); // width
+    fitBWgetPar->SetLineColor(kCyan+2);
+    h1->Fit(fitBWgetPar.get(), "PBRV");
 
     // 'pol2(3)' is a substitute for: [3]+[4]*x+[5]*x*x
-    std::unique_ptr<TF1> fitPol2getPar = std::make_unique<TF1>("fitPol2getPar", "pol2(3)", 1.2, 1.8);
+    std::unique_ptr<TF1> fitPol2getPar = std::make_unique<TF1>("fitPol2getPar", "pol2(3)", 1.2, 2.8);
     fitPol2getPar->SetParameter(3, fitFcnCombined->GetParameter(3)); // ?
     fitPol2getPar->SetParameter(4, fitFcnCombined->GetParameter(4)); // ?
     fitPol2getPar->SetParameter(5, fitFcnCombined->GetParameter(5)); // ?
-    fitPol2getPar->SetLineColor(kOrange+7);
-    h1->Fit(fitPol2getPar.get(), "B");
+    fitPol2getPar->SetLineColor(kGreen+2);
+    h1->Fit(fitPol2getPar.get(), "PBRV");
 
     // ******** PLOTTING ********
 
     std::shared_ptr<TCanvas> c1 = std::make_shared<TCanvas>("c1", "f1_m_fit", 800, 600);
-    h1->SetLineColor(kBlue);
+    
     //h1->GetXaxis()->SetRangeUser(xMin,xMax);
     //h1->GetYaxis()->SetRangeUser(yMin,yMax);
     h1->Draw();
     //fitPol1->Draw("same");
-    //fitPol2->Draw("same");
+    fitPol2->Draw("same");
     //fitGaus->Draw("same");
-    //fitBW->Draw("same");
+    fitBW->Draw("same");
     fitFcnCombined->Draw("same"); // bw + pol2
     fitBWgetPar->Draw("same");
     fitPol2getPar->Draw("same");
     
-    auto legend1 = new TLegend(0.15, 0.95, .35, 0.85); //(x_topLeft, y_topLeft, x_bottomRight, y_bottomRight)
-    legend1->AddEntry("h1", "ks_m", "l");
-    //legend1->AddEntry(fitPol1.get(), "fit: pol1", "l");
-    //legend1->AddEntry(fitPol2.get(), "fit: pol2", "l");
-    //legend1->AddEntry(fitGaus.get(), "fit: gaus", "l");
-    //legend1->AddEntry(fitBW.get(), "fit: bw", "l");
-    legend1->AddEntry(fitBWgetPar.get(), "fitBWgetPar", "l");
-    legend1->AddEntry(fitPol2getPar.get(), "fitPol2getPar", "l");
-    legend1->AddEntry(fitFcnCombined.get(), "fit: bw + pol2", "l");
+    auto legend1 = new TLegend(0.75, 0.77, .98, 0.58); //(x_topLeft, y_topLeft, x_bottomRight, y_bottomRight)
+    legend1->AddEntry("h1", "Data: ks_m", "l");
+    //legend1->AddEntry(fitPol1.get(), "fcn: fitPol1", "l");
+    //legend1->AddEntry(fitGaus.get(), "fcn: fitGaus", "l");
+    legend1->AddEntry(fitFcnCombined.get(), "fcn: fit(bw + pol2)", "l");
+    legend1->AddEntry(fitBW.get(), "fcn: fitBW", "l");
+    legend1->AddEntry(fitBWgetPar.get(), "fcn: fitBWgetPar", "l");
+    legend1->AddEntry(fitPol2.get(), "fcn: fitPol2", "l");
+    legend1->AddEntry(fitPol2getPar.get(), "fcn: fitPol2getPar", "l");
     legend1->Draw();
 
     c1->Update();
     c1->SaveAs("plots/f1_m_fit.png");
+
+// ********** END OF PROGRAM **********
+
+    // But...keep the canvas displayed and wait for user input to close
+
+while (true) {
+    // Create a TApplication object to handle the event loop
+    TApplication app("app", nullptr, nullptr);
+
+    // Wait for user input to close the program
+    std::cout << "Press Enter to continue..." << std::endl;
+    std::cin.ignore(); // this line clears the input buffer before the user presses enter so no previously entered characters are registered
+    c1->Close();
+    //app.Terminate(); // not working, so trying below
+    gApplication->Terminate(0);
+    }
+
 }
 
 // ********** MAIN FUNCTION **********
