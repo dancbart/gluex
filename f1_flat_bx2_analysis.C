@@ -136,6 +136,9 @@ void f1_flat_bx2_analysis() {
     // fitBW->SetLineColor(kCyan-3);
     // h1->Fit(fitBW.get(), "B");
 
+    // // 'pol3()' is a substitute for: [0]+[1]*x+[2]*x*x+[3]*x*x*x ? Need to check.
+    std::unique_ptr<TF1> fitPol3 = std::make_unique<TF1>("fitPol3", "pol3()", 1.2, 1.7);
+
     // Next steps, Tyler Zoom 7/26/2023: 
     // Fix bw paremeters as above, then read off the poly parameters.
     // Then type those poly paremeters (and change 'SetParameter' to 'FixParamerer'), and let the BW parameters float.
@@ -144,17 +147,36 @@ void f1_flat_bx2_analysis() {
     // ...it should be better
     // Also, try using a 3rd order poly (instead of just a second-order, like I have now).
 
-    // 'breitwigner(0)' is a substitute for??: [0]/(pow(x*x-[1]*[1],2)+[1]*[1]*[2]*[2]) ? Need to check.
-    // 'pol2(3)' is a substitute for: [3]+[4]*x+[5]*x*x ? Need to check.
-    std::unique_ptr<TF1> fitFcnCombined = std::make_unique<TF1>("fitFcnCombined", "breitwigner(0) + pol2(3)", 1.2, 1.7);
-    fitFcnCombined->SetParameter(0, 145); // BW: amplitude (put approx. 1/2 of total events, i.e. y-axis) //old: 145
-    fitFcnCombined->SetParameter(1, 1.42); // BW: mass
-    fitFcnCombined->SetParameter(2, 0.0315); // BW: width
-    fitFcnCombined->SetParameter(3, -2.8E4); // Poly: ?
-    fitFcnCombined->SetParameter(4, 3.3E4); // Poly: ?
-    fitFcnCombined->SetParameter(5, -8.2E3); // Poly: ?
+    // Define some custom functions from Tyler, line 91, 92:
+    // https://github.com/tylerviducic/gluex/blob/main/scripts/fitting/root/relBW_f1_fit.py
+    std::unique_ptr<TF1> fitFcnCombined = std::make_unique<TF1>("fitFcnCombined", "expo() + breitwigner(0)", 1.2, 1.7); // aka 'bkg'
+    //std::unique_ptr<TF1> bw1420 = std::make_unique<TF1>("fitFcnCombined2", "par(3) * breitWigner(0)", 1.2, 1.7)
+
+    // 8/31/2023 meeting: maybe change fit to 
+    
+    fitFcnCombined->SetParameter(0, 145); //
+    fitFcnCombined->SetParameter(1, 1.42); //
+    fitFcnCombined->SetParameter(2, 0.0315); //
+    fitFcnCombined->SetParameter(3, 1.42); // 
+    fitFcnCombined->SetParameter(4, 0.0315); //
+    fitFcnCombined->SetParameter(5, -2.8E4); //
+    fitFcnCombined->SetParameter(6, 1); //
+    fitFcnCombined->SetParameter(7, 1); //
+    fitFcnCombined->SetParameter(8, 1); // 
     fitFcnCombined->SetLineColor(kMagenta);
     h1->Fit(fitFcnCombined.get(), "RV"); // orig params: "PBRV"
+
+    // // 'breitwigner(0)' is a substitute for??: [0]/(pow(x*x-[1]*[1],2)+[1]*[1]*[2]*[2]) ? Need to check.
+    // // 'pol2(3)' is a substitute for: [3]+[4]*x+[5]*x*x ? Need to check.
+    // std::unique_ptr<TF1> fitFcnCombined = std::make_unique<TF1>("fitFcnCombined", "breitwigner(0) + pol2(3) + bkg + bw1420", 1.2, 1.7);
+    // fitFcnCombined->SetParameter(0, 145); // BW: amplitude (put approx. 1/2 of total events, i.e. y-axis) //old: 145
+    // fitFcnCombined->SetParameter(1, 1.42); // BW: mass
+    // fitFcnCombined->SetParameter(2, 0.0315); // BW: width
+    // fitFcnCombined->SetParameter(3, -2.8E4); // Poly: ?
+    // fitFcnCombined->SetParameter(4, 3.3E4); // Poly: ?
+    // fitFcnCombined->SetParameter(5, -8.2E3); // Poly: ?
+    // fitFcnCombined->SetLineColor(kMagenta);
+    // h1->Fit(fitFcnCombined.get(), "RV"); // orig params: "PBRV"
 
     // ******** PRETTY MUCH DON'T NEED THE FITBWGETPAR AND FITPOL2GETPAR FUNCTIONS BELOW ********
 
