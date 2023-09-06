@@ -136,8 +136,8 @@ void f1_flat_bx2_analysis() {
     // fitBW->SetLineColor(kCyan-3);
     // h1->Fit(fitBW.get(), "B");
 
-    // // 'pol3()' is a substitute for: [0]+[1]*x+[2]*x*x+[3]*x*x*x ? Need to check.
-    std::unique_ptr<TF1> fitPol3 = std::make_unique<TF1>("fitPol3", "pol3()", 1.2, 1.7);
+    // // // 'pol3()' is a substitute for: [0]+[1]*x+[2]*x*x+[3]*x*x*x ? Need to check.
+    // std::unique_ptr<TF1> fitPol3 = std::make_unique<TF1>("fitPol3", "pol3()", 1.2, 1.7);
 
     // Next steps, Tyler Zoom 7/26/2023: 
     // Fix bw paremeters as above, then read off the poly parameters.
@@ -147,24 +147,26 @@ void f1_flat_bx2_analysis() {
     // ...it should be better
     // Also, try using a 3rd order poly (instead of just a second-order, like I have now).
 
+    // 8/31/2023 meeting: maybe change fit to exponential + breit-wigner (exp + bw), instead of poly + bw.
     // Define some custom functions from Tyler, line 91, 92:
     // https://github.com/tylerviducic/gluex/blob/main/scripts/fitting/root/relBW_f1_fit.py
-    std::unique_ptr<TF1> fitFcnCombined = std::make_unique<TF1>("fitFcnCombined", "expo() + breitwigner(0)", 1.2, 1.7); // aka 'bkg'
-    //std::unique_ptr<TF1> bw1420 = std::make_unique<TF1>("fitFcnCombined2", "par(3) * breitWigner(0)", 1.2, 1.7)
-
-    // 8/31/2023 meeting: maybe change fit to 
     
-    fitFcnCombined->SetParameter(0, 145); //
-    fitFcnCombined->SetParameter(1, 1.42); //
-    fitFcnCombined->SetParameter(2, 0.0315); //
-    fitFcnCombined->SetParameter(3, 1.42); // 
-    fitFcnCombined->SetParameter(4, 0.0315); //
-    fitFcnCombined->SetParameter(5, -2.8E4); //
-    fitFcnCombined->SetParameter(6, 1); //
-    fitFcnCombined->SetParameter(7, 1); //
-    fitFcnCombined->SetParameter(8, 1); // 
-    fitFcnCombined->SetLineColor(kMagenta);
-    h1->Fit(fitFcnCombined.get(), "RV"); // orig params: "PBRV"
+    // Create exponential function, and pass a lambda function of the form: [0]+[1]*x+[2]*x*x inside.
+    std::unique_ptr<TF1> bkg = std::make_unique<TF1>("bkg", "TMath::Exp([6] + [7] * x + [8] * x * x)", 1.2, 1.7);
+    std::unique_ptr<TF1> bw1420 = std::make_unique<TF1>("bw1420", "TMath::BreitWigner(x, [4], [5])", 1.2, 1.7);
+    bw1420->SetParameter(4, 1.42); // mass
+    bw1420->SetParameter(5, 0.05); // width
+    bkg->SetParameter(6, 1); // ?
+    bkg->SetParameter(7, 1); // ?
+    bkg->SetParameter(8, 1); // ?
+
+    // fitFcnCombined->SetParameter(4, 1); //
+    // fitFcnCombined->SetParameter(5, 1); //
+    // fitFcnCombined->SetParameter(6, 1); //
+    // fitFcnCombined->SetParameter(7, 1); //
+    // fitFcnCombined->SetParameter(8, 1); // 
+    // fitFcnCombined->SetLineColor(kMagenta);
+    // h1->Fit(fitFcnCombined.get(), "RV"); // orig params: "PBRV"
 
     // // 'breitwigner(0)' is a substitute for??: [0]/(pow(x*x-[1]*[1],2)+[1]*[1]*[2]*[2]) ? Need to check.
     // // 'pol2(3)' is a substitute for: [3]+[4]*x+[5]*x*x ? Need to check.
@@ -180,46 +182,48 @@ void f1_flat_bx2_analysis() {
 
     // ******** PRETTY MUCH DON'T NEED THE FITBWGETPAR AND FITPOL2GETPAR FUNCTIONS BELOW ********
 
-    // 'breitwigner(0)' is a substitute for??: [0]/(pow(x*x-[1]*[1],2)+[1]*[1]*[2]*[2]) ? Need to check.
-    // Just draw this on the histogram, without fitting it.  Note, it is only necessary to fit the combined function, since we know the histogram is more complex than just a Breit-Wigner.
-    std::unique_ptr<TF1> fitBWgetPar = std::make_unique<TF1>("fitBWgetPar", "breitwigner(0)", 1.2, 1.7);
-    fitBWgetPar->SetParameter(0, fitFcnCombined->GetParameter(0)); // amplitude (put approx. 1/2 of total events, i.e. y-axis)
-    fitBWgetPar->SetParameter(1, fitFcnCombined->GetParameter(1)); // mass
-    fitBWgetPar->SetParameter(2, fitFcnCombined->GetParameter(2)); // width
-    fitBWgetPar->SetLineColor(kCyan+2);
+    // // 'breitwigner(0)' is a substitute for??: [0]/(pow(x*x-[1]*[1],2)+[1]*[1]*[2]*[2]) ? Need to check.
+    // // Just draw this on the histogram, without fitting it.  Note, it is only necessary to fit the combined function, since we know the histogram is more complex than just a Breit-Wigner.
+    // std::unique_ptr<TF1> fitBWgetPar = std::make_unique<TF1>("fitBWgetPar", "breitwigner(0)", 1.2, 1.7);
+    // fitBWgetPar->SetParameter(0, fitFcnCombined->GetParameter(0)); // amplitude (put approx. 1/2 of total events, i.e. y-axis)
+    // fitBWgetPar->SetParameter(1, fitFcnCombined->GetParameter(1)); // mass
+    // fitBWgetPar->SetParameter(2, fitFcnCombined->GetParameter(2)); // width
+    // fitBWgetPar->SetLineColor(kCyan+2);
     
-    // 'pol2(3)' is a substitute for: [3]+[4]*x+[5]*x*x
-    // Just draw this on the histogram, without fitting it.  Note, it is only necessary fit the combined function, since we know the histogram is more complex than just a Polynomial.
-    std::unique_ptr<TF1> fitPol2getPar = std::make_unique<TF1>("fitPol2getPar", "pol2(3)", 1.2, 1.7);
-    fitPol2getPar->SetParameter(3, fitFcnCombined->GetParameter(3)); // ?
-    fitPol2getPar->SetParameter(4, fitFcnCombined->GetParameter(4)); // ?
-    fitPol2getPar->SetParameter(5, fitFcnCombined->GetParameter(5)); // ?
-    fitPol2getPar->SetLineColor(kGreen+2);
+    // // 'pol2(3)' is a substitute for: [3]+[4]*x+[5]*x*x
+    // // Just draw this on the histogram, without fitting it.  Note, it is only necessary fit the combined function, since we know the histogram is more complex than just a Polynomial.
+    // std::unique_ptr<TF1> fitPol2getPar = std::make_unique<TF1>("fitPol2getPar", "pol2(3)", 1.2, 1.7);
+    // fitPol2getPar->SetParameter(3, fitFcnCombined->GetParameter(3)); // ?
+    // fitPol2getPar->SetParameter(4, fitFcnCombined->GetParameter(4)); // ?
+    // fitPol2getPar->SetParameter(5, fitFcnCombined->GetParameter(5)); // ?
+    // fitPol2getPar->SetLineColor(kGreen+2);
     
     // ******** PLOTTING ********
 
     std::shared_ptr<TCanvas> c1 = std::make_shared<TCanvas>("c1", "f1_m_fit", 800, 600);
     
-    //h1->GetXaxis()->SetRangeUser(xMin,xMax);
-    //h1->GetYaxis()->SetRangeUser(yMin,yMax);
+    // h1->GetXaxis()->SetRangeUser(xMin,xMax);
+    // h1->GetYaxis()->SetRangeUser(yMin,yMax);
     h1->Draw("E"); // "E"
-    //fitPol1->Draw("same");
-    //fitPol2->Draw("same");
-    //fitGaus->Draw("same");
-    //fitBW->Draw("same");
-    fitFcnCombined->Draw("same"); // bw + pol2
-    fitBWgetPar->Draw("same");
-    fitPol2getPar->Draw("same");
+    // fitPol1->Draw("same");
+    // fitPol2->Draw("same");
+    // fitGaus->Draw("same");
+    // fitBW->Draw("same");
+    // fitFcnCombined->Draw("same"); // bw + pol2
+    // fitBWgetPar->Draw("same");
+    // fitPol2getPar->Draw("same");
+    bkg->Draw("same");
     
     auto legend1 = new TLegend(0.75, 0.77, .98, 0.58); //(x_topLeft, y_topLeft, x_bottomRight, y_bottomRight)
     legend1->AddEntry("h1", "Data: ks_m", "l");
-    //legend1->AddEntry(fitPol1.get(), "fcn: fitPol1", "l");
-    //legend1->AddEntry(fitGaus.get(), "fcn: fitGaus", "l");
-    legend1->AddEntry(fitFcnCombined.get(), "fcn: fit(bw + pol2)", "l");
-    //legend1->AddEntry(fitBW.get(), "fcn: fitBW", "l");
-    legend1->AddEntry(fitBWgetPar.get(), "fcn: BW", "l");
-    //legend1->AddEntry(fitPol2.get(), "fcn: fitPol2", "l");
-    legend1->AddEntry(fitPol2getPar.get(), "fcn: Pol2", "l");
+    // legend1->AddEntry(fitPol1.get(), "fcn: fitPol1", "l");
+    // legend1->AddEntry(fitGaus.get(), "fcn: fitGaus", "l");
+    // legend1->AddEntry(fitFcnCombined.get(), "fcn: fit(bw + pol3)", "l");
+    // legend1->AddEntry(fitBW.get(), "fcn: fitBW", "l");
+    // legend1->AddEntry(fitBWgetPar.get(), "fcn: BW", "l");
+    // legend1->AddEntry(fitPol2.get(), "fcn: fitPol2", "l");
+    // legend1->AddEntry(fitPol2getPar.get(), "fcn: Pol2", "l");
+    legend1->AddEntry(bkg.get(), "fcn: bkg", "l");
     legend1->Draw();
 
     c1->Update();
