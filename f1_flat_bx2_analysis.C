@@ -98,6 +98,9 @@ void f1_flat_bx2_analysis() {
 
     // ********** FITTING **********
 
+    // Tyler/Moskov Zoom 9/7/23: Just fix the BW, let poly float.   Get exp values and reverse process, same as before.
+    // Then send to tyler.
+
     std::unique_ptr<TF1> bkg = std::make_unique<TF1>("bkg", "TMath::Exp([6] + [7] * x + [8] * x * x)", 1.2, 1.7);
     std::unique_ptr<TF1> bw1420 = std::make_unique<TF1>("bw1420", "TMath::BreitWigner(x, [4], [5])", 1.2, 1.7);
     bw1420->SetParameter(4, 1.42); // mass
