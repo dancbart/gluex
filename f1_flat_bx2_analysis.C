@@ -87,7 +87,7 @@ void f1_flat_bx2_analysis() {
     
     // ********** HISTOGRAMS **********
     
-    auto h1 = cut_df.Filter(reject_kstar_plus).Filter(keep_kstar_zero).Histo1D({"h1", "f1_m (aka pipkmks_m)", 30, 1.2, 1.7}, "f1_m");
+    auto h1 = cut_df.Filter(reject_kstar_plus).Filter(keep_kstar_zero).Histo1D({"h1", "f1_m (aka pipkmks_m)", 60, 1.2, 1.7}, "f1_m");
     h1->SetLineColor(kBlack);
     //auto h2 = cut_df.Filter(keep_kstar_plus).Filter(keep_kstar_zero).Histo1D({"h2", "f1", 60, 1.1, 1.7}, "f1_m");
     // auto xMin = 1.0;
@@ -103,11 +103,22 @@ void f1_flat_bx2_analysis() {
 
     std::unique_ptr<TF1> bkg = std::make_unique<TF1>("bkg", "TMath::Exp([6] + [7] * x + [8] * x * x)", 1.2, 1.7);
     std::unique_ptr<TF1> bw1420 = std::make_unique<TF1>("bw1420", "TMath::BreitWigner(x, [4], [5])", 1.2, 1.7);
-    bw1420->SetParameter(4, 1.42); // mass
-    bw1420->SetParameter(5, 0.05); // width
-    bkg->SetParameter(6, 1); // ?
-    bkg->SetParameter(7, 1); // ?
-    bkg->SetParameter(8, 1); // ?
+    std::unique_ptr<TF1> fitCombined = std::make_unique<TF1>("fitCombined", "bkg + bw1420", 1.2, 1.7);
+    fitCombined->FixParameter(4, 1.42); // mass
+    fitCombined->FixParameter(5, 0.05); // width
+    fitCombined->SetParameter(6, -6.47); // ?
+    fitCombined->SetParameter(7, 9.29); // ?
+    fitCombined->SetParameter(8, -2.97); // ?
+    fitCombined->SetLineColor(kMagenta);
+    fitCombined->SetLineWidth(2);
+    fitCombined->SetLineStyle(2);
+    // fitCombined->SetParName(4, "bwMass");
+    // fitCombined->SetParName(5, "bwWidth");
+    // fitCombined->SetParName(6, "expPar1");
+    // fitCombined->SetParName(7, "expPar2");
+    // fitCombined->SetParName(8, "expPar3");
+    h1->Fit(bw1420.get(), "RV");
+    h1->Fit(fitCombined.get(), "RV");
 
     // ******** PLOTTING ********
 
@@ -116,13 +127,15 @@ void f1_flat_bx2_analysis() {
     // h1->GetXaxis()->SetRangeUser(xMin,xMax);
     // h1->GetYaxis()->SetRangeUser(yMin,yMax);
     h1->Draw("E"); // "E"
-    bkg->Draw("same");
+    // bkg->Draw("same");
     bw1420->Draw("same");
+    fitCombined->Draw("same");
     
     auto legend1 = new TLegend(0.75, 0.77, .98, 0.58); //(x_topLeft, y_topLeft, x_bottomRight, y_bottomRight)
     legend1->AddEntry("h1", "Data: ks_m", "l");
     legend1->AddEntry(bkg.get(), "fcn: bkg", "l");
     legend1->AddEntry(bw1420.get(), "fcn: bw1420", "l");
+    legend1->AddEntry(fitCombined.get(), "fcn: fitCombined", "l");
     legend1->Draw();
 
     c1->Update();
