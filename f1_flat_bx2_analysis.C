@@ -101,27 +101,29 @@ void f1_flat_bx2_analysis() {
     // Tyler/Moskov Zoom 9/7/23: Just fix the BW, let poly float.   Get exp values and reverse process, same as before.
     // Then send to tyler.
 
-    std::unique_ptr<TF1> bw = std::make_unique<TF1>("bw", "breitwigner(0)", 1.2, 1.7);
-    // std::unique_ptr<TF1> bkg = std::make_unique<TF1>("bkg", "TMath::Exp([6] + [7] * x + [8] * x * x)", 1.2, 1.7);
-    // Function directly below (bw1420) may be defined wrong here because parameters don't print out in terminal.  trying my old bw function (aka "breitwitner(0)")
-    std::unique_ptr<TF1> bw1420 = std::make_unique<TF1>("bw1420", "TMath::BreitWigner(x, [4], [5])", 1.2, 1.7); // used to have BreitWigner(x, [4], [5])
-    std::unique_ptr<TF1> fitCombined = std::make_unique<TF1>("fitCombined", "bw + bw1420", 1.2, 1.7);
-    fitCombined->SetParName(0, "bw_amplitude");
-    fitCombined->SetParName(1, "bw_mass");
-    fitCombined->SetParName(2, "bw_width");
-    // fitCombined->SetParName(3, "bkg_expPar1");
-    // fitCombined->SetParName(4, "bkg_expPar2");
-    // fitCombined->SetParName(5, "bkg_expPar3");
-    fitCombined->SetParName(3, "bw1420_mass");
-    fitCombined->SetParName(4, "bw1420_width");
-    fitCombined->SetParameter("bw_amplitude", 1.609E2);
-    fitCombined->SetParameter("bw_mass", 1.427E0); 
-    fitCombined->SetParameter("bw_width", 7.082E-2);
-    // fitCombined->SetParameter("bkg_expPar1", -6.089E1);
-    // fitCombined->SetParameter("bkg_expPar2", 8.527E1);
-    // fitCombined->SetParameter("bkg_expPar3", -2.670E1);
+    // std::unique_ptr<TF1> bw = std::make_unique<TF1>("bw", "breitwigner(0)", 1.2, 1.7);
+    std::unique_ptr<TF1> bkg = std::make_unique<TF1>("bkg", "TMath::Exp([6] + [7] * x + [8] * x * x)", 1.2, 1.7);
+    std::unique_ptr<TF1> bw1420 = std::make_unique<TF1>("bw1420", "[9]*TMath::BreitWigner(x, [4], [5])", 1.2, 1.7); // used to have BreitWigner(x, [4], [5])
+    std::unique_ptr<TF1> fitCombined = std::make_unique<TF1>("fitCombined", "bkg + bw1420", 1.2, 1.7);
+    // fitCombined->SetParName(0, "bw_amplitude");
+    // fitCombined->SetParName(1, "bw_mass");
+    // fitCombined->SetParName(2, "bw_width");
+    fitCombined->SetParName(0, "bkg_expPar1");
+    fitCombined->SetParName(1, "bkg_expPar2");
+    fitCombined->SetParName(2, "bkg_expPar3");
+    fitCombined->SetParName(4, "bw1420_mass");
+    fitCombined->SetParName(5, "bw1420_width");
+    fitCombined->SetParName(9, "bw1420_amplitude");
+    // fitCombined->SetParameter("bw_amplitude", 1.609E2);
+    // fitCombined->SetParameter("bw_mass", 1.427E0); 
+    // fitCombined->SetParameter("bw_width", 7.082E-2);
+    fitCombined->SetParameter("bkg_expPar1", -6.47E0);
+    fitCombined->SetParameter("bkg_expPar2", 9.29E0);
+    fitCombined->SetParameter("bkg_expPar3", -2.970E0);
+    fitCombined->SetParameter("bw1420_amplitude", 1.609E2);
     fitCombined->SetParameter("bw1420_mass", 1.420E0);
     fitCombined->SetParameter("bw1420_width", 7.082E-2);
+    fitCombined->SetParameter("bw1420_amplitude", 1.609E2);
     fitCombined->SetLineColor(kMagenta);
     fitCombined->SetLineWidth(2);
     fitCombined->SetLineStyle(4);
@@ -132,25 +134,25 @@ void f1_flat_bx2_analysis() {
     // These INDICES are the same as the order in which the parameters are listed below the fitCombined function (0, 1, 2, etc.).
     // But they are NOT the 'parameter numbers' (i.e. 1, 2, 6, 7, 8), as stated earlier.
 
-    bw->SetParameter(0, fitCombined->GetParameter("bw_amplitude")); // 
-    bw->SetParameter(1, fitCombined->GetParameter("bw_mass")); // 
-    bw->SetParameter(2, fitCombined->GetParameter("bw_width")); // 
-    bw->SetLineColor(kBlue);
-    bw->SetLineWidth(2);
-    bw->SetLineStyle(2);
+    // bw->SetParameter(0, fitCombined->GetParameter("bw_amplitude")); // 
+    // bw->SetParameter(1, fitCombined->GetParameter("bw_mass")); // 
+    // bw->SetParameter(2, fitCombined->GetParameter("bw_width")); // 
+    // bw->SetLineColor(kBlue);
+    // bw->SetLineWidth(2);
+    // bw->SetLineStyle(2);
 
-    // bkg->SetParameter(6, fitCombined->GetParameter("bkg_expPar1")); // 
-    // bkg->SetParameter(7, fitCombined->GetParameter("bkg_expPar2")); // 
-    // bkg->SetParameter(8, fitCombined->GetParameter("bkg_expPar3")); // 
+    // bkg->SetParameter(0, fitCombined->GetParameter("bkg_expPar1")); // 
+    // bkg->SetParameter(1, fitCombined->GetParameter("bkg_expPar2")); // 
+    // bkg->SetParameter(2, fitCombined->GetParameter("bkg_expPar3")); // 
     // bkg->SetLineColor(kCyan);
     // bkg->SetLineWidth(2);
     // bkg->SetLineStyle(2);
 
-    bw1420->SetParameter(4, fitCombined->GetParameter("bw1420_mass")); // bw mass?
-    bw1420->SetParameter(5, fitCombined->GetParameter("bw1420_width")); // bw width?
-    bw1420->SetLineColor(kGreen);
-    bw1420->SetLineWidth(2);
-    bw1420->SetLineStyle(2);
+    // bw1420->SetParameter(3, fitCombined->GetParameter("bw1420_mass")); // bw mass?
+    // bw1420->SetParameter(4, fitCombined->GetParameter("bw1420_width")); // bw width?
+    // bw1420->SetLineColor(kGreen);
+    // bw1420->SetLineWidth(2);
+    // bw1420->SetLineStyle(2);
     
     // ******** PLOTTING ********
 
@@ -160,16 +162,16 @@ void f1_flat_bx2_analysis() {
     // h1->GetYaxis()->SetRangeUser(yMin,yMax);
     h1->Draw("E"); // "E"
     // bkg->Draw("same");
-    bw1420->Draw("same");
-    bw->Draw("same");
+    // bw1420->Draw("same");
+    // bw->Draw("same");
     fitCombined->Draw("same");
     
     auto legend1 = new TLegend(0.75, 0.77, .98, 0.58); //(x_topLeft, y_topLeft, x_bottomRight, y_bottomRight)
     legend1->AddEntry("h1", "Data: ks_m", "l");
     // legend1->AddEntry(bkg.get(), "fcn: bkg", "l");
-    legend1->AddEntry(bw.get(), "fcn: bw", "l");
-    legend1->AddEntry(bw1420.get(), "fcn: bw1420", "l");
-    legend1->AddEntry(fitCombined.get(), "bkg + breitwigner(0)", "l");
+    // legend1->AddEntry(bw.get(), "fcn: bw", "l");
+    // legend1->AddEntry(bw1420.get(), "fcn: bw1420", "l");
+    legend1->AddEntry(fitCombined.get(), "bkg + bw1420", "l");
     legend1->Draw();
 
     c1->Update();
