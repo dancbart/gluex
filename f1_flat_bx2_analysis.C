@@ -103,34 +103,35 @@ void f1_flat_bx2_analysis() {
     bkg->SetParName(1, "bkg_expPar2");
     bkg->SetParName(2, "bkg_expPar3");
     std::unique_ptr<TF1> bw1420 = std::make_unique<TF1>("bw1420", "breitwigner(0)", 1.2, 1.7); // used to have BreitWigner(x, [4], [5])
-    bw1420->SetParName(3, "bw1420_amplitude");
-    bw1420->SetParName(4, "bw1420_width");
-    bw1420->SetParName(5, "bw1420_mass");
+    bw1420->SetParName(0, "bw1420_amplitude");
+    bw1420->SetParName(1, "bw1420_mass");
+    bw1420->SetParName(2, "bw1420_width");
     std::unique_ptr<TF1> fitCombined = std::make_unique<TF1>("fitCombined", "bkg + bw1420", 1.2, 1.7);
-    fitCombined->SetParameter("0", -2.8E4); //  -6.47E0);
-    fitCombined->SetParameter("1", 3.3E4); //  9.29E0);
-    fitCombined->SetParameter("2", -8.2E3); // -2.970E0);
-    fitCombined->SetParameter("3", 145); // 1.609E2
-    fitCombined->SetParameter("4", 1.42); // 1.420E0
-    fitCombined->SetParameter("5", 0.0315); // 7.082E-2
+    fitCombined->SetParameter("bkg_expPar1", -6.47E0); //  -6.47E0);
+    fitCombined->SetParameter("bkg_expPar2", 9.29E0); //  9.29E0);
+    fitCombined->SetParameter("bkg_expPar3", -2.970E0); // -2.970E0);
+    fitCombined->SetParameter("bw1420_amplitude", 145); // 1.609E2
+    fitCombined->SetParameter("bw1420_mass", 1.42); // 1.420E0
+    fitCombined->SetParameter("bw1420_width", 7.082E-2); // 7.082E-2
     fitCombined->SetLineColor(kMagenta);
     fitCombined->SetLineWidth(2);
     fitCombined->SetLineStyle(4);
     h1->Fit(fitCombined.get(), "RV");
 
-    // bkg->SetParameter(0, fitCombined->GetParameter("bkg_expPar1")); // 
-    // bkg->SetParameter(1, fitCombined->GetParameter("bkg_expPar2")); // 
-    // bkg->SetParameter(2, fitCombined->GetParameter("bkg_expPar3")); // 
-    // bkg->SetLineColor(kCyan);
-    // bkg->SetLineWidth(2);
-    // bkg->SetLineStyle(2);
 
-    // bw1420->SetParameter(3, fitCombined->GetParameter("bw1420_amplitude")); //
-    // bw1420->SetParameter(4, fitCombined->GetParameter("bw1420_mass")); //
-    // bw1420->SetParameter(5, fitCombined->GetParameter("bw1420_width")); //
-    // bw1420->SetLineColor(kGreen);
-    // bw1420->SetLineWidth(2);
-    // bw1420->SetLineStyle(2);
+    bkg->SetParameter(0, fitCombined->GetParameter("bkg_expPar1")); // 
+    bkg->SetParameter(1, fitCombined->GetParameter("bkg_expPar2")); // 
+    bkg->SetParameter(2, fitCombined->GetParameter("bkg_expPar3")); // 
+    bkg->SetLineColor(kCyan);
+    bkg->SetLineWidth(2);
+    bkg->SetLineStyle(2);
+
+    bw1420->SetParameter(0, fitCombined->GetParameter("bw1420_amplitude")); //
+    bw1420->SetParameter(1, fitCombined->GetParameter("bw1420_mass")); //
+    bw1420->SetParameter(2, fitCombined->GetParameter("bw1420_width")); //
+    bw1420->SetLineColor(kGreen);
+    bw1420->SetLineWidth(2);
+    bw1420->SetLineStyle(2);
 
     
     // ******** PLOTTING ********
@@ -140,14 +141,14 @@ void f1_flat_bx2_analysis() {
     // h1->GetXaxis()->SetRangeUser(xMin,xMax);
     // h1->GetYaxis()->SetRangeUser(yMin,yMax);
     h1->Draw("E"); // "E"
-    // bkg->Draw("same");
-    // bw1420->Draw("same");
+    bkg->Draw("same");
+    bw1420->Draw("same");
     fitCombined->Draw("same");
     
     auto legend1 = new TLegend(0.75, 0.77, .98, 0.58); //(x_topLeft, y_topLeft, x_bottomRight, y_bottomRight)
     legend1->AddEntry("h1", "Data: ks_m", "l");
-    // legend1->AddEntry(bkg.get(), "fcn: bkg", "l");
-    // legend1->AddEntry(bw1420.get(), "fcn: bw1420", "l");
+    legend1->AddEntry(bkg.get(), "fcn: bkg", "l");
+    legend1->AddEntry(bw1420.get(), "fcn: bw1420", "l");
     legend1->AddEntry(fitCombined.get(), "bkg + bw1420", "l");
     legend1->Draw();
 
