@@ -20,3 +20,6 @@ Exponential function of the form: TMath::Exp([6] + [7] * x + [8] * x * x)
 bkg->SetParameter(6, 1); // ?
 bkg->SetParameter(7, 1); // ?
 bkg->SetParameter(8, 1); // ?
+
+
+Markus Diefenthaler
