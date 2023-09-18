@@ -1,0 +1,25 @@
+Parameters to use in various fits:
+
+f1 Analysis:
+
+Procedure: change 'SetParameter' to 'FixParameter' for parameters you think are close.
+Then read-off values for the other parameters.  Then change 'FixParameter' back to 'SetParameter',
+set the values you read-off (change those to 'FixParameter'), and let the ones you had fixed float
+(i.e. change the fixed ones to 'SetParameter').  Run the code and see if the fit is better, then collect the
+revised values for the parameters you had fixed.
+
+Finally, put the values you have collected into the code, set all parameters to 'SetParameter', and run the code.
+Hopefully the fit will be better.  If not, repeat the procedure, or just try different parameters or ask 
+for help.
+
+Breit Wigner function of the form: TMath::BreitWigner(x, [4], [5])
+Breit Wigner function->SetParameter(1, 1.42); // mass
+Breit Wigner function->SetParameter(2, 0.05); // width
+
+Exponential function of the form: TMath::Exp([6] + [7] * x + [8] * x * x)
+bkg->SetParameter(6, 1); // ?
+bkg->SetParameter(7, 1); // ?
+bkg->SetParameter(8, 1); // ?
+
+
+Markus Diefenthaler
