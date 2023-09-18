@@ -1,25 +1,13 @@
 Parameters to use in various fits:
 
+************
+
 f1 Analysis:
 
-Procedure: change 'SetParameter' to 'FixParameter' for parameters you think are close.
-Then read-off values for the other parameters.  Then change 'FixParameter' back to 'SetParameter',
-set the values you read-off (change those to 'FixParameter'), and let the ones you had fixed float
-(i.e. change the fixed ones to 'SetParameter').  Run the code and see if the fit is better, then collect the
-revised values for the parameters you had fixed.
-
-Finally, put the values you have collected into the code, set all parameters to 'SetParameter', and run the code.
-Hopefully the fit will be better.  If not, repeat the procedure, or just try different parameters or ask 
-for help.
-
-Breit Wigner function of the form: TMath::BreitWigner(x, [4], [5])
-Breit Wigner function->SetParameter(1, 1.42); // mass
-Breit Wigner function->SetParameter(2, 0.05); // width
-
-Exponential function of the form: TMath::Exp([6] + [7] * x + [8] * x * x)
-bkg->SetParameter(6, 1); // ?
-bkg->SetParameter(7, 1); // ?
-bkg->SetParameter(8, 1); // ?
-
-
-Markus Diefenthaler
+std::unique_ptr<TF1> fitCombined = std::make_unique<TF1>("fitCombined", "bkg + bw1420", 1.2, 1.7);
+fitCombined->SetParameter("bkg_expPar1", -6.47E0); //  -6.47E0);
+fitCombined->SetParameter("bkg_expPar2", 9.29E0); //  9.29E0);
+fitCombined->SetParameter("bkg_expPar3", -2.970E0); // -2.970E0);
+fitCombined->SetParameter("bw1420_amplitude", 145); // 1.609E2
+fitCombined->SetParameter("bw1420_mass", 1.42); // 1.420E0
+fitCombined->SetParameter("bw1420_width", 7.082E-2); // 7.082E-2
