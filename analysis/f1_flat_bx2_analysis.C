@@ -73,10 +73,10 @@ void f1_flat_bx2_analysis() {
     
     auto reject_delta = "pip1p_m > 1.4"; // delta++ cut
     auto reject_lambda = "pkm_m > 1.9"; // lambda cut
-    auto keep_kstar_plus = "kspip1_m >= 0.8 && kspip1_m <= 1.0";
-    auto keep_kstar_zero = "kmpip1_m >= 0.8 && kmpip1_m <= 1.0";
-    auto reject_kstar_plus = "kspip1_m <= 0.8 || kspip1_m >= 1.0";
-    auto reject_kstar_zero = "kmpip1_m <= 0.8 || kmpip1_m >= 1.0";
+    auto keep_kstar_plus = "kspip1_m >= 0.8 && kspip1_m <= 1.0"; // aka "charged" K*(KsPi+)
+    auto keep_kstar_zero = "kmpip1_m >= 0.8 && kmpip1_m <= 1.0"; // aka "neutral" K*(K-Pi+)
+    auto reject_kstar_plus = "kspip1_m <= 0.8 || kspip1_m >= 1.0"; // aka "charged" K*(KsPi+)
+    auto reject_kstar_zero = "kmpip1_m <= 0.8 || kmpip1_m >= 1.0"; // aka "neutral" K*(K-Pi+)
 
     // Apply cuts; make new dataframe
     auto cut_df = df2.Filter("pathlength_sig > 5")
@@ -87,7 +87,7 @@ void f1_flat_bx2_analysis() {
     
     // ********** HISTOGRAMS **********
     
-    auto h1 = cut_df.Filter(reject_kstar_plus).Filter(keep_kstar_zero).Histo1D({"h1", "f1_m (aka pipkmks_m)", 60, 1.2, 1.7}, "f1_m");
+    auto h1 = cut_df.Filter(keep_kstar_plus).Filter(reject_kstar_zero).Histo1D({"h1", "f1_m (select charged K*, reject neutral K*)", 60, 1.2, 1.7}, "f1_m");
     h1->SetLineColor(kBlack);
     //auto h2 = cut_df.Filter(keep_kstar_plus).Filter(keep_kstar_zero).Histo1D({"h2", "f1", 60, 1.1, 1.7}, "f1_m");
     // auto xMin = 1.0;
@@ -153,7 +153,7 @@ void f1_flat_bx2_analysis() {
     legend1->Draw();
 
     c1->Update();
-    c1->SaveAs("plots/f1_m_fit.png");
+    c1->SaveAs("../plots/f1_m_fit.png");
 
 // ********** END OF PROGRAM **********
 
