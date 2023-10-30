@@ -20,8 +20,20 @@ pol2->SetLineColor(kCyan);
 pol2->SetLineWidth(2);
 pol2->SetLineStyle(2);
 
-'breitwigner(0)' is a substitute for??: [0]/(pow(x*x-[1]*[1],2)+[1]*[1]*[2]*[2]) ? Need to check.
+// 'breitwigner(0)' is a substitute for??: [0]/(pow(x*x-[1]*[1],2)+[1]*[1]*[2]*[2]) ? Need to check.
 'pol2(3)' is a substitute for: [3]+[4]*x+[5]*x*x
+
+// 'gaus(0)' is a substitute for: [0]*exp(-0.5*((x-[1])/[2])**2) and (0) means start numbering parameters at 0
+std::unique_ptr<TF1> fitGaus = std::make_unique<TF1>("fitGaus", "gaus(0)", 1.2, 1.8);
+
+// 'expo(3)' is a substitute for: exp([3]+[4]*x).  Not used here.
+std::unique_ptr<TF1> fitExpo = std::make_unique<TF1>("fitExpo", "expo(3)", 1.2, 1.8);
+
+// 'pol1(3)' is a substitute for: [3]+[4]*x ??need to check
+std::unique_ptr<TF1> fitPol1 = std::make_unique<TF1>("fitPol1", "pol1(3)", 1.2, 1.8);
+
+// 'pol2(3)' is a substitute for: [3]+[4]*x+[5]*x*x
+std::unique_ptr<TF1> fitPol2 = std::make_unique<TF1>("fitPol2", "pol2(3)", 1.2, 2.8);
 
 std::unique_ptr<TF1> bkg = std::make_unique<TF1>("bkg", "TMath::Exp([0] + [1] * x + [2] * x * x)", 1.2, 1.7);
 bkg->SetParName(0, "bkg_expPar1");
