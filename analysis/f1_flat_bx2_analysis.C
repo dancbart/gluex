@@ -104,12 +104,13 @@ void f1_flat_bx2_analysis() {
     // bw1420->SetParName(0, "bw1420_amplitude");
     // bw1420->SetParName(1, "bw1420_mass");
     // bw1420->SetParName(2, "bw1420_width");
-    std:unique_ptr<TF1> voigtian = std::make_unique<TF1>("voigtian", "TMath::Voigt(x - [0], [1], [2])", 1.2, 1.7);
-    voigtian->SetParName(0, "voigtian_mean"); // median?
-    voigtian->SetParName(1, "voigtian_sigma"); // 'sigma' is the bw width
-    voigtian->SetParName(2, "voigtian_width"); // 'lg' aka "width" is the Gaussian width (detector resolution)
+    std:unique_ptr<TF1> voigtian = std::make_unique<TF1>("voigtian", "[0]*TMath::Voigt(x - [1], [2], [3])", 1.2, 1.7);
+    voigtian->SetParName(0, "voigtian_amplitude");
+    voigtian->SetParName(1, "voigtian_mean"); // 'mean' is the offset that places the peak at the correct position, where we know the resonance to be.  It represents the particles mass.
+    voigtian->SetParName(2, "voigtian_sigma"); // 'sigma' is the gaussian width (detector resolution)
+    voigtian->SetParName(3, "voigtian_width"); // 'lg' aka "lorentz gamma" is the width of the breit-wigner (natural width of the resonance)
 
-    // std::unique_ptr<TF1> RooVoigtian = std::make_unique<TF1>("RooVoigtian", "ROOT::RooVoigtian(x, [0], [1], [2])", 1.2, 1.7); // 'doFast use the faster look-up-table-based method for the evaluation of the complex error function.
+    // std::unique_ptr<TF1> RooVoigtian = std::make_u nique<TF1>("RooVoigtian", "ROOT::RooVoigtian(x, [0], [1], [2])", 1.2, 1.7); // 'doFast use the faster look-up-table-based method for the evaluation of the complex error function.
     // RooVoigtian->SetParName(0, "RooVoigtian_mean");
     // RooVoigtian->SetParName(1, "RooVoigtian_width");
     // RooVoigtian->SetParName(2, "RooVoigtian_sigma");
@@ -125,9 +126,10 @@ void f1_flat_bx2_analysis() {
     // fitCombined->SetParameter("bw1420_mass", 1.42); // 1.420E0
     // fitCombined->SetParameter("bw1420_width", 7.082E-2); // 7.082E-2
     
-    fitCombined->SetParameter("voigtian_mean", 1.4E0); // 
-    fitCombined->SetParameter("voigtian_sigma", 2.000E0); // 
-    fitCombined->SetParameter("voigtian_width", -4.998E3); // 
+    fitCombined->SetParameter("voigtian_amplitude", 4.5E2); //
+    fitCombined->SetParameter("voigtian_mean", 1.45807E0); // 
+    fitCombined->SetParameter("voigtian_sigma", 6.12880E-02); // detector resolution (this is part of the gaussian component of the voigtian)
+    fitCombined->SetParameter("voigtian_width", 3.81110E-06); // 'lg' here corresponds to the breit wigner width (this is part of the lorentzian component of the voigtian).  I think the 'l' in 'lg' stands for "lorentzian-gamma"
     
     // fitCombined->SetParameter("RooVoigtian_mean", 1.285); // 1.420E0
     // fitCombined->SetParameter("RooVoigtian_width", 0.25); // 7.082E-2
@@ -160,9 +162,10 @@ void f1_flat_bx2_analysis() {
     // RooVoigtian->SetLineWidth(2);
     // RooVoigtian->SetLineStyle(2);
 
-    voigtian->SetParameter(0, fitCombined->GetParameter("voigtian_mean")); //
-    voigtian->SetParameter(1, fitCombined->GetParameter("voigtian_sigma")); //
-    voigtian->SetParameter(2, fitCombined->GetParameter("voigtian_width")); //
+    voigtian->SetParameter(0, fitCombined->GetParameter("voigtian_amplitude")); //
+    voigtian->SetParameter(1, fitCombined->GetParameter("voigtian_mean")); //
+    voigtian->SetParameter(2, fitCombined->GetParameter("voigtian_sigma")); //
+    voigtian->SetParameter(3, fitCombined->GetParameter("voigtian_width")); //
     voigtian->SetLineColor(kGreen);
     voigtian->SetLineWidth(2);
     voigtian->SetLineStyle(2);
