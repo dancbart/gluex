@@ -1,4 +1,17 @@
 
+// Last working version of fitFcnCombined:
+
+// A version of bw1420 + bkg which roughly worked had these parameters:
+std::unique_ptr<TF1> fitCombined = std::make_unique<TF1>("fitCombined", "bkg + bw1420", 1.2, 1.7);
+fitCombined->SetParameter("bkg_expPar1", -6.47E0); //  -6.47E0);
+fitCombined->SetParameter("bkg_expPar2", 9.29E0); //  9.29E0);
+fitCombined->SetParameter("bkg_expPar3", -2.970E0); // -2.970E0);
+fitCombined->SetParameter("bw1420_amplitude", 145); // 1.609E2
+fitCombined->SetParameter("bw1420_mass", 1.42); // 1.420E0
+fitCombined->SetParameter("bw1420_width", 7.082E-2); // 7.082E-2
+
+////////////////////////// Other functions //////////////////////////
+
 std::unique_ptr<TF1> bw = std::make_unique<TF1>("bw", "breitwigner(0)", 1.2, 1.7);
 bw->SetParName(0, "bw_amplitude");
 bw->SetParName(1, "bw_mass");
