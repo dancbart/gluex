@@ -85,7 +85,7 @@ void f1_flat_bx2_analysis() {
     
     // ********** HISTOGRAMS **********
     
-    auto h1 = cut_df.Filter(reject_kstar_plus).Filter(keep_kstar_zero).Histo1D({"h1", "f1_m (reject charged K*, select neutral K*)", 60, 1.2, 1.7}, "f1_m");
+    auto h1 = cut_df.Filter(keep_kstar_plus).Filter(reject_kstar_zero).Histo1D({"h1", "f1_m (keep charged K*, reject neutral K*)", 60, 1.2, 1.7}, "f1_m");
     h1->SetLineColor(kBlack);
     //auto h2 = cut_df.Filter(keep_kstar_plus).Filter(keep_kstar_zero).Histo1D({"h2", "f1", 60, 1.1, 1.7}, "f1_m");
     // auto xMin = 1.0;
@@ -131,6 +131,7 @@ void f1_flat_bx2_analysis() {
     fitCombined->SetParameter("voigtian_sigma", 1.0E-02); // detector resolution (this is part of the gaussian component of the voigtian)
     fitCombined->SetParameter("voigtian_width", 3.81110E-06); // 'lg' here corresponds to the breit wigner width (this is part of the lorentzian component of the voigtian).  I think the 'l' in 'lg' stands for "lorentzian-gamma"    
     
+    // When using 'FixParameter' use index number, not name.  Compiler will complain if you use name.
     fitCombined->FixParameter(5, 1.0E-02); // detector resolution (this is part of the gaussian component of the voigtian)")
 
     fitCombined->SetLineColor(kMagenta);
