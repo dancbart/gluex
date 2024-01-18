@@ -77,6 +77,7 @@ void f1_flat_bx2_analysis_secondVoigtian() {
     auto keep_kstar_zero = "kmpip1_m >= 0.8 && kmpip1_m <= 1.0"; // aka "neutral" K*(K-Pi+)
     auto reject_kstar_plus = "kspip1_m <= 0.8 || kspip1_m >= 1.0"; // aka "charged" K*(KsPi+)
     auto reject_kstar_zero = "kmpip1_m <= 0.8 || kmpip1_m >= 1.0"; // aka "neutral" K*(K-Pi+)
+    // addl cut on pip pim mass 1/9/24
 
     // Apply cuts; make new dataframe
     auto cut_df = df2.Filter("pathlength_sig > 5")
