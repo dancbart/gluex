@@ -1,4 +1,4 @@
-// Description: Analysis of f1(1285) resonance in flat bx2 data.
+// Description: Analysis of f1(1420) resonance in flat bx2 data.
 
 void f1_flat_bx2_analysis() {
 
