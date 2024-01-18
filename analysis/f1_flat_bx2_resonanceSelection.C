@@ -87,8 +87,8 @@ void f1_flat_bx2_resonanceSelection() {
     // ********** HISTOGRAMS **********
     
     // auto h1 = cut_df.Filter(keep_kstar_plus).Filter(reject_kstar_zero).Histo1D({"h1", "f1_m (keep charged K*, reject neutral K*)", 60, 1.2, 1.7}, "f1_m");
-    auto h1 = cut_df.Histo1D({"h1", "k_short w/pathlength_sig > 5", 60, 0.3, 0.7}, "ks_m");
-    auto h2 = df2.Histo1D({"h1", "k_short w/pathlength_sig > 5", 60, 0.3, 0.7}, "ks_m");
+    auto h1 = cut_df.Histo1D({"h1", "k_short w/pathlength_sig > 5", 60, 0.45, 0.55}, "ks_m");
+    auto h2 = df2.Histo1D({"h1", "k_short w/pathlength_sig > 5", 60, 0.45, 0.55}, "ks_m");
     h1->SetLineColor(kBlack);
     h2->SetLineColor(kRed);
     //auto h2 = cut_df.Filter(keep_kstar_plus).Filter(keep_kstar_zero).Histo1D({"h2", "f1", 60, 1.1, 1.7}, "f1_m");
