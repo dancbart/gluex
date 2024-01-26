@@ -78,6 +78,7 @@ void f1_flat_bx2_resonanceSelection() {
     auto keep_kstar_zero = "kmpip1_m >= 0.8 && kmpip1_m <= 1.0"; // aka "neutral" K*(K-Pi+)
     auto reject_kstar_plus = "kspip1_m <= 0.8 || kspip1_m >= 1.0"; // aka "charged" K*(KsPi+)
     auto reject_kstar_zero = "kmpip1_m <= 0.8 || kmpip1_m >= 1.0"; // aka "neutral" K*(K-Pi+)
+    auto select_kShort = "ks_m >= 0.45 && ks_m <= 0.55";
 
     // Apply cuts; make new dataframe
     auto cut_df = df2.Filter("pathlength_sig > 5");
@@ -87,8 +88,8 @@ void f1_flat_bx2_resonanceSelection() {
     // ********** HISTOGRAMS **********
     
     // auto h1 = cut_df.Filter(keep_kstar_plus).Filter(reject_kstar_zero).Histo1D({"h1", "f1_m (keep charged K*, reject neutral K*)", 60, 1.2, 1.7}, "f1_m");
-    auto h1 = cut_df.Histo1D({"h1", "k_short w/pathlength_sig > 5", 60, 0.45, 0.55}, "ks_m");
-    auto h2 = df2.Histo1D({"h1", "k_short w/pathlength_sig > 5", 60, 0.45, 0.55}, "ks_m");
+    auto h1 = cut_df.Filter(select_kShort).Histo1D({"h1", "k_short w/pathlength_sig > 5", 60, 0.3, 0.7}, "ks_m");
+    auto h2 = df2.Filter(select_kShort).Histo1D({"h1", "k_short w/pathlength_sig > 5", 60, 0.3, 0.7}, "ks_m");
     h1->SetLineColor(kBlack);
     h2->SetLineColor(kRed);
     //auto h2 = cut_df.Filter(keep_kstar_plus).Filter(keep_kstar_zero).Histo1D({"h2", "f1", 60, 1.1, 1.7}, "f1_m");
