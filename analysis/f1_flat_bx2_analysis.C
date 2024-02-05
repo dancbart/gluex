@@ -9,6 +9,18 @@ void analysis(double f1_mMin, double f1_mMax, int plotIndex) {
 
     // Define resonances; add columns to dataframe for each....using '.Define' method
     auto df2 = df
+                 // pi_plus (pip2).  i.e. one of two components of the kShort.  the other is pi_minus (pim)
+                 // total mass:
+                 .Define("pip2_m", "sqrt(pip2_E*pip2_E - pip2_px*pip2_px - pip2_py*pip2_py - pip2_pz*pip2_pz)")
+                 // Mass squared:
+                 .Define("pip2_m2", "pip2_E*pip2_E - pip2_px*pip2_px - pip2_py*pip2_py - pip2_pz*pip2_pz")
+
+                 // pi_minus (pim).  i.e. one of two components of the kShort.  the other is pi_plus (pip2)
+                 // total mass:
+                 .Define("pim_m", "sqrt(pim_E*pim_E - pim_px*pim_px - pim_py*pim_py - pim_pz*pim_pz)")
+                 // Mass squared:
+                 .Define("pim_m2", "pim_E*pim_E - pim_px*pim_px - pim_py*pim_py - pim_pz*pim_pz")
+                 
                  // k_short (pip2 & pim)
                  .Define("pip2pim_E", "pip2_E + pim_E") // 4-momentum
                     .Alias("ks_E", "pip2pim_E")
@@ -30,7 +42,7 @@ void analysis(double f1_mMin, double f1_mMax, int plotIndex) {
                  // total mass
                  .Define("pip1p_m", "sqrt(pip1p_E*pip1p_E - pip1p_px*pip1p_px - pip1p_py*pip1p_py - pip1p_pz*pip1p_pz)")
                  
-                 // lambda (proton' & k_minus -- 1500, 1900?)
+                 // lambda (proton & k_minus -- 1500, 1900?)
                  .Define("pkm_E", "p_E + km_E") // 4-momentum
                  .Define("pkm_px", "p_px + km_px")
                  .Define("pkm_py", "p_py + km_py")
@@ -38,13 +50,15 @@ void analysis(double f1_mMin, double f1_mMax, int plotIndex) {
                  // total mass:
                  .Define("pkm_m" , "sqrt(pkm_E*pkm_E - pkm_px*pkm_px - pkm_py*pkm_py - pkm_pz*pkm_pz)")
 
-                 // k_minus * pip1
+                 // k_minus & pip1
                  .Define("kmpip1_E", "km_E + pip1_E") // 4-momentum
                  .Define("kmpip1_px", "km_px + pip1_px")
                  .Define("kmpip1_py", "km_py + pip1_py")
                  .Define("kmpip1_pz", "km_pz + pip1_pz")
                  // total mass:
                  .Define("kmpip1_m", "sqrt(kmpip1_E*kmpip1_E - kmpip1_px*kmpip1_px - kmpip1_py*kmpip1_py - kmpip1_pz*kmpip1_pz)")
+                 // total mass squared:
+                 .Define("kmpip1_m2", "kmpip1_E*kmpip1_E - kmpip1_px*kmpip1_px - kmpip1_py*kmpip1_py - kmpip1_pz*kmpip1_pz")
 
                  // k_short & pip1
                  .Define("kspip1_E", "ks_E + pip1_E") // 4-momentum
@@ -53,8 +67,10 @@ void analysis(double f1_mMin, double f1_mMax, int plotIndex) {
                  .Define("kspip1_pz", "ks_pz + pip1_pz")
                  // total mass:
                  .Define("kspip1_m", "sqrt(kspip1_E*kspip1_E - kspip1_px*kspip1_px - kspip1_py*kspip1_py - kspip1_pz*kspip1_pz)")
+                 // total mass squared:
+                 .Define("kspip1_m2", "kspip1_E*kspip1_E - kspip1_px*kspip1_px - kspip1_py*kspip1_py - kspip1_pz*kspip1_pz")
 
-                 // f1 (pip1 & km & ks[pip2 + pim])
+                 // f1 (pip1 & km & ks{pip2 + pim]}
                  .Define("pipkmks_E", "pip1_E + km_E + ks_E") // 4-momentum
                      .Alias("f1_E", "pipkmks_E")
                  .Define("pipkmks_px", "pip1_px + km_px + ks_px")
@@ -84,28 +100,42 @@ void analysis(double f1_mMin, double f1_mMax, int plotIndex) {
     auto select_f1 = [=](double f1_m) { return f1_m >= f1_mMin && f1_m <= f1_mMax; };
 
     // Apply cuts; make new dataframe
-    auto cut_df = df2.Filter("pathlength_sig > 5")
-                     .Filter(reject_delta)
+    auto cut_df = df2.Filter(reject_delta)
+                     .Filter(reject_lambda)
+                     .Filter(select_f1, {"f1_m"})
+                     .Filter("pathlength_sig > 5");
+                    //  .Filter(select_kShort);
+
+    // Other cuts (in case I want two histograms on the same canvas, for example)
+    auto cut_df_alternate = df2.Filter(reject_delta)
                      .Filter(reject_lambda)
                      .Filter(select_f1, {"f1_m"});
+                    //  .Filter("pathlength_sig > 5");
                     //  .Filter(select_kShort);
     
-    // ********** HISTOGRAMS **********
+    // ********** 1D HISTOGRAMS **********
     
-    // make Dalitz plot, i.e. 2D m^2 vs m^2, per Tyler/Justin.  kshort_pi and the k- pi.  20 mev per justin.  Maybe start at 1.2?  thel loop over kk pi masses, .  See how dalitz plot evolves ad funciotn of k kp mas.
-    // Tyler 1/22/24: Confidence Level Distribution, apply the cut
-        // i.e. plot kinematics plot confidence
-
     // auto h1 = cut_df.Filter(keep_kstar_plus).Histo1D({"h1", "f1_m (keep charged K only)", 60, 1.2, 1.7}, "f1_m");
     // h1->SetLineColor(kBlack);
-    //auto h2 = cut_df.Filter(keep_kstar_plus).Filter(keep_kstar_zero).Histo1D({"h2", "f1", 60, 1.1, 1.7}, "f1_m");
     // auto xMin = 1.0;
     // auto xMax = 1.8;
     // auto yMin = 0;
     // auto yMax = 15000;
 
-    auto h2 = cut_df.Histo2D({"h2", "Select f1: 1.3 - 1.5)", 200, 0.6, 1.1, 200, 0.6, 1.1}, "kspip1_m", "kmpip1_m");
-    h2->SetLineColor(kGreen);
+    // 1D histogram of M(pip2 + pim) (mass of Ks)
+    auto h1 = cut_df.Histo1D({"hNew", Form("M(pip2 + pim).  Bins of: pipKmKs invariant mass (GeV): %.2f - %.2f", f1_mMin, f1_mMax), 60, 0.400, 0.600}, "ks_m");
+    h1->SetLineColor(kRed);
+    // 1D histogram of M(pip2 + pim) (mass of Ks) DIFFERENT CUTS!
+    auto h2 = cut_df_alternate.Histo1D({"hNew", Form("M(pip2 + pim).  Bins of: pipKmKs invariant mass (GeV): %.2f - %.2f", f1_mMin, f1_mMax), 60, 0.400, 0.600}, "ks_m");
+    h2->SetLineColor(kBlue);
+
+    // ********** DALITZ PLOTS ********** (i.e. 2D HISTOGRAMS)
+
+    // // auto h3 = cut_df.Histo2D({"h3", "Select f1: 1.3 - 1.5)", 200, 0.6, 1.1, 200, 0.6, 1.1}, "kspip1_m", "kmpip1_m");
+    // // create histogram where the histogram label is a string that is a function of the f1 mass range
+    // auto h3 = cut_df.Histo2D({"h2", Form("Bins of: pipKmKs invariant mass (GeV): %.2f - %.2f", f1_mMin, f1_mMax), 40, 0.100, 0.200, 40, 0.100, 0.200}, "pip2_m2", "pim_m2");
+    // // auto h3 = cut_df.Histo2D({"h3", "", 200, 0.6, 1.1, 200, 0.6, 1.1}, "kspip1_m", "kmpip1_m");
+    // h3->SetLineColor(kGreen);
 
 
     // ********** FITTING **********
@@ -209,28 +239,36 @@ void analysis(double f1_mMin, double f1_mMax, int plotIndex) {
     
     // ******** PLOTTING ********
 
-    // std::shared_ptr<TCanvas> c1 = std::make_shared<TCanvas>("c1", "f1_m_fit", 800, 600);
+    std::shared_ptr<TCanvas> c1 = std::make_shared<TCanvas>("c1", "M(pi+pi-)", 800, 600);
     // New vanvas for histogram H2
-    std::shared_ptr<TCanvas> c2 = std::make_shared<TCanvas>("c2", "Dalitz Plot", 800, 600);
+    // std::shared_ptr<TCanvas> c2 = std::make_shared<TCanvas>("c2", "Dalitz Plot", 850, 650);
     
-    TString plotName = Form("../plots/dalitz_plot_%d.png", plotIndex);
+    TString plotName = Form("../plots/M(pip2 + pim)_%d.png", plotIndex);
 
     // h1->GetXaxis()->SetRangeUser(xMin,xMax);
     // h1->GetYaxis()->SetRangeUser(yMin,yMax);
     // h1->Draw("E"); // "E"
+    // draw the histogram as a histogram instead of data points
+    h1->Draw("HIST");
+    h2->Draw("same");
     // options to draw histogram with are: "E" (error bars), "H" (histogram), "L" (line), "P" (markers), "C" (curve), "B" (bar chart), "A" (area), "9" (same as "H" but fills with a color), "hist" (same as "H"), "histc" (same as "C"), "same" (superimpose on previous picture), "nostack" (don't stack bars), "nol" (don't draw the line), "noc" (don't draw the markers), "nofunction" (don't draw the function), "text" (draw bin contents as text), "goff" (graphics off), "e1" (draw error bars only), "e2" (draw error rectangles only), "e3" (draw error bars and rectangles), "e4" (draw a fill area through the end points of the vertical error bars), "e5" (draw a smooth fill area through the end points of the vertical error bars), "e6" (draw a smooth fill area through the end points of the error bars), "e7" (draw a fill area through the end points of the error bars)
     // and options to draw the dalitz plot (h2) with are: "COLZ" (draw a color plot representing the cell contents), "CONTZ" (draw a contour plot representing the cell contents), "LEGO" (draw a lego plot representing the cell contents), "SURF" (draw a surface plot representing the cell contents), "SURF1" (draw a surface plot representing the cell contents, with hidden line removal), "SURF2" (draw a surface plot representing the cell contents, with color representation of the cell contents), "SURF3" (draw a surface plot representing the cell contents, with color representation of the cell contents and hidden line removal), "SURF4" (draw a surface plot representing the cell contents, with Gouraud shading), "SURF5" (draw a surface plot representing the cell contents, with color representation of the cell contents and Gouraud shading), "SURF6" (draw a surface plot representing the cell contents, with color representation of the cell contents, Gouraud shading and hidden line removal)
-    h2->Draw("COLZ");
+    // h2->Draw("COLZ");
     // axes labels
-    h2->GetXaxis()->SetTitle("K*_{S}#pi^{+} mass (GeV)");
-    h2->GetYaxis()->SetTitle("K*^{-}#pi^{+} mass (GeV)");
+    // h2->GetXaxis()->SetTitle("K_{S}#pi^{+} mass Squared (GeV^{2})");
+    // h2->GetYaxis()->SetTitle("K^{-}#pi^{+} mass Squared (GeV^{2})");
+    // h2->GetXaxis()->SetTitle("#pi^{+} mass Squared (GeV^{2})");
+    // h2->GetYaxis()->SetTitle("#pi^{-} mass Squared (GeV^{2})");
     // bkg->Draw("same");
     // bw1420->Draw("same");
     // voigtian->Draw("same");
     // voigtian2->Draw("same");
     // fitCombined->Draw("same");
+
+
+    auto legend1 = new TLegend(0.75, 0.77, .98, 0.58); //(x_topLeft, y_topLeft, x_bottomRight, y_bottomRight)
     
-    // auto legend1 = new TLegend(0.75, 0.77, .98, 0.58); //(x_topLeft, y_topLeft, x_bottomRight, y_bottomRight)
+    
     // legend1->AddEntry("h1", "Data, no fitting", "l");
     // Legend for h2
     // auto legend2 = new TLegend(0.75, 0.77, .98, 0.58); //(x_topLeft, y_topLeft, x_bottomRight, y_bottomRight)
@@ -241,14 +279,14 @@ void analysis(double f1_mMin, double f1_mMax, int plotIndex) {
     // legend1->AddEntry(voigtian.get(), "fcn: voigtian", "l");
     // legend1->AddEntry(voigtian2.get(), "fcn: voigtian2", "l");
     // legend1->AddEntry(fitCombined.get(), "bkg + voigtan", "l");
-    // legend1->Draw();
+    legend1->Draw();
     // legend2->Draw();
 
-    // c1->Update();
-    // c1->SaveAs("../plots/f1_m_fit.png");
-    c2->Update();
-    c2->SaveAs(plotName);
-    // c2->SaveAs("../plots/dalitz_plot.png");
+    c1->Update();
+    c1->SaveAs(plotName);
+    // c2->Update();
+    // c2->SaveAs(plotName);
+    // // c2->SaveAs("../plots/dalitz_plot.png");
 
 // ********** END OF PROGRAM **********
 
@@ -271,7 +309,7 @@ void analysis(double f1_mMin, double f1_mMax, int plotIndex) {
 void f1_flat_bx2_analysis() {
     // For loop running through "analysis" for different ranges of f1 masses
     // create 2D array of masses from 1.1 to 2.0 GeV in 100 MeV steps
-    for (int i = 0; i < 10; i++) {
+    for (int i = 5; i < 6; i++) {
         int plotIndex = i;
         double f1_mMin = 1.1 + i * 0.1;
         double f1_mMax = 1.2 + i * 0.1;
