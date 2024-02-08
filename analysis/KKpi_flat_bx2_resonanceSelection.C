@@ -1,6 +1,7 @@
-// Description: Analysis of f1(1285) resonance in flat bx2 data.
+// Description: Resonance selection in flat bx2 data for f1(1420) analysis.
+// k-short resonance (pip2 & pim)
 
-void f1_flat_bx2_analysis_secondVoigtian() {
+void KKpi_flat_bx2_resonanceSelection() {
 
     ROOT::RDataFrame df("pipkmks__B4_M16", "pipkmks_flat_bestX2_2017.root");
 
@@ -77,17 +78,20 @@ void f1_flat_bx2_analysis_secondVoigtian() {
     auto keep_kstar_zero = "kmpip1_m >= 0.8 && kmpip1_m <= 1.0"; // aka "neutral" K*(K-Pi+)
     auto reject_kstar_plus = "kspip1_m <= 0.8 || kspip1_m >= 1.0"; // aka "charged" K*(KsPi+)
     auto reject_kstar_zero = "kmpip1_m <= 0.8 || kmpip1_m >= 1.0"; // aka "neutral" K*(K-Pi+)
-    // addl cut on pip pim mass 1/9/24
+    auto select_kShort = "ks_m >= 0.45 && ks_m <= 0.55";
 
     // Apply cuts; make new dataframe
-    auto cut_df = df2.Filter("pathlength_sig > 5")
-                     .Filter(reject_delta)
-                     .Filter(reject_lambda);
+    auto cut_df = df2.Filter("pathlength_sig > 5");
+                    //  .Filter(reject_delta)
+                    //  .Filter(reject_lambda);
     
     // ********** HISTOGRAMS **********
     
-    auto h1 = cut_df.Filter(keep_kstar_plus).Filter(reject_kstar_zero).Histo1D({"h1", "f1_m (keep charged K*, reject neutral K*)", 60, 1.2, 1.7}, "f1_m");
+    // auto h1 = cut_df.Filter(keep_kstar_plus).Filter(reject_kstar_zero).Histo1D({"h1", "f1_m (keep charged K*, reject neutral K*)", 60, 1.2, 1.7}, "f1_m");
+    auto h1 = cut_df.Filter(select_kShort).Histo1D({"h1", "k_short w/pathlength_sig > 5", 60, 0.3, 0.7}, "ks_m");
+    auto h2 = df2.Filter(select_kShort).Histo1D({"h1", "k_short w/pathlength_sig > 5", 60, 0.3, 0.7}, "ks_m");
     h1->SetLineColor(kBlack);
+    h2->SetLineColor(kRed);
     //auto h2 = cut_df.Filter(keep_kstar_plus).Filter(keep_kstar_zero).Histo1D({"h2", "f1", 60, 1.1, 1.7}, "f1_m");
     // auto xMin = 1.0;
     // auto xMax = 1.8;
@@ -97,25 +101,25 @@ void f1_flat_bx2_analysis_secondVoigtian() {
 
     // ********** FITTING **********
 
-    std::unique_ptr<TF1> bkg = std::make_unique<TF1>("bkg", "TMath::Exp([0] + [1] * x + [2] * x * x)", 1.2, 1.7);
-    bkg->SetParName(0, "bkg_expPar1");
-    bkg->SetParName(1, "bkg_expPar2");
-    bkg->SetParName(2, "bkg_expPar3");
+    // std::unique_ptr<TF1> bkg = std::make_unique<TF1>("bkg", "TMath::Exp([0] + [1] * x + [2] * x * x)", 1.2, 1.7);
+    // bkg->SetParName(0, "bkg_expPar1");
+    // bkg->SetParName(1, "bkg_expPar2");
+    // bkg->SetParName(2, "bkg_expPar3");
     // std::unique_ptr<TF1> bw1420 = std::make_unique<TF1>("bw1420", "breitwigner(0)", 1.2, 1.7); // used to have BreitWigner(x, [4], [5])
     // bw1420->SetParName(0, "bw1420_amplitude");
     // bw1420->SetParName(1, "bw1420_mass");
     // bw1420->SetParName(2, "bw1420_width");
-    std::unique_ptr<TF1> voigtian = std::make_unique<TF1>("voigtian", "[0]*TMath::Voigt(x - [1], [2], [3])", 1.2, 1.7);
-    voigtian->SetParName(0, "voigtian_amplitude");
-    voigtian->SetParName(1, "voigtian_mean"); // 'mean' is the offset that places the peak at the correct position, where we know the resonance to be.  It represents the particles mass.
-    voigtian->SetParName(2, "voigtian_sigma"); // 'sigma' is the gaussian width (detector resolution)
-    voigtian->SetParName(3, "voigtian_width"); // 'lg' aka "lorentz gamma" is the width of the breit-wigner (natural width of the resonance)
+    // std::unique_ptr<TF1> voigtian = std::make_unique<TF1>("voigtian", "[0]*TMath::Voigt(x - [1], [2], [3])", 1.2, 1.7);
+    // voigtian->SetParName(0, "voigtian_amplitude");
+    // voigtian->SetParName(1, "voigtian_mean"); // 'mean' is the offset that places the peak at the correct position, where we know the resonance to be.  It represents the particles mass.
+    // voigtian->SetParName(2, "voigtian_sigma"); // 'sigma' is the gaussian width (detector resolution)
+    // voigtian->SetParName(3, "voigtian_width"); // 'lg' aka "lorentz gamma" is the width of the breit-wigner (natural width of the resonance)
 
-    std::unique_ptr<TF1> voigtian2 = std::make_unique<TF1>("voigtian2", "[0]*TMath::Voigt(x - [1], [2], [3])", 1.2, 1.7);
-    voigtian->SetParName(0, "voigtian_amplitude2");
-    voigtian->SetParName(1, "voigtian_mean2"); // 'mean' is the offset that places the peak at the correct position, where we know the resonance to be.  It represents the particles mass.
-    voigtian->SetParName(2, "voigtian_sigma2"); // 'sigma' is the gaussian width (detector resolution)
-    voigtian->SetParName(3, "voigtian_width2");
+    // std::unique_ptr<TF1> voigtian2 = std::make_unique<TF1>("voigtian2", "[0]*TMath::Voigt(x - [1], [2], [3])", 1.2, 1.7);
+    // voigtian->SetParName(0, "voigtian_amplitude2");
+    // voigtian->SetParName(1, "voigtian_mean2"); // 'mean' is the offset that places the peak at the correct position, where we know the resonance to be.  It represents the particles mass.
+    // voigtian->SetParName(2, "voigtian_sigma2"); // 'sigma' is the gaussian width (detector resolution)
+    // voigtian->SetParName(3, "voigtian_width2");
 
     // std::unique_ptr<TF1> RooVoigtian = std::make_u nique<TF1>("RooVoigtian", "ROOT::RooVoigtian(x, [0], [1], [2])", 1.2, 1.7); // 'doFast use the faster look-up-table-based method for the evaluation of the complex error function.
     // RooVoigtian->SetParName(0, "RooVoigtian_mean");
@@ -124,39 +128,32 @@ void f1_flat_bx2_analysis_secondVoigtian() {
 
     // Combine functions: //
 
-    std::unique_ptr<TF1> fitCombined = std::make_unique<TF1>("fitCombined", "bkg + voigtian", 1.2, 1.7);
+    // std::unique_ptr<TF1> fitCombined = std::make_unique<TF1>("fitCombined", "bkg + voigtian", 1.2, 1.7);
     // fitCombined->SetParameter("bkg_expPar1", -6.47E0); //  -6.47E0);
-    fitCombined->FixParameter(0, -6.47E0); //  -6.47E0);
     // fitCombined->SetParameter("bkg_expPar2", 9.29E0); //  9.29E0);
-    fitCombined->FixParameter(1, 9.29E0); //  9.29E0);
     // fitCombined->SetParameter("bkg_expPar3", -2.970E0); // -2.970E0);
-    fitCombined->FixParameter(2, -2.970E0); // -2.970E0);
     
     // fitCombined->SetParameter("bw1420_amplitude", 145); // 1.609E2
     // fitCombined->SetParameter("bw1420_mass", 1.42); // 1.420E0
     // fitCombined->SetParameter("bw1420_width", 7.082E-2); // 7.082E-2
     
     // fitCombined->SetParameter("voigtian_amplitude", 4.5E2); //
-    fitCombined->FixParameter(3, 4.5E2); //
     // fitCombined->SetParameter("voigtian_mean", 1.45807E0); // 
-    fitCombined->FixParameter(4, 1.45807E0); // 
     // fitCombined->SetParameter("voigtian_sigma", 1.0E-02); // detector resolution (this is part of the gaussian component of the voigtian)
-    fitCombined->FixParameter(5, 1.0E-02); // detector resolution (this is part of the gaussian component of the voigtian)
     // fitCombined->SetParameter("voigtian_width", 3.81110E-06); // 'lg' here corresponds to the breit wigner width (this is part of the lorentzian component of the voigtian).  I think the 'l' in 'lg' stands for "lorentzian-gamma"    
-    fitCombined->FixParameter(6, 3.81110E-06); // 'lg' here corresponds to the breit wigner width (this is part of the lorentzian component of the voigtian).  I think the 'l' in 'lg' stands for "lorentzian-gamma"    
     
-    fitCombined->SetParameter("voigtian_amplitude2", 1.0E0); //
-    fitCombined->SetParameter("voigtian_mean2", 1.0E0); // 
-    fitCombined->SetParameter("voigtian_sigma2", 1.0E0); // detector resolution (this is part of the gaussian component of the voigtian)
-    fitCombined->SetParameter("voigtian_width2", 1.0E0);
+    // fitCombined->SetParameter("voigtian_amplitude2", 4.5E2); //
+    // fitCombined->SetParameter("voigtian_mean2", 1.45807E0); // 
+    // fitCombined->SetParameter("voigtian_sigma2", 1.0E-02); // detector resolution (this is part of the gaussian component of the voigtian)
+    // fitCombined->SetParameter("voigtian_width2", 3.81110E-06);
 
     // When using 'FixParameter' use index number, not name.  Compiler will complain if you use name.
-    fitCombined->FixParameter(5, 1.0E-02); // detector resolution (this is part of the gaussian component of the voigtian)")
+    // fitCombined->FixParameter(5, 1.0E-02); // detector resolution (this is part of the gaussian component of the voigtian)")
 
-    fitCombined->SetLineColor(kMagenta);
-    fitCombined->SetLineWidth(2);
-    fitCombined->SetLineStyle(4);
-    h1->Fit(fitCombined.get(), "RV");
+    // fitCombined->SetLineColor(kMagenta);
+    // fitCombined->SetLineWidth(2);
+    // fitCombined->SetLineStyle(4);
+    // h1->Fit(fitCombined.get(), "RV");
 
 
     // bkg->SetParameter(0, fitCombined->GetParameter("bkg_expPar1")); // 
@@ -181,40 +178,42 @@ void f1_flat_bx2_analysis_secondVoigtian() {
     // voigtian->SetLineWidth(2);
     // voigtian->SetLineStyle(2);
 
-    voigtian2->SetParameter(0, fitCombined->GetParameter("voigtian_amplitude2")); //
-    voigtian2->SetParameter(1, fitCombined->GetParameter("voigtian_mean2")); //
-    voigtian2->SetParameter(2, fitCombined->GetParameter("voigtian_sigma2")); //
-    voigtian2->SetParameter(3, fitCombined->GetParameter("voigtian_width2")); //
-    voigtian2->SetLineColor(kBlack);
-    voigtian2->SetLineWidth(2);
-    voigtian2->SetLineStyle(2);
+    // voigtian2->SetParameter(0, fitCombined->GetParameter("voigtian_amplitude2")); //
+    // voigtian2->SetParameter(1, fitCombined->GetParameter("voigtian_mean2")); //
+    // voigtian2->SetParameter(2, fitCombined->GetParameter("voigtian_sigma2")); //
+    // voigtian2->SetParameter(3, fitCombined->GetParameter("voigtian_width2")); //
+    // voigtian2->SetLineColor(kGreen);
+    // voigtian2->SetLineWidth(2);
+    // voigtian2->SetLineStyle(2);
 
 
     
     // ******** PLOTTING ********
 
-    std::shared_ptr<TCanvas> c1 = std::make_shared<TCanvas>("c1", "f1_m_fit", 800, 600);
+    std::shared_ptr<TCanvas> c1 = std::make_shared<TCanvas>("c1", "kShort_m_fit", 800, 600);
     
     // h1->GetXaxis()->SetRangeUser(xMin,xMax);
     // h1->GetYaxis()->SetRangeUser(yMin,yMax);
-    h1->Draw("E"); // "E"
+    h1->Draw(); // "E"
+    h2->Draw("same");
     // bkg->Draw("same");
-    // bw1420->Draw("same");
+    // // bw1420->Draw("same");
     // voigtian->Draw("same");
-    voigtian2->Draw("same");
-    fitCombined->Draw("same");
+    // // voigtian2->Draw("same");
+    // fitCombined->Draw("same");
     
     auto legend1 = new TLegend(0.75, 0.77, .98, 0.58); //(x_topLeft, y_topLeft, x_bottomRight, y_bottomRight)
-    legend1->AddEntry("h1", "Data: ks_m", "l");
+    legend1->AddEntry(h1.GetPtr(), "ks_m pathlength_sig > 5", "l");
+    legend1->AddEntry(h2.GetPtr(), "ks_m NO pathlength cut", "l");
     // legend1->AddEntry(bkg.get(), "fcn: bkg", "l");
     // legend1->AddEntry(bw1420.get(), "fcn: bw1420", "l");
     // legend1->AddEntry(voigtian.get(), "fcn: voigtian", "l");
-    legend1->AddEntry(voigtian2.get(), "fcn: voigtian2", "l");
-    legend1->AddEntry(fitCombined.get(), "bkg + voigtan", "l");
+    // legend1->AddEntry(voigtian2.get(), "fcn: voigtian2", "l");
+    // legend1->AddEntry(fitCombined.get(), "bkg + voigtan", "l");
     legend1->Draw();
 
     c1->Update();
-    c1->SaveAs("../plots/f1_m_fit.png");
+    c1->SaveAs("../plots/f1_resonanceSelection.png");
 
 // ********** END OF PROGRAM **********
 
@@ -238,6 +237,6 @@ while (true) {
 
 // Runs above analysis:
 int main() {
-    f1_flat_bx2_analysis_secondVoigtian();
+    f1_flat_bx2_resonanceSelection();
     return 0;
 }
