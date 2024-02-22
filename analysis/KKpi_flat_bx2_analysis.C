@@ -1,7 +1,7 @@
 // Description: Analysis of f1(1420) resonance in flat bx2 data.
 
 void analysis(double f1_mMin, double f1_mMax, int plotIndex) {
-
+    gStyle->SetOptStat(0); // don't show statistics box on plots
     ROOT::RDataFrame df("pipkmks__B4_M16", "KKpi_flat_bestX2_2017.root");
 
    
@@ -99,30 +99,42 @@ void analysis(double f1_mMin, double f1_mMax, int plotIndex) {
 
     // Apply cuts; make new dataframe
 
-    // Old cuts (~5/2023).  Used when originally looking for f1(1420) resonance
-    auto cut_df0 = df2.Filter("pkm_m > 1.9") // lambda cut
-                     .Filter("pip1p_m > 1.4") // delta++ cut
-                     .Filter("pathlength_sig > 5");
-                    //  Not sure why these kspip1 and kmpip1 cuts were here.  They don't make much sense, and also cut out almost all the data.
-                    //  .Filter("kspip1_m > 1.1") // kspip1 cut
-                    //  .Filter("kmpip1_m > 1.1") // kmpip1 cut
+    // // Old cuts (~5/2023).  Used when originally looking for f1(1420) resonance
+    // auto cut_df0 = df2.Filter("pkm_m > 1.9") // lambda cut
+    //                  .Filter("pip1p_m > 1.4") // delta++ cut
+    //                  .Filter("pathlength_sig > 5");
+    //                 //  Not sure why these kspip1 and kmpip1 cuts were here.  They don't make much sense, and also cut out almost all the data.
+    //                 //  .Filter("kspip1_m > 1.1") // kspip1 cut
+    //                 //  .Filter("kmpip1_m > 1.1") // kmpip1 cut
 
     // Working cuts (2/2024).  Use these for active analysis
-    auto cut_df1 = df2.Filter(reject_delta)
-                     .Filter(reject_lambda)
-                     .Filter(select_f1, {"f1_m"})
-                     .Filter("pathlength_sig > 5");
+    auto cut_df1 = df2.Filter("pathlength_sig > 5");
+                    //  .Filter(select_f1, {"f1_m"})
+                    //  .Filter(reject_delta);
+                    //  .Filter(reject_lambda);
                     //  .Filter(select_kShort);
 
-    // Other cuts (in case I want two histograms on the same canvas, for example)
-    auto cut_df2 = df2.Filter(reject_delta)
-                     .Filter(reject_lambda)
-                     .Filter(select_f1, {"f1_m"});
-                    //  .Filter("pathlength_sig > 5");
-                    //  .Filter(select_kShort);
+    // // Other cuts (in case I want two histograms on the same canvas, for example)
+    // auto cut_df2 = df2.Filter("pathlength_sig > 5");
+    //                 //  .Filter(reject_delta)
+    //                 //  .Filter(reject_lambda)
+    //                 //  .Filter(select_f1, {"f1_m"})
+    //                 //  .Filter(select_kShort);
     
     // ********** 1D HISTOGRAMS **********
     
+    // 1D histogram for pip1p_m > 1.4" (delta++ cut)
+    auto h1 = cut_df1.Histo1D({"h1", "M(#pi^{+} + proton) (#Delta++ cut)", 60, 1.0, 3.5}, "pip1p_m");
+    h1->GetXaxis()->SetTitle("#Delta++ M(#pi^{+} + proton) (GeV)"); // X-axis label
+    h1->GetYaxis()->SetTitle("Counts"); // Y-axis label
+    h1->SetLineColor(kBlue);
+
+    // 1D histogram for pkm_m > 1.9 (lambda cut)
+    auto h2 = cut_df1.Histo1D({"h2", "M(p + K^{-}) (#Lambda cut)", 60, 1.4, 2.0}, "pkm_m");
+    h2->GetXaxis()->SetTitle("#Lambda: M(proton + K^{-}) (GeV)"); // X-axis label
+    h2->GetYaxis()->SetTitle("Counts"); // Y-axis label
+    h2->SetLineColor(kMagenta);
+
     // auto h1 = cut_df.Filter(keep_kstar_plus).Histo1D({"h1", "f1_m (keep charged K only)", 60, 1.2, 1.7}, "f1_m");
     // h1->SetLineColor(kBlack);
     // auto xMin = 1.0;
@@ -131,8 +143,26 @@ void analysis(double f1_mMin, double f1_mMax, int plotIndex) {
     // auto yMax = 15000;
 
     // 1D Histogram of KKpi full mass range (to see where the f1(1420) is)
-    auto h1 = cut_df1.Histo1D({"h1", Form("Bin of KKpi invariant mass (GeV): %.2f - %.2f", f1_mMin, f1_mMax), 60, 1.2, 1.7}, "f1_m");
-    h1->SetLineColor(kBlue);
+    // auto h1 = cut_df1.Histo1D({"h1", "M(K^{-}K_{s}#pi^{+})", 60, 1.2, 1.7}, "f1_m");
+    // h1->GetXaxis()->SetTitle("M(K^{-}K_{s}#pi^{+}) (GeV)"); // X-axis label
+    // h1->GetYaxis()->SetTitle("Counts"); // Y-axis label
+    // h1->SetLineColor(kBlue);
+    // auto h2 = cut_df1.Filter("pathlength_sig > 5").Filter(reject_delta).Histo1D({"h2", "M(K^{-}K_{s}#pi^{+})", 60, 1.2, 1.7}, "f1_m");
+    // h2->GetXaxis()->SetTitle("M(K^{-}K_{s}#pi^{+}) (GeV)"); // X-axis label
+    // h2->GetYaxis()->SetTitle("Counts"); // Y-axis label
+    // h2->SetLineColor(kMagenta);
+    // auto h3 = cut_df1.Filter("pathlength_sig > 5").Filter(reject_lambda).Histo1D({"h3", "M(K^{-}K_{s}#pi^{+})", 60, 1.2, 1.7}, "f1_m");
+    // h3->GetXaxis()->SetTitle("M(K^{-}K_{s}#pi^{+}) (GeV)"); // X-axis label
+    // h3->GetYaxis()->SetTitle("Counts"); // Y-axis label
+    // h3->SetLineColor(kBlack);
+    // auto h4 = cut_df1.Filter("pathlength_sig > 5").Filter(select_kShort).Histo1D({"h4", "M(K^{-}K_{s}#pi^{+})", 60, 1.2, 1.7}, "f1_m");
+    // h4->GetXaxis()->SetTitle("M(KK^{-}#_{s}pi^{+}) (GeV)"); // X-axis label
+    // h4->GetYaxis()->SetTitle("Counts"); // Y-axis label
+    // h4->SetLineColor(TColor::GetColor(160, 32, 240)); // A shade of purple
+    // auto h5 = cut_df1.Filter("pathlength_sig > 5").Filter(reject_delta).Filter(reject_lambda).Filter(select_kShort).Histo1D({"h5", "M(K^{-}K_{s}#pi^{+})", 60, 1.2, 1.7}, "f1_m");
+    // h5->GetXaxis()->SetTitle("M(K^{-}K_{s}#pi^{+}) (GeV)"); // X-axis label
+    // h5->GetYaxis()->SetTitle("Counts"); // Y-axis label
+    // h5->SetLineColor(kBlue);
 
     // // 1D histogram of M(pip2 + pim) (mass of Ks).
     // auto h1 = cut_df.Histo1D({"hNew", Form("M(pip2 + pim).  Bins of: pipKmKs invariant mass (GeV): %.2f - %.2f", f1_mMin, f1_mMax), 60, 0.400, 0.600}, "ks_m");
@@ -252,6 +282,7 @@ void analysis(double f1_mMin, double f1_mMax, int plotIndex) {
     // ******** PLOTTING ********
 
     std::shared_ptr<TCanvas> c1 = std::make_shared<TCanvas>("c1", "Canvas", 800, 600);
+    c1->SetLeftMargin(0.15);
 
     // options to draw histogram with are: "E" (error bars), "H" (histogram), "L" (line), "P" (markers), "C" (curve), "B" (bar chart), "A" (area), "9" (same as "H" but fills with a color), "hist" (same as "H"), "histc" (same as "C"), "same" (superimpose on previous picture), "nostack" (don't stack bars), "nol" (don't draw the line), "noc" (don't draw the markers), "nofunction" (don't draw the function), "text" (draw bin contents as text), "goff" (graphics off), "e1" (draw error bars only), "e2" (draw error rectangles only), "e3" (draw error bars and rectangles), "e4" (draw a fill area through the end points of the vertical error bars), "e5" (draw a smooth fill area through the end points of the vertical error bars), "e6" (draw a smooth fill area through the end points of the error bars), "e7" (draw a fill area through the end points of the error bars)
     // and options to draw the dalitz plot (h2) with are: "COLZ" (draw a color plot representing the cell contents), "CONTZ" (draw a contour plot representing the cell contents), "LEGO" (draw a lego plot representing the cell contents), "SURF" (draw a surface plot representing the cell contents), "SURF1" (draw a surface plot representing the cell contents, with hidden line removal), "SURF2" (draw a surface plot representing the cell contents, with color representation of the cell contents), "SURF3" (draw a surface plot representing the cell contents, with color representation of the cell contents and hidden line removal), "SURF4" (draw a surface plot representing the cell contents, with Gouraud shading), "SURF5" (draw a surface plot representing the cell contents, with color representation of the cell contents and Gouraud shading), "SURF6" (draw a surface plot representing the cell contents, with color representation of the cell contents, Gouraud shading and hidden line removal)
@@ -261,25 +292,28 @@ void analysis(double f1_mMin, double f1_mMax, int plotIndex) {
     // h1->Draw("E"); // "E"
     // draw as a histogram instead of data points
     h1->Draw("HIST");
+    // h2->Draw("same");
+    // h3->Draw("same");
+    // h4->Draw("same");
+    // h5->Draw("same");
     // Usage: auto arrow = new TArrow(x_position, y_start, x_position, y_end, 0.02, "|>"); // Adjust x_position, y_start, y_end as needed
-    // auto arrow1 = new TArrow(1.295, 4000, 1.295, 2600, 0.01, "|>"); // Example positions
+    // auto arrow1 = new TArrow(1.295, 2200, 1.295, 1200, 0.01, "|>"); // Example positions
     // arrow1->SetLineWidth(8);
     // arrow1->Draw();
     // arrow1->SetLineColor(kRed);
-    // auto latex1 = new TLatex(1.295, 4200, "1.295 GeV"); // Adjust position and LaTeX formatted text as needed
+    // auto latex1 = new TLatex(1.295, 2300, "1.295 GeV"); // Adjust position and LaTeX formatted text as needed
     // latex1->SetTextAlign(22); // Centers the text horizontally and vertically
     // latex1->SetTextSize(0.03); // Adjust text size as needed
     // latex1->Draw();
 
-    auto arrow2 = new TArrow(1.420, 3000, 1.420, 4000, 0.01, "|>"); // Example positions
-    arrow2->SetLineWidth(8);
-    arrow2->Draw();
-    arrow2->SetLineColor(kRed);
-    auto latex2 = new TLatex(1.420, 2800, "1.420 GeV"); // Adjust position and LaTeX formatted text as needed
-    latex2->SetTextAlign(22); // Centers the text horizontally and vertically
-    latex2->SetTextSize(0.03); // Adjust text size as needed
-    latex2->Draw();
-
+    // auto arrow2 = new TArrow(1.420, 3000, 1.420, 4000, 0.01, "|>"); // Example positions
+    // arrow2->SetLineWidth(8);
+    // arrow2->Draw();
+    // arrow2->SetLineColor(kRed);
+    // auto latex2 = new TLatex(1.420, 2800, "1.420 GeV"); // Adjust position and LaTeX formatted text as needed
+    // latex2->SetTextAlign(22); // Centers the text horizontally and vertically
+    // latex2->SetTextSize(0.03); // Adjust text size as needed
+    // latex2->Draw();
 
     // // Draw histogram for pip2 vs. pim mass squared (evidence of Ks)
     // h2->Draw("same");
@@ -299,11 +333,15 @@ void analysis(double f1_mMin, double f1_mMax, int plotIndex) {
     // fitCombined->Draw("same");
 
 
-    // auto legend1 = new TLegend(0.75, 0.77, .98, 0.58); //(x_topLeft, y_topLeft, x_bottomRight, y_bottomRight)
+    auto legend1 = new TLegend(0.60, 0.88, .85, 0.83); //(x_topLeft, y_topLeft, x_bottomRight, y_bottomRight)
     // legend1->AddEntry(h3.GetPtr(), "Pathlength_sig > 5", "l"); // using "GetPtr()" instead of "get()" because "get()" is a method of unique_ptr, not shared_ptr, something like that.
     // legend1->AddEntry(h2.GetPtr(), "No pathlength cut", "l");
     
-    // legend1->AddEntry("h1", "Data, no fitting", "l");
+    legend1->AddEntry(h1.GetPtr(), "M(#pi^{+} + proton) (#Delta++ dist)", "l");
+    // legend1->AddEntry(h2.GetPtr(), "#Delta cut w/pl", "l");
+    // legend1->AddEntry(h3.GetPtr(), "#Lambda cut w/pl", "l");
+    // legend1->AddEntry(h4.GetPtr(), "select k short w/pl", "l");
+    // legend1->AddEntry(h5.GetPtr(), "All cuts (pl, #Delta, #Lambda, ks)");
     // Legend for h2
     // auto legend2 = new TLegend(0.75, 0.77, .98, 0.58); //(x_topLeft, y_topLeft, x_bottomRight, y_bottomRight)
     // legend2->AddEntry("h2", "Dalitz plot", "l");
@@ -313,11 +351,11 @@ void analysis(double f1_mMin, double f1_mMax, int plotIndex) {
     // legend1->AddEntry(voigtian.get(), "fcn: voigtian", "l");
     // legend1->AddEntry(voigtian2.get(), "fcn: voigtian2", "l");
     // legend1->AddEntry(fitCombined.get(), "bkg + voigtan", "l");
-    // legend1->Draw();
+    legend1->Draw();
     // legend2->Draw();
 
     // TString plotName = Form("../plots/dalitzPlots/kMinusPip_Vs_kShortPip_SQUARED_%d.png", plotIndex); // plotIndex is the index of the KKpi mass range and is set in the for loop in the main function
-    TString plotName = Form("../_plots/KKpi_findingResonance_1420GeV.png"); // plotIndex is the index of the KKpi mass range and is set in the for loop in the main function
+    TString plotName = Form("../_plots/KKpi_findingResonance_DeltaDistribution.png"); // plotIndex is the index of the KKpi mass range and is set in the for loop in the main function
     c1->Update();
     c1->SaveAs(plotName);
     // c2->Update();
