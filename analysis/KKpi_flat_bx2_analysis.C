@@ -108,10 +108,10 @@ void analysis(double f1_mMin, double f1_mMax, int plotIndex) {
     //                 //  .Filter("kmpip1_m > 1.1") // kmpip1 cut
 
     // Working cuts (2/2024).  Use these for active analysis
-    auto cut_df1 = df2.Filter("pathlength_sig > 5");
+    auto cut_df1 = df2.Filter("pathlength_sig > 5")
                     //  .Filter(select_f1, {"f1_m"})
-                    //  .Filter(reject_delta);
-                    //  .Filter(reject_lambda);
+                     .Filter(reject_delta)
+                     .Filter(reject_lambda);
                     //  .Filter(select_kShort);
 
     // // Other cuts (in case I want two histograms on the same canvas, for example)
@@ -123,17 +123,30 @@ void analysis(double f1_mMin, double f1_mMax, int plotIndex) {
     
     // ********** 1D HISTOGRAMS **********
     
-    // 1D histogram for pip1p_m > 1.4" (delta++ cut)
-    auto h1 = cut_df1.Histo1D({"h1", "M(#pi^{+} + proton) (#Delta++ cut)", 60, 1.0, 3.5}, "pip1p_m");
-    h1->GetXaxis()->SetTitle("#Delta++ M(#pi^{+} + proton) (GeV)"); // X-axis label
-    h1->GetYaxis()->SetTitle("Counts"); // Y-axis label
-    h1->SetLineColor(kBlue);
+    // // 1D histogram for pip1p_m > 1.4" (delta++ cut)
+    // auto h1 = cut_df1.Histo1D({"h1", "M(#pi^{+} + proton) (#Delta++ distribution)", 60, 1.0, 3.5}, "pip1p_m");
+    // h1->GetXaxis()->SetTitle("#Delta++ & #Lambda (GeV) & kShort"); // X-axis label
+    // h1->GetYaxis()->SetTitle("Counts"); // Y-axis label
+    // h1->SetLineColor(kBlue);
 
     // 1D histogram for pkm_m > 1.9 (lambda cut)
-    auto h2 = cut_df1.Histo1D({"h2", "M(p + K^{-}) (#Lambda cut)", 60, 1.4, 2.0}, "pkm_m");
-    h2->GetXaxis()->SetTitle("#Lambda: M(proton + K^{-}) (GeV)"); // X-axis label
-    h2->GetYaxis()->SetTitle("Counts"); // Y-axis label
-    h2->SetLineColor(kMagenta);
+    // auto h2 = cut_df1.Histo1D({"h2", "M(p + K^{-}) (#Lambda distribution)", 60, 1.4, 3.8}, "pkm_m");
+    // h2->GetXaxis()->SetTitle("#Lambda: M(proton + K^{-}) (GeV)"); // X-axis label
+    // h2->GetYaxis()->SetTitle("Counts"); // Y-axis label
+    // h2->SetLineColor(kMagenta);
+
+    // // 1D histograms for kShort
+    // auto h3 = df2.Histo1D({"h4", "M(K_{s}) (kShort distribution)", 60, 0.4, 0.6}, "ks_m");
+    // h3->GetXaxis()->SetTitle("kShort: M(K_{s}) (GeV)"); // X-axis label
+    // h3->GetYaxis()->SetTitle("Counts"); // Y-axis label
+    // h3->SetLineColor(kBlack);
+    // h3->SetMinimum(0);
+
+    // auto h4 = cut_df1.Histo1D({"h3", "M(K_{s}) (kShort distribution)", 60, 0.4, 0.6}, "ks_m");
+    // h4->GetXaxis()->SetTitle("kShort: M(K_{s}) (GeV)"); // X-axis label
+    // h4->GetYaxis()->SetTitle("Counts"); // Y-axis label
+    // h4->SetLineColor(kRed);
+    // h4->SetMinimum(0);
 
     // auto h1 = cut_df.Filter(keep_kstar_plus).Histo1D({"h1", "f1_m (keep charged K only)", 60, 1.2, 1.7}, "f1_m");
     // h1->SetLineColor(kBlack);
@@ -143,7 +156,7 @@ void analysis(double f1_mMin, double f1_mMax, int plotIndex) {
     // auto yMax = 15000;
 
     // 1D Histogram of KKpi full mass range (to see where the f1(1420) is)
-    // auto h1 = cut_df1.Histo1D({"h1", "M(K^{-}K_{s}#pi^{+})", 60, 1.2, 1.7}, "f1_m");
+    // auto h1 = df2.Histo1D({"h1", "M(K^{-}K_{s}#pi^{+})", 60, 0.2, 2.0}, "f1_m");
     // h1->GetXaxis()->SetTitle("M(K^{-}K_{s}#pi^{+}) (GeV)"); // X-axis label
     // h1->GetYaxis()->SetTitle("Counts"); // Y-axis label
     // h1->SetLineColor(kBlue);
@@ -175,9 +188,9 @@ void analysis(double f1_mMin, double f1_mMax, int plotIndex) {
 
     // // kShort Dalitz plot
     // auto h2 = cut_df.Histo2D({"h2", Form("Bins of: pipKmKs invariant mass (GeV): %.2f - %.2f", f1_mMin, f1_mMax), 40, 0.100, 0.200, 40, 0.100, 0.200}, "pip2_m2", "pim_m2");
-    // // K* Dalitz plot
-    // auto h3 = cut_df.Histo2D({"h3", Form("Bins of: KKpi invariant mass (GeV): %.2f - %.2f", f1_mMin, f1_mMax), 40, 0.1, 1.4, 40, 0.1, 1.4}, "kspip1_m2", "kmpip1_m2");
-    // h3->SetLineColor(kRed);
+    // K* Dalitz plot
+    auto h3 = cut_df1.Histo2D({"h3", Form("Bins of: KKpi invariant mass (GeV): %.2f - %.2f", f1_mMin, f1_mMax), 40, 0.1, 1.4, 40, 0.1, 1.4}, "kspip1_m2", "kmpip1_m2");
+    h3->SetLineColor(kRed);
 
 
     // ********** FITTING **********
@@ -291,10 +304,39 @@ void analysis(double f1_mMin, double f1_mMax, int plotIndex) {
     // h1->GetYaxis()->SetRangeUser(yMin,yMax);
     // h1->Draw("E"); // "E"
     // draw as a histogram instead of data points
-    h1->Draw("HIST");
-    // h2->Draw("same");
-    // h3->Draw("same");
+    // h1->Draw("HIST");
+    // h2->Draw("HIST");
+    h3->Draw("COLZ");
     // h4->Draw("same");
+    
+    // // Draw line at x-value
+    // double x_value1 = 0.45;
+    // double x_value2 = 0.55;
+    // double y_value1 = 0;
+    // double y_value2 = 50000;
+    // TLine *line1 = new TLine(x_value1, y_value1, x_value1, y_value2);
+    // line1->SetLineColor(kBlack);
+    // line1->SetLineWidth(4);
+    // line1->Draw();
+    // // Add a label near the top of the line
+    // TLatex latex1;
+    // latex1.SetTextSize(0.03);
+    // latex1.SetTextAlign(22); // Center the text horizontally and vertically
+    // // Adjust the y position slightly above the line for visibility
+    // latex1.DrawLatex(x_value1, y_value2 * 1.1, "0.45 GeV");
+
+    // TLine *line2 = new TLine(x_value2, y_value1, x_value2, y_value2);
+    // line2->SetLineColor(kBlack);
+    // line2->SetLineWidth(4);
+    // line2->Draw();
+    // // Add a label near the top of the line
+    // TLatex latex2;
+    // latex2.SetTextSize(0.03);
+    // latex2.SetTextAlign(22); // Center the text horizontally and vertically
+    // // Adjust the y position slightly above the line for visibility
+    // latex2.DrawLatex(x_value2, y_value2 * 1.1, "0.55 GeV");
+
+    // latex.DrawLatex(x_value, y_value, "0.45 Gev");
     // h5->Draw("same");
     // Usage: auto arrow = new TArrow(x_position, y_start, x_position, y_end, 0.02, "|>"); // Adjust x_position, y_start, y_end as needed
     // auto arrow1 = new TArrow(1.295, 2200, 1.295, 1200, 0.01, "|>"); // Example positions
@@ -333,14 +375,16 @@ void analysis(double f1_mMin, double f1_mMax, int plotIndex) {
     // fitCombined->Draw("same");
 
 
-    auto legend1 = new TLegend(0.60, 0.88, .85, 0.83); //(x_topLeft, y_topLeft, x_bottomRight, y_bottomRight)
+    // auto legend1 = new TLegend(0.60, 0.88, .85, 0.75); //(x_topLeft, y_topLeft, x_bottomRight, y_bottomRight)
     // legend1->AddEntry(h3.GetPtr(), "Pathlength_sig > 5", "l"); // using "GetPtr()" instead of "get()" because "get()" is a method of unique_ptr, not shared_ptr, something like that.
     // legend1->AddEntry(h2.GetPtr(), "No pathlength cut", "l");
     
-    legend1->AddEntry(h1.GetPtr(), "M(#pi^{+} + proton) (#Delta++ dist)", "l");
-    // legend1->AddEntry(h2.GetPtr(), "#Delta cut w/pl", "l");
-    // legend1->AddEntry(h3.GetPtr(), "#Lambda cut w/pl", "l");
-    // legend1->AddEntry(h4.GetPtr(), "select k short w/pl", "l");
+    // legend for KKpi mass range
+    // legend1->AddEntry(h1.GetPtr(), "M(K^{-}K_{s}#pi^{+})", "l");
+    // legend1->AddEntry(h1.GetPtr(), "M(#pi^{+} + proton) (#Delta++ distribution)", "l");
+    // legend1->AddEntry(h2.GetPtr(), "M(p + K^{-}) (#Lambda distribution)", "l");
+    // legend1->AddEntry(h3.GetPtr(), "kShort", "l");
+    // legend1->AddEntry(h4.GetPtr(), "kShort w/pathlength", "l");
     // legend1->AddEntry(h5.GetPtr(), "All cuts (pl, #Delta, #Lambda, ks)");
     // Legend for h2
     // auto legend2 = new TLegend(0.75, 0.77, .98, 0.58); //(x_topLeft, y_topLeft, x_bottomRight, y_bottomRight)
@@ -351,11 +395,11 @@ void analysis(double f1_mMin, double f1_mMax, int plotIndex) {
     // legend1->AddEntry(voigtian.get(), "fcn: voigtian", "l");
     // legend1->AddEntry(voigtian2.get(), "fcn: voigtian2", "l");
     // legend1->AddEntry(fitCombined.get(), "bkg + voigtan", "l");
-    legend1->Draw();
+    // legend1->Draw();
     // legend2->Draw();
 
-    // TString plotName = Form("../plots/dalitzPlots/kMinusPip_Vs_kShortPip_SQUARED_%d.png", plotIndex); // plotIndex is the index of the KKpi mass range and is set in the for loop in the main function
-    TString plotName = Form("../_plots/KKpi_findingResonance_DeltaDistribution.png"); // plotIndex is the index of the KKpi mass range and is set in the for loop in the main function
+    // TString plotName = Form("../plots/dalitzPlots/_TEST_%d.png", plotIndex); // plotIndex is the index of the KKpi mass range and is set in the for loop in the main function
+    TString plotName = Form("../_plots/dalitzPlots/TEST.png"); // plotIndex is the index of the KKpi mass range and is set in the for loop in the main function
     c1->Update();
     c1->SaveAs(plotName);
     // c2->Update();
