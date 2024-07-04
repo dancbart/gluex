@@ -1,4 +1,4 @@
-# Tyler sent this over Slack 8/29/2023.
+# Tyler sent this over Slack 8/29/2023.  Original filename 'all_jobs_swif2.py'
 # The reason is this is a good example of why Python is also helpful, cause for scripting, as done below:
 
 
