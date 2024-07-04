@@ -83,6 +83,8 @@ void DSelector_sel1::Init(TTree *locTree)
 	dHist_MissingMassSquared = new TH1I("MissingMassSquared", ";Missing Mass Squared (GeV/c^{2})^{2}", 600, -0.06, 0.06);
 	dHist_BeamEnergy = new TH1I("BeamEnergy", ";Beam Energy (GeV)", 600, 0.0, 12.0);
 	dHist_mass_pip_pim = new TH1I("mass_pip_pim", ";mass at (Gev)", 100, 0.0, 1.0);
+	dHist_IM_Pip1P = new TH1I("IM_Pip1P", "Mass of Proton pi+", 150, 0.5, 2.0);
+	dHist_mass_ks_km = new TH1I("IM_k_short", "IM_k_minus", 150, 0.5, 2.5); //d.barton 5/1/2023
 
 	/************************** EXAMPLE USER INITIALIZATION: CUSTOM OUTPUT BRANCHES - MAIN TREE *************************/
 
@@ -182,8 +184,9 @@ Bool_t DSelector_sel1::Process(Long64_t locEntry)
 		//In general: Multiple PIDs, so multiple sets: Contain within a map
 		//Multiple combos: Contain maps within a set (easier, faster to search)
 	set<map<Particle_t, set<Int_t> > > locUsedSoFar_MissingMass;
-	set<set<Int_t> > locUsedSoFar_IM_Pip2Pim;
+	set<set<Int_t> > locUsedSoFar_Im_Pip2Pim;
 	set<set<Int_t> > locUsedSoFar_Im_Pip1P;
+	set<set<Int_t> > locUsedSoFar_Im_KsKm;
 	//INSERT USER ANALYSIS UNIQUENESS TRACKING HERE
 
 	/**************************************** EXAMPLE: FILL CUSTOM OUTPUT BRANCHES **************************************/
@@ -257,7 +260,7 @@ Bool_t DSelector_sel1::Process(Long64_t locEntry)
 		Double_t locDeltaT_RF = dAnalysisUtilities.Get_DeltaT_RF(Get_RunNumber(), locBeamX4_Measured, dComboWrapper);
 		Int_t locRelBeamBucket = dAnalysisUtilities.Get_RelativeBeamBucket(Get_RunNumber(), locBeamX4_Measured, dComboWrapper); // 0 for in-time events, non-zero integer for out-of-time photons
 		Int_t locNumOutOfTimeBunchesInTree = 4; //YOU need to specify this number
-			Number of out-of-time beam bunches in tree (on a single side, so that total number out-of-time bunches accepted is 2 times this number for left + right bunches) 
+		//	Number of out-of-time beam bunches in tree (on a single side, so that total number out-of-time bunches accepted is 2 times this number for left + right bunches) 
 
 		Bool_t locSkipNearestOutOfTimeBunch = true; // True: skip events from nearest out-of-time bunch on either side (recommended).
 		Int_t locNumOutOfTimeBunchesToUse = locSkipNearestOutOfTimeBunch ? locNumOutOfTimeBunchesInTree-1:locNumOutOfTimeBunchesInTree; 
@@ -278,7 +281,10 @@ Bool_t DSelector_sel1::Process(Long64_t locEntry)
 		// Combine 4-vectors
 		TLorentzVector locMissingP4_Measured = locBeamP4_Measured + dTargetP4;
 		locMissingP4_Measured -= locPiPlus1P4_Measured + locKMinusP4_Measured + locProtonP4_Measured + locPiMinusP4_Measured + locPiPlus2P4_Measured;
-		TLorentzVector loc_pip_pim = locPiMinusP4_Measured + locPiPlus2P4_Measured;
+		TLorentzVector loc_pip_pim_measured = locPiMinusP4_Measured + locPiPlus2P4_Measured;
+		TLorentzVector locKs = locPiMinusP4 + locPiPlus2P4;
+		TLorentzVector locPip1P = locProtonP4 + locPiPlus1P4;
+		TLorentzVector kshort_kminus = locKs + locKMinusP4; //d.barton 5/1/23
 
 		/******************************************** EXECUTE ANALYSIS ACTIONS *******************************************/
 
@@ -344,10 +350,10 @@ Bool_t DSelector_sel1::Process(Long64_t locEntry)
 			continue;
 		}
 
-		double m_pip_pim = loc_pip_pim.M();
-		set<Int_t> locUsedThisCombo_IM_Pip2Pim;
-		locUsedThisCombo_IM_Pip2Pim.insert(locPiMinusTrackID);
-		locUsedThisCombo_IM_Pip2Pim.insert(locPiPlus2TrackID);
+		double m_pip_pim = loc_pip_pim_measured.M();
+		set<Int_t> locUsedThisCombo_Im_Pip2Pim;
+		locUsedThisCombo_Im_Pip2Pim.insert(locPiMinusTrackID);
+		locUsedThisCombo_Im_Pip2Pim.insert(locPiPlus2TrackID);
 		if(locUsedSoFar_Im_Pip2Pim.find(locUsedThisCombo_Im_Pip2Pim) == locUsedSoFar_Im_Pip2Pim.end()){
 
 		// FLIGHT SIGNIFIGANCE CALCULATIONS AND CUT.  from tyler's dselector 4/8/23
@@ -387,7 +393,7 @@ Bool_t DSelector_sel1::Process(Long64_t locEntry)
 			locUsedSoFar_Im_Pip1P.insert(locUsedThisCombo_Im_Pip1P);
 		}
 
-		if(im_ppip < 1.4){
+		if(im_ppip > 1.4){
 			dComboWrapper->Set_IsComboCut(true);
 
 			continue;
@@ -396,7 +402,26 @@ Bool_t DSelector_sel1::Process(Long64_t locEntry)
 
 			dHist_mass_pip_pim->Fill(m_pip_pim);
 			locUsedSoFar_Im_Pip2Pim.insert(locUsedThisCombo_Im_Pip2Pim);
+		}		
+		// d.barton 5/1/23 (next 3 lines)
+
+		double im_kskm = kshort_kminus.M();
+
+		set<Int_t> locUsedThisCombo_Im_KsKm;
+		locUsedThisCombo_Im_KsKm.insert(locKMinusTrackID);
+		locUsedThisCombo_Im_KsKm.insert(locPiPlus2TrackID);
+		locUsedThisCombo_Im_KsKm.insert(locPiMinusTrackID);
+		
+		if(locUsedSoFar_Im_KsKm.find(locUsedThisCombo_Im_KsKm) == locUsedSoFar_Im_KsKm.end()){
+			dHist_IM_KsKm->Fill(im_kskm);
+			locUsedSoFar_Im_KsKm.insert(locUsedThisCombo_Im_KsKm);
 		}
+
+
+		
+
+
+
 
 		/****************************************** FILL FLAT TREE (IF DESIRED) ******************************************/
 
