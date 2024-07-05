@@ -4,7 +4,7 @@
 
 R__LOAD_LIBRARY(libDSelector.so)
    
-void macroRunDS(){
+void runDSelectorINTERACTIVE(){
 
 gEnv->SetValue("ProofLite.Sandbox", "/w/halld-scshelf2101/home/dbarton/gluex/dselectors/tmp");
 
@@ -24,8 +24,7 @@ chain->Add("/lustre19/expphy/cache/halld/gluex_simulations/REQUESTED_MC/dbarton_
 //All Files
 //  chain->Add( "/lustre19/expphy/cache/halld/gluex_simulations/REQUESTED_MC/dbarton_MC_v1_pipkmks_genr8_2017_01_anaVer50_3837/trees/tree_pipkmks__B4_M16_genr8/tree_pipkmks__B4_M16_genr8_*" );
 
- DPROOFLiteManager::Process_Chain(chain, "DSelector_mc_pipkmks_thrown.C++", 6);
- // there is an option to add a custom name for the Tree output name, look it up!
+ DPROOFLiteManager::Process_Chain(chain, "DSelector_KKpi_mcThrown.C++", 6);
   
   return;
 }
