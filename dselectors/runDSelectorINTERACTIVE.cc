@@ -4,7 +4,7 @@
 
 R__LOAD_LIBRARY(libDSelector.so)
    
-void runDSelectorINTERACTIVE(){
+void runDSelectorINTERACTIVE_CentOS(){
 
 gEnv->SetValue("ProofLite.Sandbox", "/w/halld-scshelf2101/home/dbarton/gluex/dselectors/tmp");
 
