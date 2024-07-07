@@ -309,6 +309,318 @@ Bool_t DSelector_KKpi_mcThrown::Process(Long64_t locEntry)
 		dTreeInterface->Fill_Fundamental<Int_t>("my_int_array", 3*loc_i, loc_i); //2nd argument = value, 3rd = array index
 	*/
 
+	/******************************************* LOOP OVER THROWN DATA ***************************************/
+
+	//Thrown beam: just use directly
+	double locBeamEnergyUsedForBinning = 0.0;
+	if(dThrownBeam != NULL)
+		locBeamEnergyUsedForBinning = dThrownBeam->Get_P4().E();
+		TLorentzVector locBeamP4 = dThrownBeam->Get_P4();
+		TLorentzVector locProdSpacetimeVertex =dThrownBeam->Get_X4();//Get production vertex
+
+
+	TLorentzVector dTargetP4;
+	dTargetP4.SetXYZM(0.0,0.0,0.0,0.938);
+
+	TLorentzVector locProtonP4;
+	TLorentzVector locPiPlus1P4;
+	TLorentzVector locPiMinusP4;
+	TLorentzVector locPiPlus2P4;
+	TLorentzVector locKMinusP4;
+	TLorentzVector locKShortP4;
+
+	TLorentzVector PiPlusHypo1;
+	TLorentzVector PiPlusHypo2;
+	
+
+	Bool_t piPlusChecked = false;
+	int nparticles = 0;
+	int nThrown = Get_NumThrown();
+
+	Int_t KsThrown_Index;
+
+	// create a vector for potential pi+ candidates indices
+	vector<int> piPlusIndices;
+
+	//Loop over throwns
+	for(UInt_t loc_i = 0; loc_i < Get_NumThrown(); ++loc_i)
+	{
+		//Set branch array indices corresponding to this particle
+		dThrownWrapper->Set_ArrayIndex(loc_i);
+		
+		//Do stuff with the wrapper here ...
+		Particle_t locPID = dThrownWrapper->Get_PID();
+		TLorentzVector locThrownP4 = dThrownWrapper->Get_P4();
+		// cout << "Thrown " << loc_i << ": " << locPID << ", " << locThrownP4.Px() << ", " << locThrownP4.Py() << ", " << locThrownP4.Pz() << ", " << locThrownP4.E() << endl;
+
+
+		if (locPID == 12){
+			locKMinusP4 = locThrownP4;
+		}
+		if (locPID == 14){
+			locProtonP4 = locThrownP4;
+		}
+		if (locPID == 9){
+			locPiMinusP4 = locThrownP4;
+		}
+		if(locPID == 16){
+			locKShortP4 = locThrownP4;
+			KsThrown_Index = loc_i;
+			
+		}
+		if (locPID == 8){
+			if(dThrownWrapper->Get_ParentIndex() < 0){
+				locPiPlus1P4 = locThrownP4;
+			}
+			else{
+				piPlusIndices.push_back(loc_i);
+			}
+			// if (loc_i == 2) { locPiPlus2P4 = locThrownP4; }
+			// if (loc_i == 4) { locPiPlus1P4 = locThrownP4; }
+		}
+	}
+
+	// loop over pion candidate indices and see if it's parent index is equal to the Ks. if it is, make that pion's 4 vector the pi+2
+	for (int i = 0; i < piPlusIndices.size(); i++){
+		dThrownWrapper->Set_ArrayIndex(piPlusIndices[i]);
+		if (dThrownWrapper->Get_ParentIndex() == KsThrown_Index){
+			locPiPlus2P4 = dThrownWrapper->Get_P4();
+		}
+	}
+
+	double proton_theta = locProtonP4.Theta() * 180/3.141592653;
+	double proton_phi = locProtonP4.Phi() * 180/3.141592653;
+	double proton_mom = locProtonP4.P();
+
+	double piplus1_theta = locPiPlus1P4.Theta() * 180/3.141592653;
+	double piplus1_phi = locPiPlus1P4.Phi() * 180/3.141592653;
+	double piplus1_mom = locPiPlus1P4.P();
+
+	double Kminus_theta = locKMinusP4.Theta() * 180/3.141592653;
+	double Kminus_phi = locKMinusP4.Phi() * 180/3.141592653;
+	double Kminus_mom = locKMinusP4.P();
+
+	double piminus_theta = locPiMinusP4.Theta() * 180/3.141592653;
+	double piminus_phi = locPiMinusP4.Phi() * 180/3.141592653;
+	double piminus_mom = locPiMinusP4.P();
+
+	double piplus2_theta = locPiPlus2P4.Theta() * 180/3.141592653;
+	double piplus2_phi = locPiPlus2P4.Phi() * 180/3.141592653;
+	double piplus2_mom = locPiPlus2P4.P();
+
+
+	double s_men = (locBeamP4 + dTargetP4).M2();
+	double w_var = (locBeamP4 + dTargetP4).M();
+	double t_kmks  = (dTargetP4 - locProtonP4).M2();
+	double minus_t_kmks = (-(t_kmks));
+
+	TLorentzVector locPip2Pim_P4 = locPiPlus2P4 + locPiMinusP4;
+	TLorentzVector locProtonPip1_P4 = locProtonP4 + locPiPlus1P4;
+	TLorentzVector locKmKsPip_P4 = locKMinusP4 + locPiPlus1P4 + locKShortP4;
+
+
+
+	// double ks_theta = locPip2Pim_P4.Theta() * 180/3.141592653;
+	// double ks_phi = locPip2Pim_P4.Phi() * 180/3.141592653;
+	// double ks_mom = locPip2Pim_P4.P();
+
+	double ks_theta = locKShortP4.Theta() * 180/3.141592653;
+	double ks_phi = locKShortP4.Phi() * 180/3.141592653;
+	double ks_mom = locKShortP4.P();
+
+	double f1_phi = locKmKsPip_P4.Phi() * 180/3.141592653;
+	double f1_theta =  locKmKsPip_P4.Theta() * 180/3.141592653;
+	double f1_mom = locKmKsPip_P4.P();
+	double f1_mass = locKmKsPip_P4.M();
+	
+
+	TLorentzVector locF1P4 = locKmKsPip_P4;
+	// Boosting in CM frame
+
+	TLorentzVector cms = locBeamP4 + dTargetP4;
+	TVector3 locBoost_cms = -cms.BoostVector();
+
+	TLorentzVector locBeamP4_CM = locBeamP4 ;
+	TLorentzVector locPiPlus1P4_CM = locPiPlus1P4 ;
+	TLorentzVector locKMinusP4_CM = locKMinusP4;
+	TLorentzVector locProtonP4_CM = locProtonP4;
+	//Step 1
+	TLorentzVector locPiMinusP4_CM = locPiMinusP4;
+	TLorentzVector locPiPlus2P4_CM = locPiPlus2P4;
+
+	TLorentzVector locKmPip2PimP4_CM = locKmKsPip_P4;
+	TLorentzVector locProtonPip1P4_CM = locProtonPip1_P4;
+	// TLorentzVector locKshortP4_CM = locPip2Pim_P4;
+	TLorentzVector locKshortP4_CM = locKShortP4;
+
+	TLorentzVector locF1P4_CM = locKmPip2PimP4_CM;
+
+
+	locBeamP4_CM.Boost(locBoost_cms);
+	locKMinusP4_CM.Boost(locBoost_cms);
+	locProtonP4_CM.Boost(locBoost_cms);
+	locKmPip2PimP4_CM.Boost(locBoost_cms);
+	locProtonPip1P4_CM.Boost(locBoost_cms);
+	locKshortP4_CM.Boost(locBoost_cms);
+
+	locF1P4_CM.Boost(locBoost_cms);
+
+	// TVector3 y_hat = (locBeamP4_CM.Vect().Unit().Cross(locF1P4_CM.Vect().Unit())).Unit();
+	
+
+	// // Boosting in GJ frame
+	// TVector3 boostGJ= -locF1P4_CM.BoostVector();                                 //-(locA2P4_CM.Vect())*(1.0/locA2P4_CM.E());
+	
+	// TLorentzVector locBeamP4_GJ = locBeamP4_CM;
+	// TLorentzVector locPiPlus1P4_GJ = locPiPlus1P4_CM;
+	// TLorentzVector locKMinusP4_GJ = locKMinusP4_CM;
+	// TLorentzVector locProtonP4_GJ = locProtonP4_CM;
+	// //Step 1
+	// TLorentzVector locPiMinusP4_GJ = locPiMinusP4_CM;
+	// TLorentzVector locPiPlus2P4_GJ = locPiPlus2P4_CM;
+	// TLorentzVector locKshortP4_GJ = locKshortP4_CM;
+	// TLorentzVector locProtonPip1P4_GJ = locProtonPip1P4_CM;
+	// TLorentzVector locKmPip2PimP4_GJ = locKmPip2PimP4_CM;
+
+	// TLorentzVector locF1P4_GJ = locF1P4_CM;
+	// //TLorentzVector locDeltaP4_GJ = locDeltaP4_CM;
+
+	// locBeamP4_GJ.Boost(boostGJ);
+	// locKMinusP4_GJ.Boost(boostGJ);
+	// locKshortP4_GJ.Boost(boostGJ);
+	// locKmPip2PimP4_GJ.Boost(boostGJ);
+	
+	// locF1P4_GJ.Boost(boostGJ);
+	// //locDeltaP4_GJ.Boost(boostGJ);
+
+
+	// TVector3 z_GJ; 
+	// z_GJ.SetXYZ(locBeamP4_GJ.X(),locBeamP4_GJ.Y(),locBeamP4_GJ.Z());//z GJ
+	// TVector3 z_hat = z_GJ.Unit();
+	// TVector3 x_hat = y_hat.Cross(z_hat);//x hat GJ
+	// TVector3 vec_Ks(locKshortP4_GJ.Vect()*x_hat, locKshortP4_GJ.Vect()*y_hat, locKshortP4_GJ.Vect()*z_hat);
+
+	// double cosThetaKs_GJ = vec_Ks.CosTheta();
+	// double phiKs_GJ = vec_Ks.Phi()* 180/3.141592653;
+
+	dFlatTreeInterface->Fill_Fundamental<Int_t>("nParticles", nparticles);
+	dFlatTreeInterface->Fill_Fundamental<Int_t>("nThrown", nThrown);
+
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("beam_E", locBeamP4.E());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("beam_px", locBeamP4.Px());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("beam_py", locBeamP4.Py());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("beam_pz", locBeamP4.Pz());
+
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("target_E", dTargetP4.M());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("target_px", dTargetP4.X());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("target_py", dTargetP4.Y());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("target_pz", dTargetP4.Z());
+
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("pip1_E", locPiPlus1P4.E());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("pip1_px", locPiPlus1P4.Px());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("pip1_py", locPiPlus1P4.Py());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("pip1_pz", locPiPlus1P4.Pz());
+
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("pip2_E", locPiPlus2P4.E());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("pip2_px", locPiPlus2P4.Px());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("pip2_py", locPiPlus2P4.Py());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("pip2_pz", locPiPlus2P4.Pz());
+
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("pim_E", locPiMinusP4.E());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("pim_px", locPiMinusP4.Px());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("pim_py", locPiMinusP4.Py());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("pim_pz", locPiMinusP4.Pz());
+
+
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("km_E", locKMinusP4.E());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("km_px", locKMinusP4.Px());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("km_py", locKMinusP4.Py());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("km_pz", locKMinusP4.Pz());
+
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("ks_E", locKShortP4.E());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("ks_px", locKShortP4.Px());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("ks_py", locKShortP4.Py());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("ks_pz", locKShortP4.Pz());
+	// dFlatTreeInterface->Fill_Fundamental<Double_t>("ks_E", locPip2Pim_P4.E());
+	// dFlatTreeInterface->Fill_Fundamental<Double_t>("ks_px", locPip2Pim_P4.Px());
+	// dFlatTreeInterface->Fill_Fundamental<Double_t>("ks_py", locPip2Pim_P4.Py());
+	// dFlatTreeInterface->Fill_Fundamental<Double_t>("ks_pz", locPip2Pim_P4.Pz());
+
+
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("proton_E", locProtonP4.E());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("proton_px", locProtonP4.Px());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("proton_py", locProtonP4.Py());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("proton_pz", locProtonP4.Pz());
+
+
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("theta_p", proton_theta);
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("mom_p",proton_mom);
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("phi_p", proton_phi);
+
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("theta_pip1", piplus1_theta);
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("mom_pip1", piplus1_mom);
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("phi_pip1", piplus1_phi );
+
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("theta_km", Kminus_theta);
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("mom_km",Kminus_mom);
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("phi_km", Kminus_phi);
+
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("theta_pip2", piplus2_theta);
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("mom_pip2", piplus2_mom);
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("phi_pip2", piplus2_phi );
+
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("theta_pim", piminus_theta);
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("mom_pim", piminus_mom);
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("phi_pim", piminus_phi);				
+
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("mass_f1", f1_mass);
+
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("mpippim",locPip2Pim_P4.M());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("mKsKm", locKmKsPip_P4.M());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("mppip1", locProtonPip1_P4.M());
+
+
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("men_s",s_men);
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("men_t",minus_t_kmks);
+
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("cosTheta_Ks_cm", locKshortP4_CM.CosTheta());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("phi_Ks_cm", locKshortP4_CM.Phi()*180/3.141592653);
+
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("cosTheta_f1_cm", locF1P4_CM.CosTheta());
+	dFlatTreeInterface->Fill_Fundamental<Double_t>("phi_f1_cm", locF1P4_CM.Phi()*180/3.141592653);
+
+	// dFlatTreeInterface->Fill_Fundamental<Double_t>("cosTheta_Ks_gj",cosThetaKs_GJ);
+	// dFlatTreeInterface->Fill_Fundamental<Double_t>("phi_Ks_gj", phiKs_GJ);
+
+	//OR Manually:
+	//BEWARE: Do not expect the particles to be at the same array indices from one event to the next!!!!
+	//Why? Because while your channel may be the same, the pions/kaons/etc. will decay differently each event.
+
+	//BRANCHES: https://halldweb.jlab.org/wiki/index.php/Analysis_TTreeFormat#TTree_Format:_Simulated_Data
+	TClonesArray** locP4Array = dTreeInterface->Get_PointerToPointerTo_TClonesArray("Thrown__P4");
+	TBranch* locPIDBranch = dTreeInterface->Get_Branch("Thrown__PID");
+/*
+	Particle_t locThrown1PID = PDGtoPType(((Int_t*)locPIDBranch->GetAddress())[0]);
+	TLorentzVector locThrown1P4 = *((TLorentzVector*)(*locP4Array)->At(0));
+	cout << "Particle 1: " << locThrown1PID << ", " << locThrown1P4.Px() << ", " << locThrown1P4.Py() << ", " << locThrown1P4.Pz() << ", " << locThrown1P4.E() << endl;
+	Particle_t locThrown2PID = PDGtoPType(((Int_t*)locPIDBranch->GetAddress())[1]);
+	TLorentzVector locThrown2P4 = *((TLorentzVector*)(*locP4Array)->At(1));
+	cout << "Particle 2: " << locThrown2PID << ", " << locThrown2P4.Px() << ", " << locThrown2P4.Py() << ", " << locThrown2P4.Pz() << ", " << locThrown2P4.E() << endl;
+*/
+
+
+	/******************************************* BIN THROWN DATA INTO SEPARATE TREES FOR AMPTOOLS ***************************************/
+
+/*
+	//THESE KEYS MUST BE DEFINED IN THE INIT SECTION (along with the output file names)
+	if((locBeamEnergyUsedForBinning >= 8.0) && (locBeamEnergyUsedForBinning < 9.0))
+		Fill_OutputTree("Bin1"); //your user-defined key
+	else if((locBeamEnergyUsedForBinning >= 9.0) && (locBeamEnergyUsedForBinning < 10.0))
+		Fill_OutputTree("Bin2"); //your user-defined key
+	else if((locBeamEnergyUsedForBinning >= 10.0) && (locBeamEnergyUsedForBinning < 11.0))
+		Fill_OutputTree("Bin3"); //your user-defined key
+*/
+
 	/************************************************* LOOP OVER COMBOS *************************************************/
 
 	
@@ -474,7 +786,7 @@ Bool_t DSelector_KKpi_mcThrown::Process(Long64_t locEntry)
 
 		//FILL FLAT TREE
 		//Fill_FlatTree(); //for the active combo
-	} // end of combo loop
+	// } // end of combo loop
 
 	//FILL HISTOGRAMS: Num combos / events surviving actions
 	// Fill_NumCombosSurvivedHists();
@@ -539,7 +851,7 @@ Bool_t DSelector_KKpi_mcThrown::Process(Long64_t locEntry)
 	if(!locIsEventCut && dOutputTreeFileName != "")
 		Fill_OutputTree();
 */
-
+	Fill_FlatTree();
 	return kTRUE;
 }
 
