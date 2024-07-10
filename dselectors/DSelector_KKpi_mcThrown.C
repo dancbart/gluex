@@ -217,40 +217,23 @@ Bool_t DSelector_KKpi_mcThrown::Process(Long64_t locEntry)
 		TLorentzVector locThrownP4 = dThrownWrapper->Get_P4();
 		// cout << "Thrown " << loc_i << ": " << locPID << ", " << locThrownP4.Px() << ", " << locThrownP4.Py() << ", " << locThrownP4.Pz() << ", " << locThrownP4.E() << endl;
 
-
+		if (locPID == 8){
+			locPiPlus1P4 = locThrownP4;
+		}
 		if (locPID == 12){
 			locKMinusP4 = locThrownP4;
 		}
-		if (locPID == 14){
-			locProtonP4 = locThrownP4;
+		if(locPID == 16){
+			locKShortP4 = locThrownP4;
+		}
+		if (locPID == 8){
+			locPiPlus2P4 = locThrownP4;
 		}
 		if (locPID == 9){
 			locPiMinusP4 = locThrownP4;
 		}
-		if(locPID == 16){
-			locKShortP4 = locThrownP4;
-			KsThrown_Index = loc_i;
-			
-		}
-		if (locPID == 8){
-			if(dThrownWrapper->Get_ParentIndex() < 0){
-				locPiPlus1P4 = locThrownP4;
-			}
-			else{
-				piPlusIndices.push_back(loc_i);
-			}
-			// if (loc_i == 2) { locPiPlus2P4 = locThrownP4; }
-			// if (loc_i == 4) { locPiPlus1P4 = locThrownP4; }
-		}
 	}
 
-	// loop over pion candidate indices and see if it's parent index is equal to the Ks. if it is, make that pion's 4 vector the pi+2
-	for (int i = 0; i < piPlusIndices.size(); i++){
-		dThrownWrapper->Set_ArrayIndex(piPlusIndices[i]);
-		if (dThrownWrapper->Get_ParentIndex() == KsThrown_Index){
-			locPiPlus2P4 = dThrownWrapper->Get_P4();
-		}
-	}
 
 	double proton_theta = locProtonP4.Theta() * 180/3.141592653;
 	double proton_phi = locProtonP4.Phi() * 180/3.141592653;
