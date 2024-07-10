@@ -27,6 +27,14 @@
 
 void DSelector_KKpi_mcThrown::Init(TTree *locTree)
 {
+	
+	// Debugging:
+	// outputFile = new TFile("debuggingOutput.root", "RECREATE");
+	// outputTree = new TTree("tree", "tree");
+	// outputTree->Branch("loc_i", &locIArray);
+	// outputTree->Branch("locPID", &locPIDArray);
+	
+	
 	// USERS: IN THIS FUNCTION, ONLY MODIFY SECTIONS WITH A "USER" OR "EXAMPLE" LABEL. LEAVE THE REST ALONE.
 
 	// The Init() function is called when the selector needs to initialize a new tree or chain.
@@ -232,6 +240,10 @@ Bool_t DSelector_KKpi_mcThrown::Process(Long64_t locEntry)
 		if (locPID == 9){
 			locPiMinusP4 = locThrownP4;
 		}
+	
+		// locPIDArray.push_back(dThrownWrapper->Get_PID());
+		// locIArray.push_back(loc_i);
+	
 	}
 
 
@@ -401,6 +413,10 @@ Bool_t DSelector_KKpi_mcThrown::Process(Long64_t locEntry)
 
 void DSelector_KKpi_mcThrown::Finalize(void)
 {
+	
+	// outputTree->Fill();
+	// outputFile->Write();
+	
 	//CALL THIS LAST
 	DSelector::Finalize(); //Saves results to the output file
 }
