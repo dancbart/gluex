@@ -31,9 +31,6 @@ void DSelector_KKpi_mc::Init(TTree *locTree)
 	dPreviousRunNumber = 0;
 
 	// Add custom branches to the main tree (these are mostly what I use in analysis scripts)
-	dFlatTreeInterface->Create_Branch_Fundamental<Int_t>("nParticles");
-	dFlatTreeInterface->Create_Branch_Fundamental<Int_t>("nThrown");
-
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("beam_px");
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("beam_py");
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("beam_pz");
@@ -360,6 +357,7 @@ Bool_t DSelector_KKpi_mc::Process(Long64_t locEntry)
 
 		TLorentzVector locPip2Pim_P4 = locPiPlus2P4 + locPiMinusP4;
 		TLorentzVector locProtonPip1_P4 = locProtonP4 + locPiPlus1P4;
+		TLorentzVector locKShortP4 = locKMinusP4 + locPiPlus2P4;
 		TLorentzVector locKmKsPip_P4 = locKMinusP4 + locPiPlus1P4 + locKShortP4;
 
 		/******************************************** EXECUTE ANALYSIS ACTIONS *******************************************/
@@ -452,9 +450,6 @@ Bool_t DSelector_KKpi_mc::Process(Long64_t locEntry)
 		double w_var = (locBeamP4 + dTargetP4).M();
 		double t_kmks  = (dTargetP4 - locProtonP4).M2();
 		double minus_t_kmks = (-(t_kmks));
-
-		dFlatTreeInterface->Fill_Fundamental<Int_t>("nParticles", nparticles);
-		dFlatTreeInterface->Fill_Fundamental<Int_t>("nThrown", nThrown);
 
 		dFlatTreeInterface->Fill_Fundamental<Double_t>("beam_E", locBeamP4.E());
 		dFlatTreeInterface->Fill_Fundamental<Double_t>("beam_px", locBeamP4.Px());
