@@ -1,3 +1,8 @@
+// This DSelector was made from a file similar to this, in the same directory:
+// /lustre19/expphy/cache/halld/RunPeriod-2018-08/analysis/ver23/tree_pi0kplamb__B4_M18/merged/tree_pi0kplamb__B4_M18_051730.root
+// The purpose is to investigate the pi0kplamb final state reported in this article:
+// https://halldweb.jlab.org/analysis/pdf/RunPeriod-2018-08/ver10/tree_pi0kplamb.pdf
+
 #include "DSelector_pi0kplamb_flat.h"
 
 void DSelector_pi0kplamb_flat::Init(TTree *locTree)
@@ -13,7 +18,7 @@ void DSelector_pi0kplamb_flat::Init(TTree *locTree)
 	dOutputTreeFileName = ""; //"" for none
 	dFlatTreeFileName = "pi0kplamb_flat_2018_08.root"; //output flat tree (one combo per tree entry), "" for none
 	dFlatTreeName = "pi0kplamb_flat"; //if blank, default name will be chosen
-	//dSaveDefaultFlatBranches = true; // False: don't save default branches, reduce disk footprint.
+	dSaveDefaultFlatBranches = false; // False: don't save default branches, reduce disk footprint.
 	//dSaveTLorentzVectorsAsFundamentaFlatTree = false; // Default (or false): save particles as TLorentzVector objects. True: save as four doubles instead.
 
 	//Because this function gets called for each TTree in the TChain, we must be careful:
@@ -33,7 +38,7 @@ void DSelector_pi0kplamb_flat::Init(TTree *locTree)
 	// // For histogramming the phi mass in phi -> K+ K-
 	// // Be sure to change this and dAnalyzeCutActions to match reaction
 	std::deque<Particle_t> MyPhi;
-	MyPhi.push_back(KPlus); MyPhi.push_back(KMinus);
+	MyPhi.push_back(KPlus); MyPhi.push_back(Pi0); MyPhi.push_back(Lambda);
 
 	//ANALYSIS ACTIONS: //Executed in order if added to dAnalysisActions
 	//false/true below: use measured/kinfit data
@@ -82,6 +87,62 @@ void DSelector_pi0kplamb_flat::Init(TTree *locTree)
 	//EXAMPLE MANUAL HISTOGRAMS:
 	dHist_MissingMassSquared = new TH1I("MissingMassSquared", ";Missing Mass Squared (GeV/c^{2})^{2}", 600, -0.06, 0.06);
 	dHist_BeamEnergy = new TH1I("BeamEnergy", ";Beam Energy (GeV)", 600, 0.0, 12.0);
+
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("beam_e");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("beam_e_measured");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("kp_m");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("kp_m_measured");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("kp_m2");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("kp_m2_measured");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("photon1_E");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("decayingPi0_m");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("decayingPi0_m2");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("photon1_E");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("photon1_E_measured");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("photon1_p");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("photon1_p_measured");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("photon2_E");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("photon2_E_measured");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("photon2_p");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("photon2_p_measured");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("pim_m");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("pim_m_measured");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("pim_m2");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("pim_m2_measured");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("protonRecoil_m");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("protonRecoil_m_measured");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("protonRecoil_m2");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("protonRecoil_m2_measured");
+
+	// combined masses or energies
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("kpANDPi0_m");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("kpANDPi0_E");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("kpANDphoton1_E");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("kpANDphoton1_E_measured");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("kpANDphoton2_E");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("kpANDphoton2_E_measured");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("kpANDlambda_m");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("kpANDlambda_m_measured");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("kpANDlambda_E");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("kpANDproton_m");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("kpANDproton_m_measured");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("kpANDpim_m");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("kpANDpim_m_measured");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("pi0ANDlambda_m");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("pi0ANDproton_m");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("pi0ANDpim_m");
+
+	// dEdx values. Energy loss per distance traveled.  Bethe-Bloch formula.
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("dEdx_cdc_kplus");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("dEdx_fdc_kplus");
+
+	// Mandelstam variables: momentum transfer (t), COM frame energy (s).
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("t");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("t0");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("tPrime");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("s");
+
+
 
 	/************************** EXAMPLE USER INITIALIZATION: CUSTOM OUTPUT BRANCHES - MAIN TREE *************************/
 
@@ -199,6 +260,11 @@ Bool_t DSelector_pi0kplamb_flat::Process(Long64_t locEntry)
 
 	/************************************************* LOOP OVER COMBOS *************************************************/
 
+	// ADD BEST CHI2 LOGIC HERE.  THEN CHANGE 'loci' to 'best_combo_index' in the loop below
+
+
+	double best_chi2 = 100000000;
+	int best_combo = -1;
 	//Loop over combos
 	for(UInt_t loc_i = 0; loc_i < Get_NumCombos(); ++loc_i)
 	{
@@ -251,6 +317,8 @@ Bool_t DSelector_pi0kplamb_flat::Process(Long64_t locEntry)
 		TLorentzVector locPiMinusP4_Measured = dPiMinusWrapper->Get_P4_Measured();
 		TLorentzVector locProtonP4_Measured = dProtonWrapper->Get_P4_Measured();
 
+
+
 		/********************************************* GET COMBO RF TIMING INFO *****************************************/
 
 		TLorentzVector locBeamX4_Measured = dComboBeamWrapper->Get_X4_Measured();
@@ -274,7 +342,73 @@ Bool_t DSelector_pi0kplamb_flat::Process(Long64_t locEntry)
 
 		// DO YOUR STUFF HERE
 
-		
+		// remove the vector.M2 cause you don't use those for Dalitz plots.  instead yuou add the 4-vectors together, square then square root
+
+		// Individual masses, momenta, & energies: beam, target -> K+, photon1, photon2, pi-, proton
+		double beam_e = locBeamP4.E();
+		double beam_e_measured = locBeamP4_Measured.E();
+		double kp_m = locKPlusP4.M();
+		double kp_m_measured = locKPlusP4_Measured.M();
+		double kp_m2 = locKPlusP4.M2();
+		double kp_m2_measured = locKPlusP4_Measured.M2();
+		double kp_E = locKPlusP4.E();
+		double kp_E_measured = locKPlusP4_Measured.E();
+		double decayingPi0_m = locDecayingPi0P4.M();
+		double decayingPi0_m_measured = locDecayingPi0P4.M();
+		double decayingPi0_m2 = locDecayingPi0P4.M2();
+		double decayingPi0_m2_measured = locDecayingPi0P4.M2();
+		double decayingPi0_E = locDecayingPi0P4.E();
+		double photon1_E = locPhoton1P4.E();
+		double photon1_E_measured = locPhoton1P4_Measured.E();
+		double photon1_p = locPhoton1P4.P();
+		double photon1_p_measured = locPhoton1P4_Measured.P();
+		double photon2_E = locPhoton2P4.E();
+		double photon2_E_measured = locPhoton2P4_Measured.E();
+		double photon2_p = locPhoton2P4.P();
+		double photon2_p_measured = locPhoton2P4_Measured.P();
+		double pim_m = locPiMinusP4.M();
+		double pim_m_measured = locPiMinusP4_Measured.M();
+		double pim_m2 = locPiMinusP4.M2();
+		double pim_m2_measured = locPiMinusP4_Measured.M2();
+		double pim_E = locPiMinusP4.E();
+		double pim_E_measured = locPiMinusP4_Measured.E();
+		double protonRecoil_m = locProtonP4.M();
+		double protonRecoil_m_measured = locProtonP4_Measured.M();
+		double protonRecoil_m2 = locProtonP4.M2();
+		double protonRecoil_m2_measured = locProtonP4_Measured.M2();
+		double protonRecoul_E = locProtonP4.E();
+		double protonRecoul_E_measured = locProtonP4_Measured.E();
+
+		// Combinations of final state particles
+		double kpANDPi0_m = (locKPlusP4 + locDecayingPi0P4).M();
+		double kpANDPi0_E = (locKPlusP4 + locDecayingPi0P4).E();
+		double kpANDPi0COMBO_E = (locKPlusP4 + locPhoton1P4 + locPhoton2P4).E();
+		double kpANDphoton1_E = (locKPlusP4 + locPhoton1P4).E();
+		double kpANDphoton1_E_measured = (locKPlusP4_Measured + locPhoton1P4_Measured).E();
+		double kpANDphoton2_E = (locKPlusP4 + locPhoton2P4).E();
+		double kpANDphoton2_E_measured = (locKPlusP4_Measured + locPhoton2P4_Measured).E();
+		double kpANDlambda_m = (locKPlusP4 + locProtonP4 + locPiMinusP4).M();
+		double kpANDlambda_m_measured = (locKPlusP4_Measured + locProtonP4_Measured + locPiMinusP4_Measured).M();
+		double kpANDlambda_E = (locKPlusP4 + locProtonP4 + locPiMinusP4).E();
+		double kpANDproton_m = (locKPlusP4 + locProtonP4).M();
+		double kpANDproton_m_measured = (locKPlusP4_Measured + locProtonP4_Measured).M();
+		double kpANDpim_m = (locKPlusP4 + locPiMinusP4).M();
+		double kpANDpim_m_measured = (locKPlusP4_Measured + locPiMinusP4_Measured).M();
+		double pi0ANDlambda_m = (locDecayingPi0P4 + locProtonP4 + locPiMinusP4).M();
+		double pi0ANDproton_m = (locDecayingPi0P4 + locProtonP4).M();
+		double pi0ANDpim_m = (locDecayingPi0P4 + locPiMinusP4).M();
+
+		// Get dEdx values.  dEdx is energy loss per distance traveled.  The formula is known as Bethe-Bloch formula.
+		double dEdx_cdc_kplus = dKPlusWrapper->Get_dEdx_CDC();
+		double dEdx_fdc_kplus = dKPlusWrapper->Get_dEdx_FDC();
+
+		// need if statement checking if there is energy in FCD or CDC
+
+		// Mandelstam variables: momentum transfer (t), COM frame energy (s).
+		double t = (locBeamP4 - locKPlusP4 - locDecayingPi0P4).M2();
+		double t0 = (locBeamP4 - locKPlusP4 - locDecayingPi0P4).M2();
+		double tPrime = (t - t0);
+		double s = (locBeamP4 + dTargetP4).M2();
 
 		// Combine 4-vectors
 		TLorentzVector locMissingP4_Measured = locBeamP4_Measured + dTargetP4;
@@ -364,6 +498,65 @@ Bool_t DSelector_pi0kplamb_flat::Process(Long64_t locEntry)
 			dFlatTreeInterface->Fill_TObject<TLorentzVector>("flat_my_p4_array", locMyComboP4_Flat, loc_j);
 		}
 		*/
+
+		// FILL CUSTOM BRANCHES: individual masses, momenta, & energies: beam, target -> K+, photon1, photon2, pi-, proton
+
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("beam_e", beam_e);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("beam_e_measured", beam_e_measured);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("kp_m", kp_m);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("kp_m_measured", kp_m_measured);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("kp_m2", kp_m2);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("kp_m2_measured", kp_m2_measured);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("photon1_E", photon1_E);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("decayingPi0_m", decayingPi0_m);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("decayingPi0_m_measured", decayingPi0_m_measured);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("decayingPi0_m2", decayingPi0_m2);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("decayingPi0_m2_measured", decayingPi0_m2_measured);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("photon1_E", photon1_E);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("photon1_E_measured", photon1_E_measured);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("photon1_p", photon1_p);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("photon1_p_measured", photon1_p_measured);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("photon2_E", photon2_E);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("photon2_E_measured", photon2_E_measured);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("photon2_p", photon2_p);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("photon2_p_measured", photon2_p_measured);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("pim_m", pim_m);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("pim_m_measured", pim_m_measured);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("pim_m2", pim_m2);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("pim_m2_measured", pim_m2_measured);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("protonRecoil_m", protonRecoil_m);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("protonRecoil_m_measured", protonRecoil_m_measured);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("protonRecoil_m2", protonRecoil_m2);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("protonRecoil_m2_measured", protonRecoil_m2_measured);
+
+		// FILL CUSTOM BRANCHES: combined masses or energies
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("kpANDPi0_m", kpANDPi0_m);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("kpANDPi0_E", kpANDPi0_E);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("kpANDphoton1_E", kpANDphoton1_E);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("kpANDphoton1_E_measured", kpANDphoton1_E_measured);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("kpANDphoton2_E", kpANDphoton2_E);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("kpANDphoton2_E_measured", kpANDphoton2_E_measured);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("kpANDlambda_m", kpANDlambda_m);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("kpANDlambda_m_measured", kpANDlambda_m_measured);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("kpANDlambda_E", kpANDlambda_E);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("kpANDproton_m", kpANDproton_m);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("kpANDproton_m_measured", kpANDproton_m_measured);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("kpANDpim_m", kpANDpim_m);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("kpANDpim_m_measured", kpANDpim_m_measured);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("pi0ANDlambda_m", pi0ANDlambda_m);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("pi0ANDproton_m", pi0ANDproton_m);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("pi0ANDpim_m", pi0ANDpim_m);
+
+		// FILL CUSTOM BRANCHES: dEdx values
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("dEdx_cdc_kplus", dEdx_cdc_kplus);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("dEdx_fdc_kplus", dEdx_fdc_kplus);
+
+		// FILL CUSTOM BRANCHES: Mandelstam variables
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("t", t);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("t0", t0);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("tPrime", tPrime);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("s", s);
+
 
 		//FILL FLAT TREE
 		Fill_FlatTree(); //for the active combo
