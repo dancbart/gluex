@@ -104,6 +104,12 @@ void DSelector_pi0kplamb_flat::Init(TTree *locTree)
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("photon2_E_measured");
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("photon2_p");
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("photon2_p_measured");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("decayingLambda_m");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("decayingLambda_m_measured");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("decayingLambda_m2");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("decayingLambda_m2_measured");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("decayingLambda_E");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("decayingLambda_E_measured");
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("pim_m");
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("pim_m_measured");
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("pim_m2");
@@ -392,6 +398,7 @@ Bool_t DSelector_pi0kplamb_flat::Process(Long64_t locEntry)
 		double decayingLambda_m = (locPiMinusP4 + locProtonP4).M();
 		double decayingLambda_m_measured = (locPiMinusP4_Measured + locProtonP4_Measured).M();
 		double decayingLambda_m2 = (locPiMinusP4 + locProtonP4).M2();
+		double decayingLambda_m2_measured = (locPiMinusP4_Measured + locProtonP4_Measured).M2();
 		double decayingLambda_E = (locPiMinusP4 + locProtonP4).E();
 		double decayingLambda_E_measured = (locPiMinusP4_Measured + locProtonP4_Measured).E();
 		double pim_m = locPiMinusP4.M();
@@ -545,6 +552,12 @@ Bool_t DSelector_pi0kplamb_flat::Process(Long64_t locEntry)
 		dFlatTreeInterface->Fill_Fundamental<Double_t>("photon2_E_measured", photon2_E_measured);
 		dFlatTreeInterface->Fill_Fundamental<Double_t>("photon2_p", photon2_p);
 		dFlatTreeInterface->Fill_Fundamental<Double_t>("photon2_p_measured", photon2_p_measured);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("decayingLambda_m", decayingLambda_m);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("decayingLambda_m_measured", decayingLambda_m_measured);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("decayingLambda_m2", decayingLambda_m2);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("decayingLambda_m2_measured", decayingLambda_m2_measured);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("decayingLambda_E", decayingLambda_E);
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("decayingLambda_E_measured", decayingLambda_E_measured);
 		dFlatTreeInterface->Fill_Fundamental<Double_t>("pim_m", pim_m);
 		dFlatTreeInterface->Fill_Fundamental<Double_t>("pim_m_measured", pim_m_measured);
 		dFlatTreeInterface->Fill_Fundamental<Double_t>("pim_m2", pim_m2);
