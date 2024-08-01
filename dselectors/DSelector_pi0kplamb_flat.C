@@ -94,7 +94,6 @@ void DSelector_pi0kplamb_flat::Init(TTree *locTree)
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("kp_m_measured");
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("kp_m2");
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("kp_m2_measured");
-	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("photon1_E");
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("decayingPi0_m");
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("decayingPi0_m2");
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("photon1_E");
@@ -260,12 +259,10 @@ Bool_t DSelector_pi0kplamb_flat::Process(Long64_t locEntry)
 
 	/************************************************* LOOP OVER COMBOS *************************************************/
 
-	// ADD BEST CHI2 LOGIC HERE.  THEN CHANGE 'loci' to 'best_combo_index' in the loop below
-
-
+	//Loop over combos
 	double best_chi2 = 100000000;
 	int best_combo = -1;
-	//Loop over combos
+	
 	for(UInt_t loc_i = 0; loc_i < Get_NumCombos(); ++loc_i)
 	{
 		//Set branch array indices for combo and all combo particles
@@ -275,7 +272,33 @@ Bool_t DSelector_pi0kplamb_flat::Process(Long64_t locEntry)
 		if(dComboWrapper->Get_IsComboCut()) // Is false when tree originally created
 			continue; // Combo has been cut previously
 
-		/********************************************** GET PARTICLE INDICES *********************************************/
+		/********************************************** GET PARTICLE INDICES
+    	 * *********************************************/
+    	double locRFTime = dComboWrapper->Get_RFTime();
+    	TLorentzVector locBeamX4_Measured = dComboBeamWrapper->Get_X4_Measured();
+
+    	// Beam
+    	double locPropagatedRFTimeBeam =
+        locRFTime + (locBeamX4_Measured.Z() - dTargetCenter.Z()) / 29.9792458;
+    	double locBeamDeltaT = locBeamX4_Measured.T() - locPropagatedRFTimeBeam;
+
+    	double chi2 = dComboWrapper->Get_ChiSq_KinFit();
+    	double ndf = dComboWrapper->Get_NDF_KinFit();
+    	// Used for tracking uniqueness when filling histograms, and for determining
+    	// unused particles
+    	if (chi2 / ndf < best_chi2) {
+    	  best_chi2 = chi2 / ndf;
+    	  best_combo = loc_i;
+    	}
+
+	} // end of combo loop
+
+  	if (best_combo == -1) {
+  	  return kTRUE;
+  	}
+  	dComboWrapper->Set_ComboIndex(best_combo);
+
+			/********************************************** GET PARTICLE INDICES *********************************************/
 
 		//Used for tracking uniqueness when filling histograms, and for determining unused particles
 
@@ -366,6 +389,11 @@ Bool_t DSelector_pi0kplamb_flat::Process(Long64_t locEntry)
 		double photon2_E_measured = locPhoton2P4_Measured.E();
 		double photon2_p = locPhoton2P4.P();
 		double photon2_p_measured = locPhoton2P4_Measured.P();
+		double decayingLambda_m = (locPiMinusP4 + locProtonP4).M();
+		double decayingLambda_m_measured = (locPiMinusP4_Measured + locProtonP4_Measured).M();
+		double decayingLambda_m2 = (locPiMinusP4 + locProtonP4).M2();
+		double decayingLambda_E = (locPiMinusP4 + locProtonP4).E();
+		double decayingLambda_E_measured = (locPiMinusP4_Measured + locProtonP4_Measured).E();
 		double pim_m = locPiMinusP4.M();
 		double pim_m_measured = locPiMinusP4_Measured.M();
 		double pim_m2 = locPiMinusP4.M2();
@@ -379,7 +407,7 @@ Bool_t DSelector_pi0kplamb_flat::Process(Long64_t locEntry)
 		double protonRecoul_E = locProtonP4.E();
 		double protonRecoul_E_measured = locProtonP4_Measured.E();
 
-		// Combinations of final state particles
+		// Various combinations of final state particles
 		double kpANDPi0_m = (locKPlusP4 + locDecayingPi0P4).M();
 		double kpANDPi0_E = (locKPlusP4 + locDecayingPi0P4).E();
 		double kpANDPi0COMBO_E = (locKPlusP4 + locPhoton1P4 + locPhoton2P4).E();
@@ -419,7 +447,7 @@ Bool_t DSelector_pi0kplamb_flat::Process(Long64_t locEntry)
 		// Loop through the analysis actions, executing them in order for the active particle combo
 		dAnalyzeCutActions->Perform_Action(); // Must be executed before Execute_Actions()
 		if(!Execute_Actions()) //if the active combo fails a cut, IsComboCutFlag automatically set
-			continue;
+			return kTRUE;
 
 		//if you manually execute any actions, and it fails a cut, be sure to call:
 			//dComboWrapper->Set_IsComboCut(true);
@@ -507,11 +535,8 @@ Bool_t DSelector_pi0kplamb_flat::Process(Long64_t locEntry)
 		dFlatTreeInterface->Fill_Fundamental<Double_t>("kp_m_measured", kp_m_measured);
 		dFlatTreeInterface->Fill_Fundamental<Double_t>("kp_m2", kp_m2);
 		dFlatTreeInterface->Fill_Fundamental<Double_t>("kp_m2_measured", kp_m2_measured);
-		dFlatTreeInterface->Fill_Fundamental<Double_t>("photon1_E", photon1_E);
 		dFlatTreeInterface->Fill_Fundamental<Double_t>("decayingPi0_m", decayingPi0_m);
-		dFlatTreeInterface->Fill_Fundamental<Double_t>("decayingPi0_m_measured", decayingPi0_m_measured);
 		dFlatTreeInterface->Fill_Fundamental<Double_t>("decayingPi0_m2", decayingPi0_m2);
-		dFlatTreeInterface->Fill_Fundamental<Double_t>("decayingPi0_m2_measured", decayingPi0_m2_measured);
 		dFlatTreeInterface->Fill_Fundamental<Double_t>("photon1_E", photon1_E);
 		dFlatTreeInterface->Fill_Fundamental<Double_t>("photon1_E_measured", photon1_E_measured);
 		dFlatTreeInterface->Fill_Fundamental<Double_t>("photon1_p", photon1_p);
@@ -560,7 +585,6 @@ Bool_t DSelector_pi0kplamb_flat::Process(Long64_t locEntry)
 
 		//FILL FLAT TREE
 		Fill_FlatTree(); //for the active combo
-	} // end of combo loop
 
 	//FILL HISTOGRAMS: Num combos / events surviving actions
 	Fill_NumCombosSurvivedHists();
