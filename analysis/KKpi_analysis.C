@@ -410,17 +410,17 @@ void analysis(double f1_mMin, double f1_mMax, int plotIndex) {
 
     // But...keep the canvas displayed and wait for user input to close
 
-// while (true) {
-//     // Create a TApplication object to handle the event loop
-//     TApplication app("app", nullptr, nullptr);
+while (true) {
+    // Create a TApplication object to handle the event loop
+    TApplication app("app", nullptr, nullptr);
 
-//     // Wait for user input to close the program
-//     std::cout << "Press Enter to continue..." << std::endl;
-//     std::cin.ignore(); // this line clears the input buffer before the user presses enter so no previously entered characters are registered
-//     c2->Close();
-//     //app.Terminate(); // not working, so trying below
-//     gApplication->Terminate(0);
-//     }
+    // Wait for user input to close the program
+    std::cout << "Press Enter to continue..." << std::endl;
+    std::cin.ignore(); // this line clears the input buffer before the user presses enter so no previously entered characters are registered
+    c1->Close();
+    //app.Terminate(); // not working, so trying below
+    gApplication->Terminate(0);
+    }
 
 }
 

@@ -283,6 +283,8 @@ Bool_t DSelector_pi0kplamb_flat::Process(Long64_t locEntry)
     	double locRFTime = dComboWrapper->Get_RFTime();
     	TLorentzVector locBeamX4_Measured = dComboBeamWrapper->Get_X4_Measured();
 
+		// am i supposed to change multiply 29.### by 10^7 for speed of light?
+
     	// Beam
     	double locPropagatedRFTimeBeam =
         locRFTime + (locBeamX4_Measured.Z() - dTargetCenter.Z()) / 29.9792458;
