@@ -409,7 +409,7 @@ Bool_t DSelector_KKpi_mc::Process(Long64_t locEntry)
 		// Loop through the analysis actions, executing them in order for the active particle combo
 		dAnalyzeCutActions->Perform_Action(); // Must be executed before Execute_Actions()
 		if(!Execute_Actions()) //if the active combo fails a cut, IsComboCutFlag automatically set
-			continue;
+			return kTRUE;
 
 		//if you manually execute any actions, and it fails a cut, be sure to call:
 			//dComboWrapper->Set_IsComboCut(true);
