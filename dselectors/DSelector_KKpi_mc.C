@@ -78,6 +78,7 @@ void DSelector_KKpi_mc::Init(TTree *locTree)
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("ks_E");
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("ks_m");
 
+
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("theta_p");
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("mom_p");
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("phi_p");
@@ -101,11 +102,10 @@ void DSelector_KKpi_mc::Init(TTree *locTree)
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("theta_f1");
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("mom_f1");
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("phi_f1");
-	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("mass_f1");
 
-	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("mpippim");
-	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("mppip1");
-	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("mKsKm");
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("kmkspip1_m"); // Invariant mass of f1(1285) system (KmKsPip1)
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("ppip1_m"); // Invariant mass of proton and pip1 system
+	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("a0_m"); // Invariant mass of a0(980) system (KmPip2Pim)
 
     dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("men_s");
 	dFlatTreeInterface->Create_Branch_Fundamental<Double_t>("men_t");
@@ -288,6 +288,9 @@ Bool_t DSelector_KKpi_mc::Process(Long64_t locEntry)
 
 	/************************************************* LOOP OVER COMBOS *************************************************/
 
+	double best_chi2 = 100000000;
+	int best_combo = -1;
+
 	//Loop over combos
 	for(UInt_t loc_i = 0; loc_i < Get_NumCombos(); ++loc_i)
 	{
@@ -297,6 +300,35 @@ Bool_t DSelector_KKpi_mc::Process(Long64_t locEntry)
 		// Is used to indicate when combos have been cut
 		if(dComboWrapper->Get_IsComboCut()) // Is false when tree originally created
 			continue; // Combo has been cut previously
+
+
+		/********************************************** GET PARTICLE INDICES
+    	 * *********************************************/
+    	double locRFTime = dComboWrapper->Get_RFTime();
+    	TLorentzVector locBeamX4_Measured = dComboBeamWrapper->Get_X4_Measured();
+
+		// am i supposed to change multiply 29.### by 10^7 for speed of light?
+
+    	// Beam
+    	double locPropagatedRFTimeBeam =
+        locRFTime + (locBeamX4_Measured.Z() - dTargetCenter.Z()) / 29.9792458;
+    	double locBeamDeltaT = locBeamX4_Measured.T() - locPropagatedRFTimeBeam;
+
+    	double chi2 = dComboWrapper->Get_ChiSq_KinFit();
+    	double ndf = dComboWrapper->Get_NDF_KinFit();
+    	// Used for tracking uniqueness when filling histograms, and for determining
+    	// unused particles
+    	if (chi2 / ndf < best_chi2) {
+    	  best_chi2 = chi2 / ndf;
+    	  best_combo = loc_i;
+    	}
+
+	} // end of combo loop
+
+	if (best_combo == -1) {
+  	  return kTRUE;
+  	}
+	dComboWrapper->Set_ComboIndex(best_combo);
 
 		/********************************************** GET PARTICLE INDICES *********************************************/
 
@@ -362,10 +394,15 @@ Bool_t DSelector_KKpi_mc::Process(Long64_t locEntry)
 		TLorentzVector locMissingP4_Measured = locBeamP4_Measured + dTargetP4;
 		locMissingP4_Measured -= locPiPlus1P4_Measured + locKMinusP4_Measured + locProtonP4_Measured + locPiMinusP4_Measured + locPiPlus2P4_Measured;
 
-		TLorentzVector locPip2Pim_P4 = locPiPlus2P4 + locPiMinusP4;
-		TLorentzVector locProtonPip1_P4 = locProtonP4 + locPiPlus1P4;
-		TLorentzVector locKShortP4 = locKMinusP4 + locPiPlus2P4;
-		TLorentzVector locKmKsPip_P4 = locKMinusP4 + locPiPlus1P4 + locKShortP4;
+		TLorentzVector locKShortP4 = locPiPlus2P4 + locPiMinusP4; // kShort
+		TLorentzVector locKmKsPip1P4 = locKMinusP4 + locPiPlus1P4 + locKShortP4; // f1(1285)
+		TLorentzVector locProtonPip1P4 = locProtonP4 + locPiPlus1P4;
+		TLorentzVector locA0P4 = locKMinusP4 + locPiPlus2P4 + locPiMinusP4; // a0(980)
+
+		double s_men = (locBeamP4 + dTargetP4).M2();
+		double w_var = (locBeamP4 + dTargetP4).M();
+		double t_kmks  = (dTargetP4 - locProtonP4).M2();
+		double minus_t_kmks = (-(t_kmks));
 
 		/******************************************** EXECUTE ANALYSIS ACTIONS *******************************************/
 
@@ -452,12 +489,6 @@ Bool_t DSelector_KKpi_mc::Process(Long64_t locEntry)
 		}
 		*/
 
-		double f1_mass = locKmKsPip_P4.M();
-		double s_men = (locBeamP4 + dTargetP4).M2();
-		double w_var = (locBeamP4 + dTargetP4).M();
-		double t_kmks  = (dTargetP4 - locProtonP4).M2();
-		double minus_t_kmks = (-(t_kmks));
-
 		dFlatTreeInterface->Fill_Fundamental<Double_t>("beam_E", locBeamP4.E());
 		dFlatTreeInterface->Fill_Fundamental<Double_t>("beam_px", locBeamP4.Px());
 		dFlatTreeInterface->Fill_Fundamental<Double_t>("beam_py", locBeamP4.Py());
@@ -506,11 +537,9 @@ Bool_t DSelector_KKpi_mc::Process(Long64_t locEntry)
 		dFlatTreeInterface->Fill_Fundamental<Double_t>("proton_pz", locProtonP4.Pz());
 		dFlatTreeInterface->Fill_Fundamental<Double_t>("proton_m", locProtonP4.M());
 
-		dFlatTreeInterface->Fill_Fundamental<Double_t>("mass_f1", f1_mass);
-
-		dFlatTreeInterface->Fill_Fundamental<Double_t>("mpippim",locPip2Pim_P4.M());
-		dFlatTreeInterface->Fill_Fundamental<Double_t>("mKsKm", locKmKsPip_P4.M());
-		dFlatTreeInterface->Fill_Fundamental<Double_t>("mppip1", locProtonPip1_P4.M());
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("kmkspip1_m", locKmKsPip1P4.M()); // Invariant mass of f1(1285) system (KmKsPip1)
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("ppip1_m", locProtonPip1P4.M()); // Invariant mass of proton and pip1 system
+		dFlatTreeInterface->Fill_Fundamental<Double_t>("a0_m", locA0P4.M()); // Invariant mass of a0(980) system (KmPip2Pim)
 
 
 		dFlatTreeInterface->Fill_Fundamental<Double_t>("men_s",s_men);
@@ -522,7 +551,7 @@ Bool_t DSelector_KKpi_mc::Process(Long64_t locEntry)
 
 		//FILL FLAT TREE
 		Fill_FlatTree(); //for the active combo
-	} // end of combo loop
+	
 
 	
 	//FILL HISTOGRAMS: Num combos / events surviving actions
