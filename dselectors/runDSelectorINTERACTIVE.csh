@@ -2,7 +2,10 @@
 
 #!/bin/tcsh
 
-(root -l -b -q runDSelectorINTERACTIVE.cc > runDSelectorINTERACTIVE_proof_THROWN.txt) >& runDSelectorINTERACTIVE_proof_error_THROWN.txt
+rm -f runDSelectorINTERACTIVE_proof.txt
+rm -f runDSelectorINTERACTIVE_proof_error.txt
+
+(root -l -b -q runDSelectorINTERACTIVE.cc > runDSelectorINTERACTIVE_proof.txt) >& runDSelectorINTERACTIVE_proof_error.txt
 
 # 7/3/2024 there may be a CCDB error causing a crash.  Try sourcing 'gxenv' in a different environment.
 # $ gxenv /group/halld/www/halldweb/html/halld_versions/version_5.17.0.xml

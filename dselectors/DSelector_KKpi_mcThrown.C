@@ -1,5 +1,5 @@
 
-// Should be able to run any DSelector on CentOS or Alma9 servers when running interactively (i.e. directly on your terminal).  However, if using SWIF2 to run the DSelector you may have to use CentOS because SWIF2 relies on a python file 'launch.py'.
+// This DSelector made from mc generated with genr8.
 
 // Notes on how this DSelector was made 6/3/2024:
 // $ gxenv // if this command not found 'source' gluex_env_boot_jlab.csh below -->
@@ -44,8 +44,8 @@ void DSelector_KKpi_mcThrown::Init(TTree *locTree)
 	//USERS: SET OUTPUT FILE NAME //can be overriden by user in PROOF
 	dOutputFileName = ""; //"" for none
 	dOutputTreeFileName = ""; //"" for none
-	dFlatTreeFileName = "KKpi_mcThrown.root"; //output flat tree (one combo per tree entry), "" for none
-	dFlatTreeName = "pipkmks_flat_Thrown"; //if blank, default name will be chosen
+	dFlatTreeFileName = "KKpi_mc_flatte_THROWN.root"; //output flat tree (one combo per tree entry), "" for none
+	dFlatTreeName = "pipkmks_flat_mc_Thrown"; //if blank, default name will be chosen
 	dSaveDefaultFlatBranches = false; // False: don't save default branches, reduce disk footprint.
 	//dSaveTLorentzVectorsAsFundamentaFlatTree = false; // Default (or false): save particles as TLorentzVector objects. True: save as four doubles instead.
 

@@ -128,11 +128,27 @@ Bool_t DSelector_KKpi_mcThrown_genamp2::Process(Long64_t locEntry)
 	if(dThrownBeam != NULL)
 		locBeamEnergyUsedForBinning = dThrownBeam->Get_P4().E();
 
+	TLorentzVector dTargetP4;
+	dTargetP4.SetXYZM(0.0,0.0,0.0,0.938);	
+
+	TLorentzVector locProtonP4;
 	TLorentzVector locPiPlus1P4;
+	TLorentzVector locPiMinusP4;
+	TLorentzVector locPiPlus2P4;
 	TLorentzVector locKMinusP4;
 	TLorentzVector locKShortP4;
-	TLorentzVector locPiPlus2P4;
-	TLorentzVector locPiMinusP4;
+
+	TLorentzVector PiPlusHypo1;
+	TLorentzVector PiPlusHypo2;
+
+	Bool_t piPlusChecked = false;
+	int nparticles = 0;
+	int nThrown = Get_NumThrown();
+
+	Int_t KsThrown_Index;
+
+	// create a vector for potential pi+ candidates indices
+	vector<int> piPlusIndices;
 
 	//Loop over throwns
 	for(UInt_t loc_i = 0; loc_i < Get_NumThrown(); ++loc_i)
@@ -145,22 +161,39 @@ Bool_t DSelector_KKpi_mcThrown_genamp2::Process(Long64_t locEntry)
 		TLorentzVector locThrownP4 = dThrownWrapper->Get_P4();
 		//cout << "Thrown " << loc_i << ": " << locPID << ", " << locThrownP4.Px() << ", " << locThrownP4.Py() << ", " << locThrownP4.Pz() << ", " << locThrownP4.E() << endl;
 
-		if (locPID == 8){
-			locPiPlus1P4 = locThrownP4;
-		}
 		if (locPID == 12){
 			locKMinusP4 = locThrownP4;
 		}
-		if(locPID == 16){
-			locKShortP4 = locThrownP4;
-		}
-		if (locPID == 8){
-			locPiPlus2P4 = locThrownP4;
+		if (locPID == 14){
+			locProtonP4 = locThrownP4;
 		}
 		if (locPID == 9){
 			locPiMinusP4 = locThrownP4;
 		}
+		if(locPID == 16){
+			locKShortP4 = locThrownP4;
+			KsThrown_Index = loc_i;
+			
+		}
+		if (locPID == 8){
+			if(dThrownWrapper->Get_ParentIndex() < 0){
+				locPiPlus1P4 = locThrownP4;
+			}
+			else{
+				piPlusIndices.push_back(loc_i);
+			}
+			// if (loc_i == 2) { locPiPlus2P4 = locThrownP4; }
+			// if (loc_i == 4) { locPiPlus1P4 = locThrownP4; }
+		}
 
+	}
+
+	// loop over pion candidate indices and see if it's parent index is equal to the Ks. if it is, make that pion's 4 vector the pi+2
+	for (int i = 0; i < piPlusIndices.size(); i++){
+		dThrownWrapper->Set_ArrayIndex(piPlusIndices[i]);
+		if (dThrownWrapper->Get_ParentIndex() == KsThrown_Index){
+			locPiPlus2P4 = dThrownWrapper->Get_P4();
+		}
 	}
 
 	// TLorentzVector locMissingP4_Measured = locBeamP4_Measured + dTargetP4;
