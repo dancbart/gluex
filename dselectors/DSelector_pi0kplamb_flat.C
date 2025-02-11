@@ -16,7 +16,7 @@ void DSelector_pi0kplamb_flat::Init(TTree *locTree)
 	//USERS: SET OUTPUT FILE NAME //can be overriden by user in PROOF
 	dOutputFileName = ""; //"" for none
 	dOutputTreeFileName = ""; //"" for none
-	dFlatTreeFileName = "pi0kplamb_flat_2018_01.root"; //output flat tree (one combo per tree entry), "" for none
+	dFlatTreeFileName = "pi0kplamb_flat_2018_08.root"; //output flat tree (one combo per tree entry), "" for none
 	dFlatTreeName = "pi0kplamb_flat"; //if blank, default name will be chosen
 	dSaveDefaultFlatBranches = false; // False: don't save default branches, reduce disk footprint.
 	//dSaveTLorentzVectorsAsFundamentaFlatTree = false; // Default (or false): save particles as TLorentzVector objects. True: save as four doubles instead.
