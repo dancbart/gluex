@@ -10,16 +10,18 @@ import os.path
 import subprocess
 from subprocess import call
 
-attempt = "_v2"
+attempt = "_v1"
 analysisLaunch = "fall2018"
-workflow = "pipkslamb_flatten_BGGEN_" + analysisLaunch + attempt
+workflow = "pipkslamb_flatten_genAmp2_" + analysisLaunch + attempt
 
-baseDir = "/w/halld-scshelf2101/home/dbarton/gluex"
+baseDir = "/work/halld/home/dbarton/gluex"
 # dataDir = "/cache/halld/RunPeriod-2018-08/analysis/ver22/tree_pipkslamb__B4_M16_M18/merged"
 # dataDir = "/cache/halld/RunPeriod-2018-01/analysis/ver23/tree_pipkslamb__B4_M16_M18/merged"
-dataDir = "/cache/halld/RunPeriod-2018-08/analysis/bggen/ver01/batch01/tree_pipkslamb/merged/"
-baseOutputDir = "/volatile/halld/home/dbarton/pipkslamb/mc/bggen/fall2018"
-scriptDir = baseOutputDir + "/scripts/"
+# dataDir = "/cache/halld/RunPeriod-2018-08/analysis/bggen/ver01/batch01/tree_pipkslamb/merged/"
+dataDir = "/volatile/halld/home/dbarton/pipkslamb/mc/genamp2/v2/root/trees/"
+# baseOutputDir = "/volatile/halld/home/dbarton/pipkslamb/mc/bggen/fall2018"
+baseOutputDir = "/volatile/halld/home/dbarton/pipkslamb/mc/genamp2/v2/root/trees/flatten/"
+scriptDir = baseOutputDir + "scripts"
 template = baseDir + "/scripts/runFSFlattenSWIF2_TEMPLATE.sh"
 # envFile = "version.xml"
 # -cores # check to see if 'flatten' can run in parallel.
@@ -35,20 +37,21 @@ NCORES = "4"
 if not os.path.exists(scriptDir): os.makedirs(scriptDir)
 
 # fileList = glob.glob(dataDir + "/tree_pipkslamb_??????.root")
-fileList = glob.glob(dataDir + "/tree_pipkslamb_05????.root")
+# fileList = glob.glob(dataDir + "/tree_pipkslamb_05????.root")
+fileList = glob.glob(dataDir + "tree_pipkslamb__B4_M16_M18_gen_amp_V2_*")
 
 for i in range(len(fileList)):
 
   # runNumber = re.search('tree_pipkslamb__B4_M16_M18_(......)',fileList[i]).group(1)
-  runNumber = re.search('tree_pipkslamb_(......)',fileList[i]).group(1)
-  if re.search('tree_pipkslamb_(......)',fileList[i]) is None: 
+  runNumber = re.search('tree_pipkslamb__B4_M16_M18_gen_amp_V2_051768_0(..)',fileList[i]).group(1)
+  if re.search('tree_pipkslamb__B4_M16_M18_gen_amp_V2_051768_0(..)',fileList[i]) is None: 
     continue
-  outputDir = baseOutputDir + "/flatten"
+  outputDir = baseOutputDir
 
   if not os.path.exists(outputDir): os.makedirs(outputDir)
 
   outScript = scriptDir + "/FSFlat_" + runNumber + ".sh"
-  outFile = outputDir + "/tree_pipkslamb__BGGEN_FSflat_" + runNumber + ".root"
+  outFile = outputDir + "tree_pipkslamb__B4_M16_M18_gen_amp_V2_051768_FSflat_" + runNumber + ".root"
   with open(template,'r+') as TEMP:
     data = TEMP.read()
     data=data.replace('INFILE',fileList[i])
