@@ -1,0 +1,116 @@
+   ------------------------------------------------------------------
+  | Welcome to ROOT 6.24/04                        https://root.cern |
+  | (c) 1995-2021, The ROOT Team; conception: R. Brun, F. Rademakers |
+  | Built for linuxx8664gcc on Aug 25 2021, 12:59:28                 |
+  | From tags/v6-24-04@v6-24-04                                      |
+  | With c++ (GCC) 11.5.0 20240719 (Red Hat 11.5.0-2)                |
+  | Try '.help', '.demo', '.license', '.credits', '.quit'/'.q'       |
+   ------------------------------------------------------------------
+
+--------------------------------------------------
+------   Loading the FSRoot Macros (v4.0)   ------
+--------------------------------------------------
+Loading FSBasic/FSControl.h...
+Loading FSBasic/FSCanvas.C...
+Loading FSBasic/FSString.h...
+Loading FSBasic/FSSystem.h...
+Loading FSBasic/FSMath.C...
+Loading FSBasic/FSPhysics.C...
+Loading FSBasic/FSCut.C...
+Loading FSBasic/FSTree.C...
+Loading FSBasic/FSHistogram.C...
+Loading FSMode/FSModeString.C...
+Loading FSMode/FSModeInfo.C...
+Loading FSMode/FSModeCollection.C...
+Loading FSMode/FSModeTree.C...
+Loading FSMode/FSModeHistogram.C...
+Loading FSData/FSXYPoint.C...
+Loading FSData/FSXYPointList.C...
+Loading FSData/FSEEDataSet.C...
+Loading FSData/FSEEDataSetList.C...
+Loading FSData/FSEEXS.C...
+Loading FSData/FSEEXSList.C...
+Loading FSFit/FSFitPrivate.C...
+Loading FSFit/FSFitFunctions.C...
+Loading FSFit/FSFitUtilities.C...
+Loading FSAnalysis/FSHistogramAnalysis.C...
+--------------------------------------------------
+-----   Finished loading the FSRoot Macros   -----
+--------------------------------------------------
+
+Processing skim_K892.C...
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/genamp2/fall2018_SBT_test2/root/thrown/flatten/tree_thrown_sp-fa18_gen_amp_V2_FSflat_RXNfltrONLY.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/genamp2/fall2018_SBT_test2/root/thrown/flatten/tree_pipkslamb_GENERAL_SKIM_K892_THROWN.root
+
+Original selection criteria:
+	((abs(-1*MCMASS2(1,-GLUEXTARGET))<1.0))
+
+Modified selection criteria:
+	((abs(-1*(pow(((-0.938272+MCEnP1)),2)-pow(((-0.0+MCPxP1)),2)-pow(((-0.0+MCPyP1)),2)-pow(((-0.0+MCPzP1)),2)))<1.0))
+
+Number of entries to skim:
+	2,952,850
+
+Number of entries kept:
+	2,090,452
+
+Skim Ratio:
+	0.707944
+
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/genamp2/fall2018_SBT_test2/root/thrown/flatten/tree_pipkslamb_GENERAL_SKIM_K892_THROWN.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/genamp2/fall2018_SBT_test2/root/thrown/flatten/tree_pipkslamb_SIGNAL_SKIM_K892_THROWN.root
+
+Original selection criteria:
+	((0.85<MCMASS(2,3)&&MCMASS(2,3)<0.95)&&(0.47<MCMASS(2)&&MCMASS(2)<0.53)&&(1.105<MCMASS(1)&&MCMASS(1)<1.1325))
+
+Modified selection criteria:
+	((0.85<(sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))&&(sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))<0.95)&&(0.47<(sqrt(pow(((MCEnP2)),2)-pow(((MCPxP2)),2)-pow(((MCPyP2)),2)-pow(((MCPzP2)),2)))&&(sqrt(pow(((MCEnP2)),2)-pow(((MCPxP2)),2)-pow(((MCPyP2)),2)-pow(((MCPzP2)),2)))<0.53)&&(1.105<(sqrt(pow(((MCEnP1)),2)-pow(((MCPxP1)),2)-pow(((MCPyP1)),2)-pow(((MCPzP1)),2)))&&(sqrt(pow(((MCEnP1)),2)-pow(((MCPxP1)),2)-pow(((MCPyP1)),2)-pow(((MCPzP1)),2)))<1.1325))
+
+Number of entries to skim:
+	2,090,452
+
+Number of entries kept:
+	892,848
+
+Skim Ratio:
+	0.427108
+
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/genamp2/fall2018_SBT_test2/root/thrown/flatten/tree_pipkslamb_GENERAL_SKIM_K892_THROWN.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/genamp2/fall2018_SBT_test2/root/thrown/flatten/tree_pipkslamb_SIDEBAND_SKIM_K892_THROWN.root
+
+Original selection criteria:
+	((1.0000000)*((1==1)))
+
+Modified selection criteria:
+	((1.0000000)*((1==1)))
+
+Number of entries to skim:
+	2,090,452
+
+Number of entries kept:
+	2,090,452
+
+Skim Ratio:
+	1
+
+----------------------------------
+--- Clearing the FSRoot Macros ---
+----------------------------------
+FSTree::clearChainCache()...
+FSHistogram::clearHistogramCache()...
+FSModeCollection::clear()...
+FSXYPointList::clearXYPoints()...
+FSEEDataSetList::clearDataSets()...
+FSEEXSList::clearXSList()...
+-------------------------------------------
+--- Finished clearing the FSRoot Macros ---
+-------------------------------------------

@@ -1,5 +1,32 @@
 {
     "files.associations": {
-        "f1_flat_bx2_analysis.C": "cpp"
+        "*.config": "shellscript",
+        "*.input": "ssh_config",
+        "f1_flat_bx2_analysis.C": "cpp",
+        "fitExample1.C": "cpp",
+        "rootlogoff.FSROOT.C": "cpp",
+        "rootlogon.FSROOT.C": "cpp",
+        "plots.C": "cpp",
+        "plotting.C": "cpp",
+        "KKpi_analysis.C": "cpp",
+        "DSelector_KKpi_mc.C": "cpp",
+        "plot_pi0kplamb.C": "cpp",
+        "histos_kspiplamb.C": "cpp",
+        "histos_pipkslamb.C": "cpp",
+        "FSCut.C": "cpp",
+        "plot_hybrid.C": "cpp",
+        "skim.C": "cpp",
+        "skim_K892.C": "cpp",
+        "plot_pi0kplamb_hybrid.C": "cpp",
+        "plot_gen_pi0kplamb.C": "cpp",
+        "FSModeHistogram.C": "cpp",
+        "skim_etapi.C": "cpp",
+        "plots_etapi.C": "cpp",
+        "plots_etapi copy.C": "cpp",
+        "plots_orig.C": "cpp",
+        "plots_malte.C": "cpp",
+        "plots_basic.C": "cpp",
+        "plots_KSpipLamb.C": "cpp",
+        "plotResult.C": "cpp"
     }
 }
