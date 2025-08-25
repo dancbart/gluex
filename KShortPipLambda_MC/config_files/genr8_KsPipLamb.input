@@ -35,18 +35,18 @@
 %
 % This file generates event for the following reaction (All decays are isotropic)
 %
-%  gamma p -> X(2000) p
+%  gamma p -> X(892) Lambda
 %
-%             X(2000) -> X(1500) pi+
+%             X(892) -> Ks pi+
 %
-%                        X(1500) -> Ks K-   
+%                       Ks -> pi+ pi-
 %
-%                                   Ks -> pi+ pi-
+%             Lambda -> p pi-
 %
 % Feb. 13, 2008  David Lawrence
 %%%%%%%%%%%%%%%%% Start Input Values %%%%%%%%%%%%%%%%%%%%
 % beamp.x beamp.y beamp.z beamEnergy (old style mono-energetic)
-% 0       0       9.0     0.0 % uncomment this line to test before submitting monte carlo request
+% 0      0       9.0     0.0 % uncomment this line to test before submitting monte carlo request
 % beam configuration file
 TEMPBEAMCONFIG % comment-out this line to test before submitting monte carlo request
 % targetp.x targetp.y targetp.z targetEnergy
@@ -54,20 +54,18 @@ TEMPBEAMCONFIG % comment-out this line to test before submitting monte carlo req
 % t-channelSlope
       2.9
 % number of particles needed to describe the isobar decay of X
-8
+6
 %   
 % particle# 0&1 are always the Y(Baryon) and X(Meson) respectively
 %part#  chld1#  chld2#  parent# Id     nchild   mass        width   charge  flag
 % baryon (Y) decay
- 0      *       *       *       14     0        0.938272    0       +1      11
+ 0      *       *       *       18     0        1.115683    0.1      0      01 % "X1" (may be Lambda)
 % meson (X) decay
- 1      2       3       *        0     2        2.0        10.0      0      00 % "X" (may be f1)
- 2      *       *       1        8     0        0.139570    0.0     +1      11 % PiPlus
- 3      4       5       1        0     2        1.500000    6.0     -1      00 % "X" some isobar (may be a0)
- 4      *       *       3       12     0        0.493677    0.0     -1      11 % kMinus
- 5      6       7       3       16     2        0.497611    0.1      0      01 % kShort
- 6      *       *       5        8     0        0.139570    0.0     +1      11 % PiPlus
- 7      *       *       5        9     0        0.139570    0.0     -1      11 % PiMinus
+ 1      2       5       *        0     2        1.0         0.05     0      00 % "X2" (may be K*)
+ 2      3       4       1       16     2        0.497611    0.1      0      01 % KShort
+ 3      *       *       2        8     0        0.139570    0.0     +1      11 % PiPlus
+ 4      *       *       2        9     0        0.139570    0.0     -1      11 % PiMinus
+ 5      *       *       1        8     0        0.139570    0.0     +1      11 % PiPlus
 !EOI
 %%%%%%%%%%%%%%%%%%%%% End Input Values %%%%%%%%%%%%%%%%%%%%%%%
 % for narrow widths particles(stable to strong interactions) 

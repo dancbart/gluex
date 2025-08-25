@@ -10,17 +10,12 @@ import os.path
 import subprocess
 from subprocess import call
 
-attempt = "_v1"
-analysisLaunch = "fall2018"
-workflow = "pipkslamb_flatten_genAmp2_" + analysisLaunch + attempt
+workflow = "MC_pipkslamb_2018-08_SBT_test2_FLATTEN_THROWN"
 
 baseDir = "/work/halld/home/dbarton/gluex"
-# dataDir = "/cache/halld/RunPeriod-2018-08/analysis/ver22/tree_pipkslamb__B4_M16_M18/merged"
-# dataDir = "/cache/halld/RunPeriod-2018-01/analysis/ver23/tree_pipkslamb__B4_M16_M18/merged"
-# dataDir = "/cache/halld/RunPeriod-2018-08/analysis/bggen/ver01/batch01/tree_pipkslamb/merged/"
-dataDir = "/volatile/halld/home/dbarton/pipkslamb/mc/genamp2/v2/root/trees/"
-# baseOutputDir = "/volatile/halld/home/dbarton/pipkslamb/mc/bggen/fall2018"
-baseOutputDir = "/volatile/halld/home/dbarton/pipkslamb/mc/genamp2/v2/root/trees/flatten/"
+dataDir = "/volatile/halld/home/dbarton/pipkslamb/mc/genamp2/fall2018_SBT_test2/root/thrown/"
+# dataDir = "/volatile/halld/home/dbarton/pipkslamb/mc/genamp2/spring2018/root/thrown/"
+baseOutputDir = "/volatile/halld/home/dbarton/pipkslamb/mc/genamp2/fall2018_SBT_test2/root/thrown/flatten/"
 scriptDir = baseOutputDir + "scripts"
 template = baseDir + "/scripts/runFSFlattenSWIF2_TEMPLATE.sh"
 # envFile = "version.xml"
@@ -38,20 +33,20 @@ if not os.path.exists(scriptDir): os.makedirs(scriptDir)
 
 # fileList = glob.glob(dataDir + "/tree_pipkslamb_??????.root")
 # fileList = glob.glob(dataDir + "/tree_pipkslamb_05????.root")
-fileList = glob.glob(dataDir + "tree_pipkslamb__B4_M16_M18_gen_amp_V2_*")
+fileList = glob.glob(dataDir + "tree_thrown_gen_amp_V2_05*")
 
 for i in range(len(fileList)):
 
   # runNumber = re.search('tree_pipkslamb__B4_M16_M18_(......)',fileList[i]).group(1)
-  runNumber = re.search('tree_pipkslamb__B4_M16_M18_gen_amp_V2_051768_0(..)',fileList[i]).group(1)
-  if re.search('tree_pipkslamb__B4_M16_M18_gen_amp_V2_051768_0(..)',fileList[i]) is None: 
+  runNumber = re.search('tree_thrown_gen_amp_V2_(......)',fileList[i]).group(1)
+  if re.search('tree_thrown_gen_amp_V2_(......)',fileList[i]) is None: 
     continue
   outputDir = baseOutputDir
 
   if not os.path.exists(outputDir): os.makedirs(outputDir)
 
   outScript = scriptDir + "/FSFlat_" + runNumber + ".sh"
-  outFile = outputDir + "tree_pipkslamb__B4_M16_M18_gen_amp_V2_051768_FSflat_" + runNumber + ".root"
+  outFile = outputDir + "tree_thrown_gen_amp_V2_FSflat_" + runNumber + ".root"
   with open(template,'r+') as TEMP:
     data = TEMP.read()
     data=data.replace('INFILE',fileList[i])
