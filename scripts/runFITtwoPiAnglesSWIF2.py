@@ -7,8 +7,8 @@ from subprocess import call
 # --------------------------------------
 # User configuration
 # --------------------------------------
-fitsToRun    = 5
-workflow     = "fitTwoPiAngles_kspiplamb_v2"
+fitsToRun    = 2000
+workflow     = "fitTwoPiAngles_kspiplamb"
 baseDir      = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/"
 scriptDir    = baseDir + "config"
 outDir       = baseDir + "fits"

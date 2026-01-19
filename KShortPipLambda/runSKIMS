@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SIF="/w/halld-scshelf2101/lng/WORK/PyAmpTools9/pyamptools.sif"
+BIND="/volatile/halld/home/dbarton,/cache/halld/home/dbarton,/work/halld/home/dbarton/gluex,/scratch"
+WORKDIR="/work/halld/home/dbarton/gluex/KShortPipLambda"
+
+apptainer exec --contain --writable-tmpfs -B "$BIND" --env BASH_ENV=/dev/null "$SIF" \
+  bash -lc "cd '$WORKDIR'; source /etc/bash.bashrc; python3 skim_K892.py; sync; sleep 0.1"
+
+exit 0
