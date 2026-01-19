@@ -27,6 +27,7 @@
         "plots_malte.C": "cpp",
         "plots_basic.C": "cpp",
         "plots_KSpipLamb.C": "cpp",
-        "plotResult.C": "cpp"
+        "plotResult.C": "cpp",
+        "skim_a2.C": "cpp"
     }
 }
