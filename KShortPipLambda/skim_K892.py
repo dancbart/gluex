@@ -12,7 +12,7 @@ atiSetup.setup(globals(), use_fsroot=True)
 # FND0 = "/volatile/halld/home/dbarton/pipkslamb/data/fall2018/flatten/tree_pipkslamb__B4_M16_M18_FSFlat_small.root"
 # LARGE DATA FILE
 FND0 = "/volatile/halld/home/dbarton/pipkslamb/data/fall2018/flatten/tree_pipkslamb__B4_M16_M18_FSflat_Spr-Fa18.root"
-FND0_MC = "/volatile/halld/home/dbarton/pipkslamb/mc_eventSelection/fall2018/root/trees/flatten/tree_pipkslamb__sp-fa18_B4_M16_M18_gen_amp_V2_FSflat_REACTIONFILTER-ONLY.root"
+FND0_MC = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/MCWjob4434/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sp18-fa18.root"
 FND0_THROWN = "/volatile/halld/home/dbarton/pipkslamb/mc_eventSelection/fall2018/root/thrown/flatten/tree_thrown_sp-fa18_gen_amp_V2_FSflat_RXNfltrONLY.root"
 NT = "ntFSGlueX_100000000_1100"
 

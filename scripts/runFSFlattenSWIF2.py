@@ -10,11 +10,11 @@ import os.path
 import subprocess
 from subprocess import call
 
-workflow = "MC_pipkslamb_2018-01_SBT_FLATTEN"
+workflow = "MC_pipkslamb_2018-08_SBT_FLATTEN"
 
 baseDir = "/work/halld/home/dbarton/gluex"
-dataDir = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/MCWjob4433/"
-baseOutputDir = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/MCWjob4433/flatten/"
+dataDir = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/MCWjob4434/trees/"
+baseOutputDir = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/MCWjob4434/trees/flatten/"
 scriptDir = baseOutputDir + "scripts"
 template = baseDir + "/scripts/runFSFlattenSWIF2_TEMPLATE.sh"
 # envFile = "version.xml"
@@ -30,12 +30,12 @@ NCORES = "4"
 
 if not os.path.exists(scriptDir): os.makedirs(scriptDir)
 
-fileList = glob.glob(dataDir + "tree_pipkslamb__B4_M16_M18_gen_amp_V2_04????.root")
-fileList = glob.glob(dataDir + "tree_pipkslamb__B4_M16_M18_gen_amp_V2_04????????.root")
+fileList = glob.glob(dataDir + "tree_pipkslamb__B4_M16_M18_gen_amp_V2_05????_???.root")
 
 for i in range(len(fileList)):
 
   runNumber = re.search('tree_pipkslamb__B4_M16_M18_gen_amp_V2_(......)',fileList[i]).group(1)
+  # fileNumber = re.search('tree_pipkslamb__B4_M16_M18_gen_amp_V2_(......)_(...)',fileList[i]).group(2)
   if re.search('tree_pipkslamb__B4_M16_M18_gen_amp_V2_(......)',fileList[i]) is None: 
     continue
   outputDir = baseOutputDir

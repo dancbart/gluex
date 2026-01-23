@@ -308,45 +308,54 @@ def setup():
     c2aa = ROOT.TCanvas("c2a", "c2a", 1400, 600)
     c2aa.Divide(2, 1)
 
+    # DecayingLambda = "1"
+    # Proton         = "1a"
+    # PiMinus2       = "1b"
+    # DecayingKShort = "2"
+    # PiPlus2        = "2a"
+    # PiMinus1       = "2b"
+    # PiPlus1        = "3"
+
     c2aa.cd(1)
-    hKShort = ROOT.FSModeHistogram.getTH1F(FND, NT, "m100000000_1100", f"MASS({DecayingKShort})", "(60,0.35,0.65)", "CUT(tRange,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ)*CUTWT(rf,Lambda)")
-    hKShortSig = ROOT.FSModeHistogram.getTH1F(FND, NT, "m100000000_1100", f"MASS({DecayingKShort})", "(60,0.35,0.65)", "CUT(tRange,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ,flightLengthKShort,flightLengthLambda)*CUTWT(rf,Lambda)")
-    hKShort.SetTitle("M(K_{s}) for -t in (0.0,1.0)")
-    hKShort.SetXTitle("M(#pi^{+} #pi^{-})  [GeV/c^{2}]")
+    hKShort = ROOT.FSModeHistogram.getTH1F(FND, NT, "m100000000_1100", f"MASS(GLUEXTARGET,GLUEXBEAM,-{DecayingLambda},-{PiPlus1})", "(60,0.35,0.65)", "CUT()*CUTWT()")
+    # hKShort = ROOT.FSModeHistogram.getTH1F(FND, NT, "m100000000_1100", f"MASS(GLUEXTARGET,GLUEXBEAM,-{DecayingLambda},{PiPlus1})", "(60,0.35,0.65)", "CUT(tRange,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ)*CUTWT(rf,Lambda)")
+    # hKShortSig = ROOT.FSModeHistogram.getTH1F(FND, NT, "m100000000_1100", f"MASS({DecayingKShort})", "(60,0.35,0.65)", "CUT(tRange,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ,flightLengthKShort,flightLengthLambda)*CUTWT(rf,Lambda)")
+    hKShort.SetTitle("Missing Mass (K_{s}) for -t in (0.0,1.0)")
+    hKShort.SetXTitle("Missing Mass (#pi^{+} #pi^{-})  [GeV/c^{2}]")
     hKShort.SetYTitle("Counts / 5 MeV")
     hKShort.SetMinimum(0.0)
     hKShort.Draw()
-    hKShortSig.SetLineColor(ROOT.kBlue)
-    hKShortSig.Draw("same hist")
+    # hKShortSig.SetLineColor(ROOT.kBlue)
+    # hKShortSig.Draw("same hist")
     legendKShort = ROOT.TLegend(0.75, 0.7, 0.94, 0.85)
     legendKShort.AddEntry(hKShort, "FL OFF", "l")
-    legendKShort.AddEntry(hKShortSig, "FL ON", "l")
+    # legendKShort.AddEntry(hKShortSig, "FL ON", "l")
     legendKShort.Draw("same")
     lab1.DrawLatex(0.5, 1.00, f"{label}")
     ROOT.gPad.Update()
-    if bggen:
-        ROOT.FSModeHistogram.drawMCComponentsSame(FND, NT, "m100000000_1100", f"MASS({DecayingKShort})", "(60,0.35,0.65)", "CUT(tRange,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ)*CUTWT(rf,Lambda)")
+    # if bggen:
+    #     ROOT.FSModeHistogram.drawMCComponentsSame(FND, NT, "m100000000_1100", f"MASS({DecayingKShort})", "(60,0.35,0.65)", "CUT(tRange,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ)*CUTWT(rf,Lambda)")
 
-    c2aa.cd(2)
-    hLamb = ROOT.FSModeHistogram.getTH1F(FND, NT, "m100000000_1100", f"MASS({DecayingLambda})", "(60,1.08,1.20)", "CUT(tRange,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ)*CUTWT(rf,KShort)")
-    hLambSig = ROOT.FSModeHistogram.getTH1F(FND, NT, "m100000000_1100", f"MASS({DecayingLambda})", "(60,1.08,1.20)", "CUT(tRange,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ,flightLengthKShort,flightLengthLambda)*CUTWT(rf,KShort)")
-    hLamb.SetTitle("M(#Lambda) for -t in (0.0,1.0)")
-    hLamb.SetXTitle("M(p #pi^{-})  [GeV/c^{2}]")
-    hLamb.SetYTitle("Counts / 2 MeV")
-    hLamb.SetMinimum(0.0)
-    hLambSig.SetLineColor(ROOT.kBlue)
-    hLambSig.Draw("same hist")
-    hLamb.Draw()
-    hLambSig.SetLineColor(ROOT.kBlue)
-    hLambSig.Draw("same hist")
-    legendLamb = ROOT.TLegend(0.75, 0.7, 0.94, 0.85)
-    legendLamb.AddEntry(hLamb, "FL OFF", "l")
-    legendLamb.AddEntry(hLambSig, "FL ON", "l")
-    legendLamb.Draw("same")
-    lab1.DrawLatex(0.5, 1.00, f"{label}")
-    ROOT.gPad.Update()
-    if bggen:
-        ROOT.FSModeHistogram.drawMCComponentsSame(FND, NT, "m100000000_1100", f"MASS({DecayingLambda})", "(60,1.08,1.20)", "CUT(tRange,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ)*CUTWT(rf,KShort)")
+    # c2aa.cd(2)
+    # hLamb = ROOT.FSModeHistogram.getTH1F(FND, NT, "m100000000_1100", f"MASS({DecayingLambda})", "(60,1.08,1.20)", "CUT(tRange,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ)*CUTWT(rf,KShort)")
+    # hLambSig = ROOT.FSModeHistogram.getTH1F(FND, NT, "m100000000_1100", f"MASS({DecayingLambda})", "(60,1.08,1.20)", "CUT(tRange,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ,flightLengthKShort,flightLengthLambda)*CUTWT(rf,KShort)")
+    # hLamb.SetTitle("M(#Lambda) for -t in (0.0,1.0)")
+    # hLamb.SetXTitle("M(p #pi^{-})  [GeV/c^{2}]")
+    # hLamb.SetYTitle("Counts / 2 MeV")
+    # hLamb.SetMinimum(0.0)
+    # hLambSig.SetLineColor(ROOT.kBlue)
+    # hLambSig.Draw("same hist")
+    # hLamb.Draw()
+    # hLambSig.SetLineColor(ROOT.kBlue)
+    # hLambSig.Draw("same hist")
+    # legendLamb = ROOT.TLegend(0.75, 0.7, 0.94, 0.85)
+    # legendLamb.AddEntry(hLamb, "FL OFF", "l")
+    # legendLamb.AddEntry(hLambSig, "FL ON", "l")
+    # legendLamb.Draw("same")
+    # lab1.DrawLatex(0.5, 1.00, f"{label}")
+    # ROOT.gPad.Update()
+    # if bggen:
+    #     ROOT.FSModeHistogram.drawMCComponentsSame(FND, NT, "m100000000_1100", f"MASS({DecayingLambda})", "(60,1.08,1.20)", "CUT(tRange,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ)*CUTWT(rf,KShort)")
 
     c2aa.Print(allPlots)  # middle pages
 

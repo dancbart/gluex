@@ -7,12 +7,30 @@ WORKDIR="/work/halld/home/dbarton/gluex/KShortPipLambda/sdme"
 PDF="$WORKDIR/plots/sdme_plots.pdf"
 
 apptainer exec --contain --writable-tmpfs -B "$BIND" --env BASH_ENV=/dev/null "$SIF" \
-  bash -lc "cd '$WORKDIR'; source /etc/bash.bashrc; python3 plots_sdme.py; sync; sleep 0.1"
+  bash -lc "cd '$WORKDIR'; source /etc/bash.bashrc; pip3 install wurlitzer; python3 plots_sdme.py; sync; sleep 0.1"
 
-# Open the PDF on the host, fully detached
-( command -v xdg-open >/dev/null && nohup xdg-open "$PDF" >/dev/null 2>&1 ) \
- || ( command -v gio >/dev/null && nohup gio open "$PDF" >/dev/null 2>&1 ) \
- || nohup evince "$PDF" >/dev/null 2>&1 &
+# # Open the PDF on the host, fully detached
+# ( command -v xdg-open >/dev/null && nohup xdg-open "$PDF" >/dev/null 2>&1 ) \
+#  || ( command -v gio >/dev/null && nohup gio open "$PDF" >/dev/null 2>&1 ) \
+#  || nohup evince "$PDF" >/dev/null 2>&1 &
 
 
-exit 0
+# exit 0
+
+# Open PDF after container exits
+if [[ -f "$PDF" ]]; then
+  # If running inside VS Code terminal, open in VS Code UI
+  if [[ "${TERM_PROGRAM:-}" == "vscode" ]] && command -v code >/dev/null 2>&1; then
+    code -r "$PDF" >/dev/null 2>&1 || true
+  # Otherwise try OS openers
+  elif command -v xdg-open >/dev/null 2>&1; then
+    xdg-open "$PDF" >/dev/null 2>&1 &
+  elif command -v open >/dev/null 2>&1; then
+    open "$PDF" &
+  else
+    echo "PDF created at: $PDF"
+  fi
+else
+  echo "ERROR: PDF not found: $PDF"
+  exit 1
+fi
