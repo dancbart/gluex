@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 # from: /work/halld/home/ksaldan/fcal_timing/runDSelector.py
+# hello from ifarm to ODU...test
 
 import os
 import glob
