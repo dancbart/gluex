@@ -2,7 +2,7 @@
 
 env
 
-time /work/halld/home/dbarton/gluex/hd_utilities/FlattenForFSRoot/flatten \
+time /home/dbart013/work/software/hd_utilities/FlattenForFSRoot/flatten \
                               -in INFILE \
                               -out OUTFILE \
                               -mctag 0_100000000_1100 \
