@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Slurm submission version of the old SWIF2 submitter.
+Slurm submission version of the SWIF2 submitter used at JLab.
 
 What it does:
   1) Finds input ROOT trees in dataDir matching your glob
@@ -21,19 +21,18 @@ import subprocess
 # -----------------------------
 workflow = "MC_pipkslamb_2018-08_SBT_FLATTEN"
 
-baseDir = "/work/halld/home/dbarton/gluex"
-dataDir = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/MCWjob4434/trees/"
-baseOutputDir = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/MCWjob4434/trees/flatten/"
-
+baseDir = "/home/dbart013/work/gluex"
+dataDir = "/home/dbart013/work/files/pipkslamb/mc/spring2018_500M/trees/"
+baseOutputDir = "/home/dbart013/work/files/pipkslamb/mc/spring2018_500M/trees/flatten/"
 scriptDir = os.path.join(baseOutputDir, "scripts")
 slurmDir  = os.path.join(baseOutputDir, "slurm")   # sbatch wrappers go here
 logDir    = os.path.join(baseOutputDir, "logs")    # stdout/stderr go here
 
-template = os.path.join(baseDir, "scripts", "runFSFlattenSWIF2_TEMPLATE.sh")
+template = os.path.join(baseDir, "scripts", "runFSFlattenSBATCH_TEMPLATE.sh")
 
-# ---- Slurm resources (EDIT FOR ODU) ----
-account = "halld"        # likely needs change or can be None/""
-partition = "production" # likely needs change (e.g. "standard", "main", etc.)
+# ---- Slurm resources (EDIT FOR ODU or other institution, JLab, etc.) ----
+account = None        # possibly 'admin' or can be None/""
+partition = "main" # likely needs change (e.g. "standard", "main", etc.)
 constraint = None        # e.g. "el9" at JLab; probably None at ODU
 cpus_per_task = 4
 mem_gb = 10
@@ -44,7 +43,7 @@ dry_run = False          # set True to only generate scripts, not submit
 nice_name_prefix = "FSFlat"  # Slurm job-name prefix
 
 # File selection
-pattern = os.path.join(dataDir, "tree_pipkslamb__B4_M16_M18_gen_amp_V2_05????_???.root")
+pattern = os.path.join(dataDir, "tree_pipkslamb__B4_M16_M18_gen_amp_V2_042559_02?.root")
 fileList = sorted(glob.glob(pattern))
 
 # -----------------------------
@@ -81,17 +80,25 @@ for infile in fileList:
         continue
     runNumber = m.group(1)
 
+    m = re.search(r"tree_pipkslamb__B4_M16_M18_gen_amp_V2_(\d{6})_(\d{3})\.root$", infile)
+    if not m:
+        continue
+
+    runNumber = m.group(1)    # e.g. "042559"
+    fileNumber = m.group(2)   # e.g. "020", "021", "022"
+    job_id = f"{runNumber}_{fileNumber}"
+
     outputDir = baseOutputDir
     mkdir_p(outputDir)
 
     # Per-file outputs
     outFile = os.path.join(
         outputDir,
-        f"tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_{runNumber}.root"
+        f"tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_{job_id}.root"
     )
 
     # 1) Build the runnable job script from your template
-    outScript = os.path.join(scriptDir, f"FSFlat_{runNumber}.sh")
+    outScript = os.path.join(scriptDir, f"FSFlat_{job_id}.sh")
     with open(template, "r", encoding="utf-8") as TEMP:
         data = TEMP.read()
     data = data.replace("INFILE", infile)
@@ -100,7 +107,7 @@ for infile in fileList:
     make_executable(outScript)
 
     # 2) Build sbatch wrapper
-    job_name = f"{nice_name_prefix}_{runNumber}"
+    job_name = f"{nice_name_prefix}_{job_id}"
     slurm_out = os.path.join(logDir, f"{job_name}.%j.out")
     slurm_err = os.path.join(logDir, f"{job_name}.%j.err")
     sbatch_script = os.path.join(slurmDir, f"sbatch_{job_name}.sh")
@@ -155,6 +162,6 @@ for infile in fileList:
         )
         print(res.stdout.strip())
 
-    print(f"Submitted run {runNumber}  infile={os.path.basename(infile)}")
+    print(f"Submitted run {job_id}  infile={os.path.basename(infile)}")
 
 print("All jobs processed.")
