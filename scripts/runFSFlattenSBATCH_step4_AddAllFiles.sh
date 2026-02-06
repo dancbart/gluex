@@ -4,11 +4,11 @@ set -euo pipefail
 # ----------------------------
 # User settings
 # ----------------------------
-INDIR="/home/dbart013/work/files/pipkslamb/mc/fall2018_500M/thrown/flatten/"
+INDIR="/home/dbart013/work/files/pipkslamb/mc/spring2018_500M/thrown/flatten/"
 PATTERN="tree_thrown_gen_amp_V2_FSFlat_*.root"
 
 # Final merged output:
-OUTFINAL="${INDIR}tree_thrown_gen_amp_V2_FSFlat_ALL.root"
+OUTFINAL="${INDIR}tree_thrown_gen_amp_V2_FSFlat_sp18_ALL.root"
 
 # Staging directory (will be created inside INDIR):
 STAGEDIR="${INDIR}hadd_stage"

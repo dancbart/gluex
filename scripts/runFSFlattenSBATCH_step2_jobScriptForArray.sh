@@ -4,14 +4,14 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=10G
 #SBATCH --time=12:00:00
-#SBATCH --output=/home/dbart013/work/files/pipkslamb/mc/fall2018_500M/thrown/flatten/logs/FSFlat_%A_%a.out
-#SBATCH --error=/home/dbart013/work/files/pipkslamb/mc/fall2018_500M/thrown/flatten/logs/FSFlat_%A_%a.err
+#SBATCH --output=/home/dbart013/work/files/pipkslamb/mc/spring2018_500M/thrown/flatten/logs/FSFlat_%A_%a.out
+#SBATCH --error=/home/dbart013/work/files/pipkslamb/mc/spring2018_500M/thrown/flatten/logs/FSFlat_%A_%a.err
 # Optional:
 #SBATC H --account=YOUR_ACCOUNT
 
 set -euo pipefail
 
-BASE="/home/dbart013/work/files/pipkslamb/mc/fall2018_500M/thrown/flatten"
+BASE="/home/dbart013/work/files/pipkslamb/mc/spring2018_500M/thrown/flatten"
 LIST="$BASE/fileList.txt"
 TEMPLATE="/home/dbart013/work/gluex/scripts/runFSFlattenSBATCH_TEMPLATE.sh"
 

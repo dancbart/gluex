@@ -1,5 +1,5 @@
-BASE="/home/dbart013/work/files/pipkslamb/mc/fall2018_500M/thrown"
-OUT="/home/dbart013/work/files/pipkslamb/mc/fall2018_500M/thrown/flatten"
+BASE="/home/dbart013/work/files/pipkslamb/mc/spring2018_500M/thrown"
+OUT="/home/dbart013/work/files/pipkslamb/mc/spring2018_500M/thrown/flatten"
 mkdir -p "$OUT"
 
 ls -1 "$BASE"/tree_thrown_gen_amp_V2_*.root \
