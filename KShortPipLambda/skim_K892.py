@@ -8,12 +8,11 @@ from pyamptools import atiSetup
 atiSetup.setup(globals(), use_fsroot=True)
 
 # Inputs
-# SMALL DATA FILE
-# FND0 = "/volatile/halld/home/dbarton/pipkslamb/data/fall2018/flatten/tree_pipkslamb__B4_M16_M18_FSFlat_small.root"
-# LARGE DATA FILE
-FND0 = "/volatile/halld/home/dbarton/pipkslamb/data/fall2018/flatten/tree_pipkslamb__B4_M16_M18_FSflat_Spr-Fa18.root"
-FND0_MC = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/MCWjob4434/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sp18-fa18.root"
-FND0_THROWN = "/volatile/halld/home/dbarton/pipkslamb/mc_eventSelection/fall2018/root/thrown/flatten/tree_thrown_sp-fa18_gen_amp_V2_FSflat_RXNfltrONLY.root"
+#FND0 = "/volatile/halld/home/dbarton/pipkslamb/data/fall2018/flatten/tree_pipkslamb__B4_M16_M18_FSflat_Spr-Fa18.root"
+# FND0 = "/volatile/halld/home/dbarton/pipkslamb/data/fall2018/flatten/tree_pipkslamb__B4_M16_M18_FSFlat_sp20_ALL.root"
+FND0_generalCuts = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/files/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_sp18fa18sp20.root"
+FND0_MC = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/MCWjob4434/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSFlat_sp18-fa18_ALL.root"
+FND0_THROWN = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/MCWjob4434/tree_thrown_gen_amp_V2_FSFlat_sp18-fa18_ALL.root"
 NT = "ntFSGlueX_100000000_1100"
 
 DecayingLambda = "1"
@@ -51,7 +50,8 @@ def setup():
     ROOT.FSCut.defineCut("chi2DOF", "Chi2DOF<5.0")
     ROOT.FSCut.defineCut("unusedE", "EnUnusedSh<0.1")
     ROOT.FSCut.defineCut("unusedTracks", "NumUnusedTracks<1")
-    ROOT.FSCut.defineCut("coherentPeak", "EnPB>8.2 && EnPB<8.8")
+#    ROOT.FSCut.defineCut("coherentPeak", "EnPB>8.2 && EnPB<8.8")
+    ROOT.FSCut.defineCut("coherentPeak", "EnPB>8.2 && EnPB<8.6")
     ROOT.FSCut.defineCut("flightLengthLambda", "VeeLP1>2.0")
     ROOT.FSCut.defineCut("flightLengthKShort", "VeeLP2>2.0")
     ROOT.FSCut.defineCut("targetZ", "ProdVz>52.0 && ProdVz<78.0")
@@ -79,8 +79,8 @@ signalCuts_THROWN = "CUT(tRangeTHROWN,coherentPeakTHROWN,selectKSTAR892THROWN)"
 # --------------------- skims ---------------------
 def skim_K892_DATA():
     setup()
-    FND0_generalCuts = "/work/halld/home/dbarton/gluex/KShortPipLambda/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892.root" # define output fileName for general cuts
-    ROOT.FSModeTree.skimTree(FND0, NT, "", FND0_generalCuts, f"{generalCuts}")
+#    FND0_generalCuts = "/work/halld/home/dbarton/gluex/KShortPipLambda/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_sp20.root" # define output fileName for general cuts
+#    ROOT.FSModeTree.skimTree(FND0, NT, "", FND0_generalCuts, f"{generalCuts}")
     ROOT.FSModeTree.skimTree(FND0_generalCuts, NT, "", "/work/halld/home/dbarton/gluex/KShortPipLambda/tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892.root", f"{signalCuts}")
     ROOT.FSModeTree.skimTree(FND0_generalCuts, NT, "", "/work/halld/home/dbarton/gluex/KShortPipLambda/tree_pipkslamb__B4_M16_M18_SIDEBAND_SKIM_K892.root", f"{sidebandWeights}")
     friendTreeContents = [(ROOT.TString("weight"), ROOT.TString(f"{sidebandWeights}"))]

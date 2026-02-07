@@ -4,10 +4,10 @@ set -e
 SIF="/w/halld-scshelf2101/lng/WORK/PyAmpTools9/pyamptools.sif"
 BIND="/volatile/halld/home/dbarton,/cache/halld/home/dbarton,/work/halld/home/dbarton/gluex,/scratch"
 WORKDIR="/work/halld/home/dbarton/gluex/KShortPipLambda"
-PDF="$WORKDIR/plots/eventSelection_plots.pdf"
+PDF="$WORKDIR/plots/plots_kStar.pdf"
 
 apptainer exec --contain --writable-tmpfs -B "$BIND" --env BASH_ENV=/dev/null "$SIF" \
-  bash -lc "cd '$WORKDIR'; source /etc/bash.bashrc; python3 plots.py; sync; sleep 0.1"
+  bash -lc "cd '$WORKDIR'; source /etc/bash.bashrc; python3 plots_kStar.py; sync; sleep 0.1"
 
 # # Open the PDF on the host, fully detached
 # ( command -v xdg-open >/dev/null && nohup xdg-open "$PDF" >/dev/null 2>&1 ) \

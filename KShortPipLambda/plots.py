@@ -16,16 +16,13 @@ ROOT.TGaxis.SetMaxDigits(3) # set scientific notation globally
 # File options (pick one)
 # -----------------------------
 # BIG FILE
-# FND = "/volatile/halld/home/dbarton/pipkslamb/data/fall2018/flatten/tree_pipkslamb__B4_M16_M18_FSflat_Spr-Fa18.root"
+FND = "/volatile/halld/home/dbarton/pipkslamb/data/fall2018/flatten/tree_pipkslamb__B4_M16_M18_FSflat_Spr-Fa18.root"
 # SMALL FILE (same dataset, but only 3-4 runs)
 # FND = "/volatile/halld/home/dbarton/pipkslamb/data/fall2018/flatten/tree_pipkslamb__B4_M16_M18_FSFlat_small.root"
-# FND = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/dbarton_pipkslamb_test_4418/root/trees/tree_pipkslamb__B4_M16_M18_gen_amp_V2/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_small.root"
 # FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/files/tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_MC.root"
-# MONTE CARLO
-FND = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/MCWjob4433/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sp18_small.root"
-
 # MONTE CARLO - use this if you want to plot DATA and MC in the same script
-FND_MC = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/MCWjob4433/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sp18_small.root"
+FND_MC = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/MCWjob4434/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSFlat_sp18-fa18_ALL.root"
+
 
 # Basic plots for flattened and skimmed DATA trees:
 # FND = "/work/halld/gluex_workshop_data/tutorial_2022/session2d/skim/tree_pi0eta__B4_M17_M7_DATA_sp17_*_GENERAL_SKIM.root"

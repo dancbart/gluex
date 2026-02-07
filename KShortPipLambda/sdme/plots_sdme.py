@@ -14,7 +14,8 @@ atiSetup.setup(globals(), use_fsroot=True)
 # -----------------------------
 # Files
 # -----------------------------
-FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/fits/twopi_plot.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/fits/twopi_plot.root"
+FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/config/twopi_plot.root"
 
 # INDICES ASSIGNED BY 'flatten':
 # 1. DecayingLambda (0)   1a. Proton (1)   1b. PiMinus2 (2)
@@ -171,9 +172,28 @@ def setup():
     Phibkg_sdme = Phibkg_sdme.Clone("Phibkg_sdme")
     Phibkg_sdme.SetDirectory(0)
 
+    # --- Retrieve psi histograms ---
+
+    psidat = file.Get("psidat")
+    if not psidat:
+        raise RuntimeError("Histogram 'psidat' not found in file")
+    psidat = psidat.Clone("psidat")
+    psidat.SetDirectory(0)
+
+    psiacc_sdme = file.Get("psiacc_sdme")
+    if not psiacc_sdme:
+        raise RuntimeError("Histogram 'psiacc_sdme' not found in file")
+    psiacc_sdme = psiacc_sdme.Clone("psiacc_sdme")
+    psiacc_sdme.SetDirectory(0)
+
+    psibkg_sdme = file.Get("psibkg_sdme")
+    if not psibkg_sdme:
+        raise RuntimeError("Histogram 'psibkg_sdme' not found in file")
+    psibkg_sdme = psibkg_sdme.Clone("psibkg_sdme")
+    psibkg_sdme.SetDirectory(0)
+
     file.Close()
 
-    # ? What is "psiacc" do we use that?
 
     # -----------------------------
     # Canvas 1
@@ -184,8 +204,9 @@ def setup():
 
     cosThetadat.SetTitle("twopi_plot outputs")
     cosThetadat.SetXTitle("cos#theta_{K_{S}} (Helicity frame)")
-    cosThetadat.SetYTitle("Counts / bin?")
+    cosThetadat.SetYTitle("Candidates / 0.01")
     cosThetadat.SetLineColor(ROOT.kBlack)
+    cosThetadat.SetMinimum(0)
     cosThetadat.Draw("")
 
     # --- acc + bkg ---
@@ -209,7 +230,7 @@ def setup():
 
     legend = ROOT.TLegend(0.70, 0.85, 0.94, 0.94)
     legend.AddEntry(cosThetadat, f"data. Integral: {int0:.0f}", "l")
-    legend.AddEntry(cosThetaacc_sdme, f"accmc. Integral: {int1:.0f}", "l")
+    legend.AddEntry(cosThetaacc_sdme, f"accmc + bkg. Integral: {int1:.0f}", "l")
     legend.AddEntry(cosThetabkg_sdme, f"bkgmc. Integral: {int2:.0f}", "l")
     legend.Draw("same")
 
@@ -226,8 +247,9 @@ def setup():
 
     phidat.SetTitle("twopi_plot outputs")
     phidat.SetXTitle("#phi(rad) (Helicity frame)")
-    phidat.SetYTitle("Counts / bin?")
+    phidat.SetYTitle("Candidates / 0.035")
     phidat.SetLineColor(ROOT.kBlack)
+    phidat.SetMinimum(0)
     phidat.Draw("")
 
     # --- acc + bkg ---
@@ -251,7 +273,7 @@ def setup():
 
     legend = ROOT.TLegend(0.70, 0.85, 0.94, 0.94)
     legend.AddEntry(phidat, f"data. Integral: {int3:.0f}", "l")
-    legend.AddEntry(phiacc_sdme, f"accmc. Integral: {int4:.0f}", "l")
+    legend.AddEntry(phiacc_sdme, f"accmc + bkg. Integral: {int4:.0f}", "l")
     legend.AddEntry(phibkg_sdme, f"bkgmc. Integral: {int5:.0f}", "l")
     legend.Draw("same")
 
@@ -266,11 +288,13 @@ def setup():
     # c3.Divide(1, 1)
     # c3.cd(1)
 
-    Phidat.SetTitle("twopi_plot outputs")
-    Phidat.SetXTitle("#Phi(rad) (Helicity frame)")
-    Phidat.SetYTitle("Counts / bin?")
-    Phidat.SetLineColor(ROOT.kBlack)
-    Phidat.Draw("")
+    bigPhidat = Phidat.Clone("bigPhidat")
+    bigPhidat.SetTitle("twopi_plot outputs")
+    bigPhidat.SetXTitle("#Phi(rad) (Helicity frame)")
+    bigPhidat.SetYTitle("Candidates / 0.035")
+    bigPhidat.SetLineColor(ROOT.kBlack)
+    bigPhidat.SetMinimum(0)
+    bigPhidat.Draw("")
 
     # --- acc + bkg ---
     Phi_acc_plus_bkg = Phiacc_sdme.Clone("Phi_acc_plus_bkg")
@@ -286,14 +310,14 @@ def setup():
     Phibkg_sdme.Draw("hist same")
 
     # Integral(s) for legend
-    int6 = Phidat.Integral()
+    int6 = bigPhidat.Integral()
     int7 = Phiacc_sdme.Integral()
     int8 = Phibkg_sdme.Integral()
 
 
     legend = ROOT.TLegend(0.70, 0.85, 0.94, 0.94)
-    legend.AddEntry(Phidat, f"data. Integral: {int6:.0f}", "l")
-    legend.AddEntry(Phiacc_sdme, f"accmc. Integral: {int7:.0f}", "l")
+    legend.AddEntry(bigPhidat, f"data. Integral: {int6:.0f}", "l")
+    legend.AddEntry(Phiacc_sdme, f"accmc + bkg. Integral: {int7:.0f}", "l")
     legend.AddEntry(Phibkg_sdme, f"bkgmc. Integral: {int8:.0f}", "l")
     legend.Draw("same")
 
@@ -308,23 +332,24 @@ def setup():
     # c4.cd(1)
 
     PhidatMINUSphi = Phidat.Clone("PhidatMINUSphi")
-    PhidatMINUSphi.Add(phidat, -1)
+    PhidatMINUSphi.Add(phidat)
     PhidatMINUSphi.SetTitle("twopi_plot outputs")
-    PhidatMINUSphi.SetXTitle("#Phi(rad) - #phi(rad) (Helicity frame)")
-    PhidatMINUSphi.SetYTitle("Counts / bin?")
+    PhidatMINUSphi.SetXTitle("#phi(rad) - #Phi(rad) (Helicity frame)")
+    PhidatMINUSphi.SetYTitle("Candidates / bin?")
     PhidatMINUSphi.SetLineColor(ROOT.kBlack)
+    PhidatMINUSphi.SetMinimum(0)
     PhidatMINUSphi.Draw("")
 
     # --- acc + bkg ---
     PhiMINUSphi = Phiacc_sdme.Clone("PhiMINUSphi")
-    PhiMINUSphi.Add(phiacc_sdme, -1)
+    PhiMINUSphi.Add(phiacc_sdme)
     PhiMINUSphi.SetLineColor(ROOT.kGreen-6)
     PhiMINUSphi.SetFillColorAlpha(ROOT.kGreen-2, 0.60)
     PhiMINUSphi.SetFillStyle(1001)
     PhiMINUSphi.Draw("hist same")
 
     PhibkgMINUSbkg = Phibkg_sdme.Clone("PhibkgMINUSbkg")
-    PhibkgMINUSbkg.Add(phibkg_sdme, -1)
+    PhibkgMINUSbkg.Add(phibkg_sdme)
     PhibkgMINUSbkg.SetLineColor(ROOT.kRed-6)
     PhibkgMINUSbkg.SetFillColorAlpha(ROOT.kRed-4, 0.60)
     PhibkgMINUSbkg.SetFillStyle(1001)  # solid fill
@@ -339,11 +364,54 @@ def setup():
 
     legend = ROOT.TLegend(0.70, 0.85, 0.94, 0.94)
     legend.AddEntry(PhidatMINUSphi, f"data. Integral: {int9:.0f}", "l")
-    legend.AddEntry(PhiMINUSphi, f"accmc. Integral: {int10:.0f}", "l")
+    legend.AddEntry(PhiMINUSphi, f"accmc + bkg. Integral: {int10:.0f}", "l")
     legend.AddEntry(PhibkgMINUSbkg, f"bkgmc. Integral: {int11:.0f}", "l")
     legend.Draw("same")
 
-    c4.Print(f"{allPlots})")  # close multipage PDF
+    c4.Print(allPlots)  # close multipage PDF
+
+
+    # -----------------------------
+    # Canvas 5 psi angular plots
+    # -----------------------------
+
+    c5 = ROOT.TCanvas("c5", "c5", 1600, 1200)
+    # c5.Divide(1, 1)
+    # c5.cd(1)
+
+    psidat.SetTitle("twopi_plot outputs")
+    psidat.SetXTitle("#psi(rad) (Helicity frame)")
+    psidat.SetYTitle("Candidates / 0.035")
+    psidat.SetLineColor(ROOT.kBlack)
+    psidat.SetMinimum(0)
+    psidat.Draw("")
+
+    # --- acc + bkg ---
+    psi_acc_plus_bkg = psiacc_sdme.Clone("psi_acc_plus_bkg")
+    psi_acc_plus_bkg.Add(psibkg_sdme)
+    psi_acc_plus_bkg.SetLineColor(ROOT.kGreen-6)
+    psi_acc_plus_bkg.SetFillColorAlpha(ROOT.kGreen-2, 0.60)
+    psi_acc_plus_bkg.SetFillStyle(1001)
+    psi_acc_plus_bkg.Draw("hist same")
+
+    psibkg_sdme.SetLineColor(ROOT.kRed-6)
+    psibkg_sdme.SetFillColorAlpha(ROOT.kRed-4, 0.60)
+    psibkg_sdme.SetFillStyle(1001)  # solid fill
+    psibkg_sdme.Draw("hist same")
+
+    # Integral(s) for legend
+    int12 = psidat.Integral()
+    int13 = psiacc_sdme.Integral()
+    int14 = psibkg_sdme.Integral()
+
+
+    legend = ROOT.TLegend(0.70, 0.85, 0.94, 0.94)
+    legend.AddEntry(psidat, f"data. Integral: {int12:.0f}", "l")
+    legend.AddEntry(psiacc_sdme, f"accmc + bkg. Integral: {int13:.0f}", "l")
+    legend.AddEntry(psibkg_sdme, f"bkgmc. Integral: {int14:.0f}", "l")
+    legend.Draw("same")
+
+    c5.Print(f"{allPlots})") # close multipage PDF
 
     endTime = time.time()
     print(f"Time to run: {endTime - startTime:.1f} seconds")
