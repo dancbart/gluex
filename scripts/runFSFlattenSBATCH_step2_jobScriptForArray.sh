@@ -4,14 +4,14 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=10G
 #SBATCH --time=12:00:00
-#SBATCH --output=/home/dbart013/work/files/pipkslamb/mc/spring2018_500M/thrown/flatten/logs/FSFlat_%A_%a.out
-#SBATCH --error=/home/dbart013/work/files/pipkslamb/mc/spring2018_500M/thrown/flatten/logs/FSFlat_%A_%a.err
+#SBATCH --output=/.bscratch/data/dbart013/files/pipkslamb/data/spring2020/flatten/logs/FSFlat_%A_%a.out
+#SBATCH --error=/.bscratch/data/dbart013/files/pipkslamb/data/spring2020/flatten/logs/FSFlat_%A_%a.err
 # Optional:
 #SBATC H --account=YOUR_ACCOUNT
 
 set -euo pipefail
 
-BASE="/home/dbart013/work/files/pipkslamb/mc/spring2018_500M/thrown/flatten"
+BASE="/.bscratch/data/dbart013/files/pipkslamb/data/spring2020/flatten"
 LIST="$BASE/fileList.txt"
 TEMPLATE="/home/dbart013/work/gluex/scripts/runFSFlattenSBATCH_TEMPLATE.sh"
 
@@ -24,14 +24,15 @@ fi
 
 # ---- build unique job id from filename ----
 BN=$(basename "$INFILE")
-if [[ "$BN" =~ gen_amp_V2_([0-9]{6})_([0-9]{3})\.root$ ]]; then
-  JOBID="${BASH_REMATCH[1]}_${BASH_REMATCH[2]}"
+if [[ "$BN" =~ tree_pipkslamb__B4_M16_M18_([0-9]{6})\.root$ ]]; then
+#  JOBID="${BASH_REMATCH[1]}_${BASH_REMATCH[2]}"
+  JOBID="${BASH_REMATCH[1]}"
 else
   echo "Unexpected filename: $BN"
   exit 2
 fi
 
-OUTFILE="$BASE/tree_thrown_gen_amp_V2_FSFlat_${JOBID}.root"
+OUTFILE="$BASE/tree_pipkslamb__B4_M16_M18_FSFlat_${JOBID}.root"
 
 # ---- skip if already done (safe re-runs) ----
 if [[ -s "$OUTFILE" ]]; then

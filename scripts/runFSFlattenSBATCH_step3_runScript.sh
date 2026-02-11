@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BASE="/home/dbart013/work/files/pipkslamb/mc/spring2018_500M/thrown/flatten"
+BASE="/.bscratch/data/dbart013/files/pipkslamb/data/spring2020/flatten"
 LIST="$BASE/fileList.txt"
 JOB="/home/dbart013/work/gluex/scripts/runFSFlattenSBATCH_step2_jobScriptForArray.sh"
 
