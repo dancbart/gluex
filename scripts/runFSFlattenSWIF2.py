@@ -10,11 +10,13 @@ import os.path
 import subprocess
 from subprocess import call
 
-workflow = "MC_pipkslamb_2018-08_SBT_FLATTEN"
+workflow = "pipkslamb_2018-01_SBT_polFlag_FLATTEN"
 
 baseDir = "/work/halld/home/dbarton/gluex"
-dataDir = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/MCWjob4434/trees/"
-baseOutputDir = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/MCWjob4434/trees/flatten/"
+# dataDir = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/MCWjob4434/trees/"
+baseDir = "/volatile/halld/home/dbarton/pipkslamb/data/spring2018/"
+# baseOutputDir = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/MCWjob4434/trees/flatten/"
+baseOutputDir = "/volatile/halld/home/dbarton/pipkslamb/data/spring2018/flatten/"
 scriptDir = baseOutputDir + "scripts"
 template = baseDir + "/scripts/runFSFlattenSWIF2_TEMPLATE.sh"
 # envFile = "version.xml"
@@ -30,20 +32,21 @@ NCORES = "4"
 
 if not os.path.exists(scriptDir): os.makedirs(scriptDir)
 
-fileList = glob.glob(dataDir + "tree_pipkslamb__B4_M16_M18_gen_amp_V2_05????_???.root")
+# fileList = glob.glob(dataDir + "tree_pipkslamb__B4_M16_M18_gen_amp_V2_05????_???.root")
+fileList = glob.glob(dataDir + "tree_pipkslamb__B4_M16_M18_04255?.root")
 
 for i in range(len(fileList)):
 
-  runNumber = re.search('tree_pipkslamb__B4_M16_M18_gen_amp_V2_(......)',fileList[i]).group(1)
+  runNumber = re.search('tree_pipkslamb__B4_M16_M18_(......)',fileList[i]).group(1)
   # fileNumber = re.search('tree_pipkslamb__B4_M16_M18_gen_amp_V2_(......)_(...)',fileList[i]).group(2)
-  if re.search('tree_pipkslamb__B4_M16_M18_gen_amp_V2_(......)',fileList[i]) is None: 
+  if re.search('tree_pipkslamb__B4_M16_M18_(......)',fileList[i]) is None: 
     continue
   outputDir = baseOutputDir
 
   if not os.path.exists(outputDir): os.makedirs(outputDir)
 
   outScript = scriptDir + "/FSFlat_" + runNumber + ".sh"
-  outFile = outputDir + "tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_" + runNumber + ".root"
+  outFile = outputDir + "tree_pipkslamb__B4_M16_M18_FSflat_" + runNumber + ".root"
   with open(template,'r+') as TEMP:
     data = TEMP.read()
     data=data.replace('INFILE',fileList[i])

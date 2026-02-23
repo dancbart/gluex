@@ -16,13 +16,14 @@ ROOT.TGaxis.SetMaxDigits(3) # set scientific notation globally
 # File options (pick one)
 # -----------------------------
 # BIG FILE
-FND = "/volatile/halld/home/dbarton/pipkslamb/data/fall2018/flatten/tree_pipkslamb__B4_M16_M18_FSflat_Spr-Fa18.root"
+# FND = "/volatile/halld/home/dbarton/pipkslamb/data/spring2020/flatten/tree_pipkslamb__B4_M16_M18_FSFlat_sp20_pol_ALL.root"
+# FND = "/volatile/halld/home/dbarton/pipkslamb/data/fall2018/flatten/tree_pipkslamb__B4_M16_M18_FSflat_Spr-Fa18.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/files/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_sp18fa18sp20.root"
 # SMALL FILE (same dataset, but only 3-4 runs)
-# FND = "/volatile/halld/home/dbarton/pipkslamb/data/fall2018/flatten/tree_pipkslamb__B4_M16_M18_FSFlat_small.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/files/tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_MC.root"
+FND = "/volatile/halld/home/dbarton/pipkslamb/data/fall2018/flatten/tree_pipkslamb__B4_M16_M18_FSFlat_small.root"
 # MONTE CARLO - use this if you want to plot DATA and MC in the same script
-FND_MC = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/MCWjob4434/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSFlat_sp18-fa18_ALL.root"
-
+# FND_MC = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/MCWjob4434/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSFlat_sp18-fa18_ALL.root"
+FND_MC = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/testMC_webform/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSFlat_071350-58.root"
 
 # Basic plots for flattened and skimmed DATA trees:
 # FND = "/work/halld/gluex_workshop_data/tutorial_2022/session2d/skim/tree_pi0eta__B4_M17_M7_DATA_sp17_*_GENERAL_SKIM.root"
@@ -111,7 +112,7 @@ def setup():
     # -----------------------------
     shutil.rmtree("plots", ignore_errors=True)
     os.makedirs("plots", exist_ok=True)
-    allPlots = "plots/eventSelection_plots.pdf"
+    allPlots = "plots/plots.pdf"
 
     # -----------------------------
     # Histogram label
@@ -132,7 +133,8 @@ def setup():
     ROOT.FSCut.defineCut("chi2DOF", "Chi2DOF<5.0")
     ROOT.FSCut.defineCut("unusedE", "EnUnusedSh<0.1")
     ROOT.FSCut.defineCut("unusedTracks", "NumUnusedTracks<1")
-    ROOT.FSCut.defineCut("coherentPeak", "EnPB>8.2 && EnPB<8.8")
+#    ROOT.FSCut.defineCut("coherentPeak", "EnPB>8.2 && EnPB<8.8")
+    ROOT.FSCut.defineCut("coherentPeak", "EnPB>8.2 && EnPB<8.6")
     ROOT.FSCut.defineCut("flightLengthLambda", "VeeLP1>2.0")
     ROOT.FSCut.defineCut("flightLengthKShort", "VeeLP2>2.0")
     ROOT.FSCut.defineCut("targetZ", "ProdVz>52.0 && ProdVz<78.0")
