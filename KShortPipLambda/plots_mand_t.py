@@ -15,8 +15,8 @@ ROOT.TGaxis.SetMaxDigits(3) # set scientific notation globally
 # -----------------------------
 # Files
 # -----------------------------
-FND = "/volatile/halld/home/dbarton/pipkslamb/data/fall2018/flatten/tree_pipkslamb__B4_M16_M18_FSflat_Spr-Fa18.root"
-# FND = "/volatile/halld/home/dbarton/pipkslamb/data/fall2018/flatten/tree_pipkslamb__B4_M16_M18_FSFlat_small.root"
+# FND = "/volatile/halld/home/dbarton/pipkslamb/data/fall2018/flatten/tree_pipkslamb__B4_M16_M18_FSflat_Spr-Fa18.root"
+FND = "/volatile/halld/home/dbarton/pipkslamb/data/fall2018/flatten/tree_pipkslamb__B4_M16_M18_FSFlat_small.root"
 FND_MC = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/MCWjob4434/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSFlat_sp18-fa18_ALL.root"
 # FNC_MC = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/testMC_webform/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSFlat_071350-58.root"
 
@@ -84,29 +84,50 @@ bggen = False
 
 
 # -----------------------------
-# Define variables for t_prime: t' = |t - t_0|
+# Define variables for t_prime_Ks: t' = |t - t_0|
 # -----------------------------
-p3 = 2   # KShort
-p4 = 1   # recoil Lambda
+p3_ks ="2"   # KShort
+p4_ks = "1,3"   # recoil Lambda
 
-s    = "MASS2(GLUEXBEAM,GLUEXTARGET)"
-sqs  = f"sqrt({s})"
-m1sq = "0.0"
-m2sq = "MASS2(GLUEXTARGET)"
-m3sq = f"MASS2({p3})"
-m4sq = f"MASS2({p4})"
+s_ks    = "MASS2(GLUEXBEAM,GLUEXTARGET)"
+sqs_ks  = f"sqrt({s_ks})"
+m1sq_ks = "0.0"
+m2sq_ks = "MASS2(GLUEXTARGET)"
+m3sq_ks = f"MASS2({p3_ks})"
+m4sq_ks = f"MASS2({p4_ks})"
 
-E1   = f"(({s})+({m1sq})-({m2sq}))/(2*({sqs}))"
-E3   = f"(({s})+({m3sq})-({m4sq}))/(2*({sqs}))"
-p1   = f"sqrt(({E1})*({E1})-({m1sq}))"      # = E1 for photon
-p3cm = f"sqrt(({E3})*({E3})-({m3sq}))"
+E1_ks   = f"(({s_ks})+({m1sq_ks})-({m2sq_ks}))/(2*({sqs_ks}))"
+E3_ks   = f"(({s_ks})+({m3sq_ks})-({m4sq_ks}))/(2*({sqs_ks}))"
+p1_ks   = f"sqrt(({E1_ks})*({E1_ks})-({m1sq_ks}))"      # = E1 for photon
+p3cm_ks = f"sqrt(({E3_ks})*({E3_ks})-({m3sq_ks}))"
 
-t    = f"MASS2(GLUEXBEAM,-{p3})"
-t0   = f"({m1sq})+({m3sq})-2*((({E1})*({E3}))-(({p1})*({p3cm})))"
+t_ks    = f"MASS2(GLUEXBEAM,-{p3_ks})"
+t0_ks   = f"({m1sq_ks})+({m3sq_ks})-2*((({E1_ks})*({E3_ks}))-(({p1_ks})*({p3cm_ks})))"
 
-tprime_abs = f"abs(({t})-({t0}))"   # |t - t0|
-# or, for "signed" t':
-tprime     = f"(({t})-({t0}))"
+tprime_ks     = f"(({t_ks})-({t0_ks}))"
+
+# -----------------------------
+# Define variables for t_prime_Pip: t' = |t - t_0|
+# -----------------------------
+p3_pip = "3"   # PiPlus
+p4_pip = "1,2"   # recoil Lambda
+
+s_pip    = "MASS2(GLUEXBEAM,GLUEXTARGET)"
+sqs_pip  = f"sqrt({s_pip})"
+m1sq_pip = "0.0"
+m2sq_pip = "MASS2(GLUEXTARGET)"
+m3sq_pip = f"MASS2({p3_pip})"
+m4sq_pip = f"MASS2({p4_pip})"
+
+E1_pip   = f"(({s_pip})+({m1sq_pip})-({m2sq_pip}))/(2*({sqs_pip}))"
+E3_pip   = f"(({s_pip})+({m3sq_pip})-({m4sq_pip}))/(2*({sqs_pip}))"
+p1_pip   = f"sqrt(({E1_pip})*({E1_pip})-({m1sq_pip}))"      # = E1 for photon
+p3cm_pip = f"sqrt(({E3_pip})*({E3_pip})-({m3sq_pip}))"
+
+t_pip    = f"MASS2(GLUEXBEAM,-{p3_pip})"
+t0_pip   = f"({m1sq_pip})+({m3sq_pip})-2*((({E1_pip})*({E3_pip}))-(({p1_pip})*({p3cm_pip})))"
+
+tprime_pip     = f"(({t_pip})-({t0_pip}))"
 
 
 
@@ -160,6 +181,31 @@ def setup():
     # ROOT.FSCut.defineCut("selectKSTAR1430", f"MASS({DecayingKShort},{PiPlus1})", "0.85", "0.95", "0.0", "0.85", "0.95", "1.0",)
 
 
+#     # -----------------------------
+#     # Canvas 1 Delta_t (t_ks - t_pip)
+#     # -----------------------------
+#     c1 = ROOT.TCanvas("c1", "c1", 1600, 1200)
+# #    c1.Divide(3, 3)
+
+# #    c1.cd(1)
+#     ROOT.gPad.SetRightMargin(0.18)
+#     h1 = ROOT.FSModeHistogram.getTH2F(FND, NT, "m100000000_1100", f"(-1*MASS2(GLUEXBEAM,-{DecayingKShort})) - (-1*MASS2(GLUEXBEAM,-{PiPlus1})):MASS({DecayingKShort},{PiPlus1})", "(100,0.4,4.0,100,-10.0, 10.0)", "CUT(rf,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ)")
+# #    h1b = ROOT.FSModeHistogram.getTH2F(FND, NT, "m100000000_1100", f"(-1*MASS2(GLUEXBEAM,-{PiPlus1})):MASS({DecayingKShort},{PiPlus1})", "(100,0.4,4.0,100,0.0, 10.0)", "CUT(rf,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ)")
+# #    h1c = h1a.Clone("h1c")
+# #    h1c.Add(h1b, -1)
+#     h1.SetTitle("|-t|")
+#     h1.SetXTitle("M(K_{s} \pi^{+})")
+#     h1.SetYTitle("t_{K_{s}} - t_{\pi^{+}}")
+#     h1.Draw("colz")
+#     ROOT.gPad.Update()
+#     if bggen:
+#         ROOT.FSModeHistogram.drawMCComponentsSame(FND, NT, "m100000000_1100", f"abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))", "(100,0,2)", "CUT(rf,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ)")
+#     lab1.DrawLatex(0.5, 1.00, f"{label}")
+#     ROOT.gPad.Update()
+
+#     c1.Print(f"{allPlots}(") # open multipage PDF
+
+
     # -----------------------------
     # Canvas 1 Delta_t (t_ks - t_pip)
     # -----------------------------
@@ -168,14 +214,14 @@ def setup():
 
 #    c1.cd(1)
     ROOT.gPad.SetRightMargin(0.18)
-    h1a = ROOT.FSModeHistogram.getTH2F(FND, NT, "m100000000_1100", f"abs(-1*MASS2(GLUEXBEAM,-{DecayingKShort})):MASS({DecayingKShort},{PiPlus1})", "(100,0.4,4.0,100,0.0, 10.0)", "CUT(rf,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ)")
-    h1b = ROOT.FSModeHistogram.getTH2F(FND, NT, "m100000000_1100", f"abs(-1*MASS2(GLUEXBEAM,-{PiPlus1})):MASS({DecayingKShort},{PiPlus1})", "(100,0.4,4.0,100,0.0, 10.0)", "CUT(rf,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ)")
-    h1c = h1a.Clone("h1c")
-    h1c.Add(h1b, -1)
-    h1c.SetTitle("|-t|")
-    h1c.SetXTitle("M(K_{s} \pi^{+})")
-    h1c.SetYTitle("t_{K_{s}} - t_{\pi^{+}}")
-    h1c.Draw("colz")
+    h1 = ROOT.FSModeHistogram.getTH1F(FND, NT, "m100000000_1100", f"(MMASS({DecayingKShort},{PiPlus1})", "(100,0.0,2.0)", "CUT(rf,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ)")
+#    h1b = ROOT.FSModeHistogram.getTH2F(FND, NT, "m100000000_1100", f"(-1*MASS2(GLUEXBEAM,-{PiPlus1})):MASS({DecayingKShort},{PiPlus1})", "(100,0.4,4.0,100,0.0, 10.0)", "CUT(rf,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ)")
+#    h1c = h1a.Clone("h1c")
+#    h1c.Add(h1b, -1)
+    # h1.SetTitle("|-t|")
+    h1.SetXTitle("MM(K_{s} \pi^{+})")
+    h1.SetYTitle("counts")
+    h1.Draw()
     ROOT.gPad.Update()
     if bggen:
         ROOT.FSModeHistogram.drawMCComponentsSame(FND, NT, "m100000000_1100", f"abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))", "(100,0,2)", "CUT(rf,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ)")
@@ -194,7 +240,7 @@ def setup():
 
 #    c2.cd(1)
     ROOT.gPad.SetRightMargin(0.18)
-    h2 = ROOT.FSModeHistogram.getTH2F(FND, NT, "m100000000_1100", f"{tprime_abs}:MASS({DecayingKShort},{PiPlus1})", "(100,0.4,4.0,100,0.0, 10.0)", "CUT(rf,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ)")
+    h2 = ROOT.FSModeHistogram.getTH2F(FND, NT, "m100000000_1100", f"{tprime_ks} - {tprime_pip}:MASS({DecayingKShort},{PiPlus1})", "(100,0.4,4.0,100,0.0, 10.0)", "CUT(rf,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ)")
     h2.SetTitle("|-t|")
     h2.SetXTitle("M(K_{s} \pi^{+})")
     h2.SetYTitle("t'_{K_{s}} - t'_{\pi^{+}}")
