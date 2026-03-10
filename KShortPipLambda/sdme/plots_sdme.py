@@ -15,7 +15,9 @@ atiSetup.setup(globals(), use_fsroot=True)
 # Files
 # -----------------------------
 # FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/fits/twopi_plot.root"
-FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/config/twopi_plot.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/config/twopi_plot.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/030826_v2/KsPipLamb_ALL.root"
+FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/031026_v1/KsPipLamb_ALL.root"
 
 # INDICES ASSIGNED BY 'flatten':
 # 1. DecayingLambda (0)   1a. Proton (1)   1b. PiMinus2 (2)
