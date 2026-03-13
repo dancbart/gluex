@@ -11,8 +11,8 @@ import subprocess
 import glob
 
 #################################################### RCDB ENVIRONMENT ####################################################
-#os.environ["RCDB_HOME"] = "/group/halld/Software/builds/Linux_CentOS7.7-x86_64-gcc4.8.5/rcdb/rcdb_0.06.00/"
-#sys.path.append("/group/halld/Software/builds/Linux_CentOS7.7-x86_64-gcc4.8.5/rcdb/rcdb_0.06.00/python")
+#os.environ["RCDB_HOME"] = "/home/dbart013/work/software/rcdb/"
+#sys.path.append("/home/dbart013/work/software/rcdb/python")
 import rcdb
 db = rcdb.RCDBProvider(os.environ.get('RCDB_CONNECTION'))
 

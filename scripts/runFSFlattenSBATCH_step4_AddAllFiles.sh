@@ -4,11 +4,11 @@ set -euo pipefail
 # ----------------------------
 # User settings
 # ----------------------------
-INDIR="/.bscratch/data/dbart013/files/pipkslamb/data/spring2020/flatten/"
-PATTERN="tree_pipkslamb__B4_M16_M18_FSFlat_07????.root"
+INDIR="/.bscratch/data/dbart013/files/pipkslamb/data/fall2018/flatten/"
+PATTERN="tree_pipkslamb__B4_M16_M18_FSFlat_05????.root"
 
 # Final merged output:
-OUTFINAL="${INDIR}tree_pipkslamb__B4_M16_M18_FSFlat_sp20_ALL.root"
+OUTFINAL="${INDIR}tree_pipkslamb__B4_M16_M18_FSFlat_fa18_pol_ALL.root"
 
 # Staging directory (will be created inside INDIR):
 STAGEDIR="${INDIR}hadd_stage"
