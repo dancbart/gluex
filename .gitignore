@@ -8,6 +8,7 @@ thesisTEMP.tex
 /KShortPipLambda/sdme/config/testFit_successful*/
 KShortPipLambda/sdme/config/outPLOT*.txt
 /plots
+/KShortPipLambda/kStar_previousMeasurements.xlsx
 /KShortPipLambda/sdme/config/fit_ranking.txt
 /KShortPipLambda/sdme/config/outFIT020626_sp18fa18sp20_forData_v1.txt
 /KShortPipLambda/sdme/config/outPLOT020626_sp18fa18sp20_forData_v1.txt
