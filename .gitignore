@@ -1,3 +1,9 @@
+bin/
+KShortPipLambda/archive/
+KShortPipLambda/sdme/config/archive/
+KShortPipLambda/sdme/outputTrees/
+KShortPipLambda/sdme/fits/
+thesisTEMP.tex
 /KShortPipLambda/sdme/config/outFIT*.txt
 /KShortPipLambda/sdme/config/testFit_successful*/
 KShortPipLambda/sdme/config/outPLOT*.txt

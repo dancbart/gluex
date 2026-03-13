@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+set -e
+
+# ----- USER INPUT -----
+NUMFITS=$1
+CONFIGFILE=$1
+OUTDIR=$2
+
+if [ -z "$NUMFITS" ] || [ -z "$CONFIGFILE" ] || [ -z "$OUTDIR" ]; then
+    echo "Usage:"
+    echo " runFitter <numberOfFits> /path/to/configFile.cfg":
+    exit 1
+fi
+
+baseDir="/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/fits"
+outDir="${baseDir}/${OUTFOLDER}"
+
+FITTER="fit"
+
+echo "Creating output directory:"
+echo "  $outDir"
+
+# prevent accidental overwrite
+if [ -d "$outDir" ]; then
+    echo "ERROR: Directory already exists:"
+    echo "  $outDir"
+    exit 1
+fi
+
+mkdir "$outDir"
+
+cd "$outDir"
+
+"$FITTER" -r "$CONFIGFILE" >& outFIT.txt
+
+echo "Done."
+echo "Output written to:"
+echo "$outDir"
+

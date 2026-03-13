@@ -14,10 +14,11 @@ atiSetup.setup(globals(), use_fsroot=True)
 # -----------------------------
 # Files
 # -----------------------------
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/fits/twopi_plot.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/config/twopi_plot.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/030826_v2/KsPipLamb_ALL.root"
-FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/031026_v1/KsPipLamb_ALL.root"
+FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/031226_fit/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/031226_fit0/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/031226_fit1/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/031226_fit2/KsPipLamb_ALL.root"
+
 
 # INDICES ASSIGNED BY 'flatten':
 # 1. DecayingLambda (0)   1a. Proton (1)   1b. PiMinus2 (2)
@@ -64,8 +65,6 @@ def gluex_style():
 
     ROOT.gROOT.SetStyle("GlueX")
     ROOT.gROOT.ForceStyle()
-
-
 
 NT = "ntFSGlueX_MODECODE"
 treeName = "ntFSGlueX_100000000_1100"
@@ -209,6 +208,10 @@ def setup():
     cosThetadat.SetYTitle("Candidates / 0.01")
     cosThetadat.SetLineColor(ROOT.kBlack)
     cosThetadat.SetMinimum(0)
+
+    print("before draw, gStyle name =", ROOT.gStyle.GetName())
+    print("before draw, opt title =", ROOT.gStyle.GetOptTitle())
+
     cosThetadat.Draw("")
 
     # --- acc + bkg ---
@@ -229,12 +232,12 @@ def setup():
     int1 = cosThetaacc_sdme.Integral()
     int2 = cosThetabkg_sdme.Integral()
 
-
     legend = ROOT.TLegend(0.70, 0.85, 0.94, 0.94)
     legend.AddEntry(cosThetadat, f"data. Integral: {int0:.0f}", "l")
     legend.AddEntry(cosThetaacc_sdme, f"accmc + bkg. Integral: {int1:.0f}", "l")
     legend.AddEntry(cosThetabkg_sdme, f"bkgmc. Integral: {int2:.0f}", "l")
     legend.Draw("same")
+
 
     c1.Print(f"{allPlots}(")  # open multipage PDF
 
@@ -379,7 +382,7 @@ def setup():
 
     c5 = ROOT.TCanvas("c5", "c5", 1600, 1200)
     # c5.Divide(1, 1)
-    # c5.cd(1)
+    # c5.cd(1) 
 
     psidat.SetTitle("twopi_plot outputs")
     psidat.SetXTitle("#psi(rad) (Helicity frame)")

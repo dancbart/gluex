@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -e
+
+# ----- USER INPUT -----
+FITFILE=$1
+OUTFOLDER=$2
+
+if [ -z "$OUTFOLDER" ] || [ -z "$FITFILE" ]; then
+	echo "Usage:"
+	echo "  makeTrees_kpi_plotter path/to/fitFile.fit outputFolderName"
+	exit 1
+fi
+
+baseDir="/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees"
+outDir="${baseDir}/${OUTFOLDER}"
+
+PLOTTER="/work/halld/home/dbarton/software/halld_sim/src/.Linux_Alma9-x86_64-gcc11.5.0/programs/AmplitudeAnalysis/kpi_plotter/kpi_plotter"
+
+echo "Creating output directory:"
+echo "  $outDir"
+
+# prevent accidental overwrite
+if [ -d "$outDir" ]; then
+	echo "ERROR: Output directory already exists:"
+	echo "  $outDir"
+	exit 1
+fi
+mkdir "$outDir"
+cd "$outDir"
+
+$PLOTTER "$FITFILE" >& outPLOT.txt
+
+echo "Done."
+echo "Output written to:"
+echo " $outDir"
