@@ -1,34 +1,35 @@
-from operator import le
 import os
-from re import T
-import shutil
 import time
 import ROOT
-ROOT.gROOT.SetBatch(True)  # don't pop up canvases with X11 (this script loads the pdf file instead).
+
+ROOT.gROOT.SetBatch(True)
+
 from pyamptools import atiSetup
 atiSetup.setup(globals(), use_fsroot=True)
-# ROOT.TGaxis.SetMaxDigits(3) # set scientific notation globally
-# ROOT.TGaxis.SetExponentOffset(-0.05, 0.01, "y")  # (xoff, yoff, axis)
+
+# -----------------------------
+# Files / globals
+# -----------------------------
+t_bin = "#bf{-t = (0.1 - 1.0) GeV^{2}}" # t_bin label for plots.  MUST match the t_bin used to create the ROOT file.
+FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/032926_t110_fit1/KsPipLamb_ALL.root"
+allPlots = "plots/sdme_plots.pdf"
+
+NT = "ntFSGlueX_MODECODE"
+TREENAME = "ntFSGlueX_100000000_1100"
+
+# Keep ROOT objects alive if needed
+_KEEP = []
+
+def keep(*objs):
+    _KEEP.extend(objs)
 
 
 # -----------------------------
-# Files
+# Style / setup
 # -----------------------------
-FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/031226_fit/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/031226_fit0/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/031226_fit1/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/031226_fit2/KsPipLamb_ALL.root"
-
-
-# INDICES ASSIGNED BY 'flatten':
-# 1. DecayingLambda (0)   1a. Proton (1)   1b. PiMinus2 (2)
-# 2. DecayingKShort (3)   2a. PiPlus2 (4)  2b. PiMinus1 (5)
-# 3. PiPlus1 (6)
-
 def gluex_style():
     style = ROOT.TStyle("GlueX", "Default GlueX Style")
 
-    # Canvas / Pad
     style.SetCanvasBorderMode(0)
     style.SetPadBorderMode(0)
     style.SetPadColor(0)
@@ -36,390 +37,638 @@ def gluex_style():
     style.SetTitleColor(0)
     style.SetStatColor(0)
 
-    # Sizes
-    style.SetCanvasDefW(800)
-    style.SetCanvasDefH(600)
-    style.SetPadBottomMargin(0.15)
-    style.SetPadLeftMargin(0.20)
-    style.SetPadTopMargin(0.05)
-    style.SetPadRightMargin(0.08)
+    style.SetCanvasDefW(900)
+    style.SetCanvasDefH(800)
 
-    # Axis
+    style.SetPadBottomMargin(0.16)
+    style.SetPadLeftMargin(0.16)
+    style.SetPadTopMargin(0.05)
+    style.SetPadRightMargin(0.06)
+
     style.SetStripDecimals(0)
-    style.SetLabelSize(0.025, "xyz")
-    style.SetTitleSize(0.06, "xyz")
+    style.SetLabelSize(0.045, "xyz")
+    style.SetTitleSize(0.055, "xyz")
     style.SetTitleFont(42, "xyz")
     style.SetLabelFont(42, "xyz")
-    style.SetTitleOffset(1.2, "y")
-    style.SetLabelOffset(0.08, "xyz")
+    style.SetTitleOffset(1.25, "y")
+    style.SetTitleOffset(1.05, "x")
 
-
-    # Histograms
     style.SetOptStat(0)
     style.SetOptTitle(0)
     style.SetHistLineWidth(2)
-    style.SetHistFillColor(920)  # grey
-
-    # Palettes
+    style.SetHistFillColor(920)
     style.SetPalette(ROOT.kViridis)
 
     ROOT.gROOT.SetStyle("GlueX")
     ROOT.gROOT.ForceStyle()
 
-NT = "ntFSGlueX_MODECODE"
-treeName = "ntFSGlueX_100000000_1100"
-
-# DecayingLambda = "1"
-# Proton         = "1a"
-# PiMinus2       = "1b"
-# DecayingKShort = "2"
-# PiPlus2        = "2a"
-# PiMinus1       = "2b"
-# PiPlus1        = "3"
-
-# Toggle BGGEN overlays
-bggen = False
 
 def setup():
-    startTime = time.time()
-    gluex_style()
-    # Early out if already configured
     if ROOT.FSModeCollection.modeVector().size() != 0:
         return
-    # ROOT.FSHistogram.readHistogramCache()
     ROOT.FSModeCollection.addModeInfo("100000000_1100").addCategory("m100000000_1100")
 
-    # -----------------------------
-    # Plot output directory / file
-    # -----------------------------
-    # shutil.rmtree("plots", ignore_errors=True)
-    # os.makedirs("plots", exist_ok=True)
-    allPlots = "plots/sdme_plots.pdf"
+
+# -----------------------------
+# Histogram loading
+# -----------------------------
+def get_hist_or_raise(root_file, name):
+    h = root_file.Get(name)
+    if not h:
+        raise RuntimeError(f"Histogram '{name}' not found in file")
+    h = h.Clone(name)
+    h.SetDirectory(0)
+    return h
+
+
+def load_histograms(filename):
+    f = ROOT.TFile.Open(filename)
+    if not f or f.IsZombie():
+        raise RuntimeError(f"Could not open ROOT file: {filename}")
+
+    hist = {
+        "cosThetadat":      get_hist_or_raise(f, "cosThetadat"),
+        "cosThetaacc_sdme": get_hist_or_raise(f, "cosThetaacc_sdme"),
+        "cosThetabkg_sdme": get_hist_or_raise(f, "cosThetabkg_sdme"),
+        "cosThetagen_sdme": get_hist_or_raise(f, "cosThetagen_sdme"),
+
+        "phidat":      get_hist_or_raise(f, "phidat"),
+        "phiacc_sdme": get_hist_or_raise(f, "phiacc_sdme"),
+        "phibkg_sdme": get_hist_or_raise(f, "phibkg_sdme"),
+        "phigen_sdme": get_hist_or_raise(f, "phigen_sdme"),
+
+        "Phidat":      get_hist_or_raise(f, "Phidat"),
+        "Phiacc_sdme": get_hist_or_raise(f, "Phiacc_sdme"),
+        "Phibkg_sdme": get_hist_or_raise(f, "Phibkg_sdme"),
+        "Phigen_sdme": get_hist_or_raise(f, "Phigen_sdme"),
+
+        "psidat":      get_hist_or_raise(f, "psidat"),
+        "psiacc_sdme": get_hist_or_raise(f, "psiacc_sdme"),
+        "psibkg_sdme": get_hist_or_raise(f, "psibkg_sdme"),
+        "psigen_sdme": get_hist_or_raise(f, "psigen_sdme"),
+    }
+
+    f.Close()
+    return hist
+
+
+# -----------------------------
+# Small helpers
+# -----------------------------
+def ensure_plot_dir(pdf_path):
+    outdir = os.path.dirname(pdf_path)
+    if outdir:
+        os.makedirs(outdir, exist_ok=True)
+
+
+def make_canvas_with_bottompad(
+    name,
+    width=1000,
+    height=1100,
+    info_frac=0.22,
+    left_margin=0.18,
+    right_margin=0.06,
+    top_margin=0.08,
+    bottom_margin_plot=0.18,
+    top_margin_info=0.02,
+    bottom_margin_info=0.20,
+):
+    """
+    Layout:
+      - plot pad on top
+      - info pad on bottom
+
+    info_frac is the fractional height of the bottom info pad.
+    """
+    c = ROOT.TCanvas(name, name, width, height)
+
+    # Top plot pad: y from info_frac to 1
+    pad_plot = ROOT.TPad(
+        f"{name}_plot", f"{name}_plot",
+        0.00, info_frac, 1.00, 1.00
+    )
+    pad_plot.SetFillColor(0)
+    pad_plot.SetBorderMode(0)
+    pad_plot.SetLeftMargin(left_margin)
+    pad_plot.SetRightMargin(right_margin)
+    pad_plot.SetTopMargin(top_margin)
+    pad_plot.SetBottomMargin(bottom_margin_plot)
+    pad_plot.Draw()
+
+    # Bottom info pad: y from 0 to info_frac
+    pad_info = ROOT.TPad(
+        f"{name}_info", f"{name}_info",
+        0.00, 0.00, 1.00, info_frac
+    )
+    pad_info.SetFillColor(0)
+    pad_info.SetBorderMode(0)
+    pad_info.SetLeftMargin(left_margin)
+    pad_info.SetRightMargin(right_margin)
+    pad_info.SetTopMargin(top_margin_info)
+    pad_info.SetBottomMargin(bottom_margin_info)
+    pad_info.Draw()
+
+    keep(c, pad_plot, pad_info)
+    return c, pad_plot, pad_info
+
+
+def draw_bottom_info_pad(info_pad, label_text, legend_items=None, notes=None):
+    """
+    legend_items: list of (obj, text, drawopt)
+    notes: list of strings
+    """
+    info_pad.cd()
+    info_pad.Clear()
+
+    # separator line at top of info pad
+    line = ROOT.TLine(0.0, 0.98, 1.0, 0.98)
+    line.SetNDC(True)
+    line.SetLineColor(ROOT.kGray + 1)
+    line.Draw()
+    keep(line)
+
+    # Legend on right
+    if legend_items:
+        leg = ROOT.TLegend(0.58, 0.18, 0.90, 0.86)
+        leg.SetBorderSize(0)
+        leg.SetFillStyle(0)
+        leg.SetTextSize(0.16)
+        for obj, text, opt in legend_items:
+            leg.AddEntry(obj, text, opt)
+        leg.Draw()
+        keep(leg)
+
+    # Label + notes on left
+    tex = ROOT.TLatex()
+    tex.SetNDC(True)
+    tex.SetTextFont(42)
+    tex.SetTextAlign(13)
+
+    tex.SetTextSize(0.18)
+    tex.DrawLatex(0.06, 0.92, f"#bf{{{label_text}}}")
+    keep(tex)
+
+    if notes:
+        y = 0.73
+        for note in notes:
+            t = ROOT.TLatex()
+            t.SetNDC(True)
+            t.SetTextFont(42)
+            t.SetTextSize(0.12)
+            t.SetTextAlign(13)
+            t.DrawLatex(0.06, y, note)
+            keep(t)
+            y -= 0.17
+
+    info_pad.Modified()
+    info_pad.Update()
+
+
+def integral_between(hist, xmin, xmax):
+    ax = hist.GetXaxis()
+    bin1 = ax.FindBin(xmin)
+    bin2 = ax.FindBin(xmax)
+    return hist.Integral(bin1, bin2)
+
+
+def open_pdf(canvas, pdf_path):
+    canvas.Print(f"{pdf_path}(")
+
+
+def add_pdf_page(canvas, pdf_path):
+    canvas.Print(pdf_path)
+
+
+def close_pdf(canvas, pdf_path):
+    canvas.Print(f"{pdf_path})")
+
+
+def style_data_mc_overlay(h_data, h_sum, h_bkg):
+    h_data.SetLineColor(ROOT.kBlack)
+    h_data.SetLineWidth(2)
+    h_data.SetMinimum(0)
+
+    h_sum.SetLineColor(ROOT.kGreen - 6)
+    h_sum.SetFillColorAlpha(ROOT.kGreen - 2, 0.60)
+    h_sum.SetFillStyle(1001)
+
+    h_bkg.SetLineColor(ROOT.kRed - 6)
+    h_bkg.SetFillColorAlpha(ROOT.kRed - 4, 0.60)
+    h_bkg.SetFillStyle(1001)
+
+
+# -----------------------------
+# cosTheta plots
+# -----------------------------
+def cosTheta_plots(hist, pdf_path):
+    cosThetadat      = hist["cosThetadat"]
+    cosThetaacc_sdme = hist["cosThetaacc_sdme"]
+    cosThetabkg_sdme = hist["cosThetabkg_sdme"]
+    cosThetagen_sdme = hist["cosThetagen_sdme"]
 
     # -----------------------------
-    # Histogram label
+    # CosineTheta of Ks in helicity frame
     # -----------------------------
-    # label = "MC" if "gen_amp" in FND or "bggen" in FND else "Data"
-    # lab1 = ROOT.TLatex()
-    # lab1.SetNDC(True)
-    # lab1.SetTextAlign(23)   # 23 = center/top
-    # lab1.SetTextFont(62)    # bold
-    # lab1.SetTextSize(0.045)
+    c1, pad_plot, pad_info = make_canvas_with_bottompad("c1_cosTheta", info_frac=0.22)
 
-    # -----------------------------
-    # Retrieve histogram(s)
-    # -----------------------------
+    pad_plot.cd()
 
-    file = ROOT.TFile.Open(FND)
+    h_data = cosThetadat.Clone("h_data_cos")
+    h_acc  = cosThetaacc_sdme.Clone("h_acc_cos")
+    h_bkg  = cosThetabkg_sdme.Clone("h_bkg_cos")
+    h_sum  = h_acc.Clone("h_sum_cos")
+    h_sum.Add(h_bkg)
 
+    h_data.SetTitle("")
+    h_data.SetXTitle("cos#theta_{K_{S}} (Helicity frame)")
+    h_data.SetYTitle("Candidates / 0.01")
 
-    # --- Retrieve cosTheta histograms ---
+    style_data_mc_overlay(h_data, h_sum, h_bkg)
 
-    cosThetadat = file.Get("cosThetadat")
-    if not cosThetadat:
-        raise RuntimeError("Histogram 'cosThetadat' not found in file")
-    cosThetadat = cosThetadat.Clone("cosThetadat") # Detach from file so it survives after close
-    cosThetadat.SetDirectory(0)
+    h_data.Draw()
+    h_sum.Draw("hist same")
+    h_bkg.Draw("hist same")
 
-    cosThetaacc_sdme = file.Get("cosThetaacc_sdme")
-    if not cosThetaacc_sdme:
-        raise RuntimeError("Histogram 'cosThetaacc_sdme' not found in file")
-    cosThetaacc_sdme = cosThetaacc_sdme.Clone("cosThetaacc_sdme") # Detach from file so it survives after close
-    cosThetaacc_sdme.SetDirectory(0)
+    # integrals to display in info pad
+    data_int = integral_between(h_data, -1.0, 0.5)
+    acc_int  = integral_between(h_acc, -1.0, 0.5)
+    bkg_int  = integral_between(h_bkg, -1.0, 0.5)
 
-    cosThetabkg_sdme = file.Get("cosThetabkg_sdme")
-    if not cosThetabkg_sdme:
-        raise RuntimeError("Histogram 'cosThetabkg_sdme' not found in file")
-    cosThetabkg_sdme = cosThetabkg_sdme.Clone("cosThetabkg_sdme") # Detach from file so it survives after close
-    cosThetabkg_sdme.SetDirectory(0)
+    draw_bottom_info_pad(
+        pad_info,
+        label_text="Not acceptance-corrected",
+        legend_items=[
+            (h_data, "data", "l"),
+            (h_sum,  "accmc + bkg", "f"),
+            (h_bkg,  "bkgmc", "f"),
+        ],
+        notes=[
+            f"{t_bin}",
+            "Fit all Polarizations (0, 45, 90, 135)",
+            f"Data int: {data_int:.0f} = acc+bkg = {(acc_int + bkg_int):.0f}",
+            "#bf{DATA:} sp18, fa18, sp20. #bf{MC:} sp18, fa18.",
+        ],
+    )
 
-    # --- Retrieve phi histograms ---
-
-    phidat = file.Get("phidat")
-    if not phidat:
-        raise RuntimeError("Histogram 'phidat' not found in file")
-    phidat = phidat.Clone("phidat")
-    phidat.SetDirectory(0)
-
-    phiacc_sdme = file.Get("phiacc_sdme")
-    if not phiacc_sdme:
-        raise RuntimeError("Histogram 'phiacc' not found in file")
-    phiacc_sdme = phiacc_sdme.Clone("phiacc_sdme")
-    phiacc_sdme.SetDirectory(0)
-
-    phibkg_sdme = file.Get("phibkg_sdme")
-    if not phibkg_sdme:
-        raise RuntimeError("Histogram 'phibkg_sdme' not found in file")
-    phibkg_sdme = phibkg_sdme.Clone("phibkg_sdme")
-    phibkg_sdme.SetDirectory(0)
-
-    # --- Retrieve Phi histograms ---
-
-    Phidat = file.Get("Phidat")
-    if not Phidat:
-        raise RuntimeError("Histogram 'Phidat' not found in file")
-    Phidat = Phidat.Clone("Phidat")
-    Phidat.SetDirectory(0)
-
-    Phiacc_sdme = file.Get("Phiacc_sdme")
-    if not Phiacc_sdme:
-        raise RuntimeError("Histogram 'Phiacc_sdme' not found in file")
-    Phiacc_sdme = Phiacc_sdme.Clone("Phiacc_sdme")
-    Phiacc_sdme.SetDirectory(0)
-
-    Phibkg_sdme = file.Get("Phibkg_sdme")
-    if not Phibkg_sdme:
-        raise RuntimeError("Histogram 'Phibkg_sdme' not found in file")
-    Phibkg_sdme = Phibkg_sdme.Clone("Phibkg_sdme")
-    Phibkg_sdme.SetDirectory(0)
-
-    # --- Retrieve psi histograms ---
-
-    psidat = file.Get("psidat")
-    if not psidat:
-        raise RuntimeError("Histogram 'psidat' not found in file")
-    psidat = psidat.Clone("psidat")
-    psidat.SetDirectory(0)
-
-    psiacc_sdme = file.Get("psiacc_sdme")
-    if not psiacc_sdme:
-        raise RuntimeError("Histogram 'psiacc_sdme' not found in file")
-    psiacc_sdme = psiacc_sdme.Clone("psiacc_sdme")
-    psiacc_sdme.SetDirectory(0)
-
-    psibkg_sdme = file.Get("psibkg_sdme")
-    if not psibkg_sdme:
-        raise RuntimeError("Histogram 'psibkg_sdme' not found in file")
-    psibkg_sdme = psibkg_sdme.Clone("psibkg_sdme")
-    psibkg_sdme.SetDirectory(0)
-
-    file.Close()
-
+    open_pdf(c1, pdf_path)
 
     # -----------------------------
-    # Canvas 1
+    # CosTheta EFFICIENCY
     # -----------------------------
-    c1 = ROOT.TCanvas("c1", "c1", 1600, 1200)
-    # c1.Divide(1, 1)
-    # c1.cd(1)
+    c2, pad_plot, pad_info = make_canvas_with_bottompad("c2_cosTheta_eff", info_frac=0.22)
+    pad_plot.cd()
 
-    cosThetadat.SetTitle("twopi_plot outputs")
-    cosThetadat.SetXTitle("cos#theta_{K_{S}} (Helicity frame)")
-    cosThetadat.SetYTitle("Candidates / 0.01")
-    cosThetadat.SetLineColor(ROOT.kBlack)
-    cosThetadat.SetMinimum(0)
+    legend_items = []
+    notes = []
 
-    print("before draw, gStyle name =", ROOT.gStyle.GetName())
-    print("before draw, opt title =", ROOT.gStyle.GetOptTitle())
+    # integrals to display in info pad
+    acc_int = integral_between(cosThetaacc_sdme, -1.0, 0.5)
+    gen_int  = integral_between(cosThetagen_sdme, -1.0, 0.5)
 
-    cosThetadat.Draw("")
+    if ROOT.TEfficiency.CheckConsistency(cosThetaacc_sdme, cosThetagen_sdme):
+        eff = ROOT.TEfficiency(cosThetaacc_sdme, cosThetagen_sdme)
+        eff.SetTitle(";cos#theta_{K_{S}} (Helicity frame);Efficiency")
+        eff.Draw("AP")
+        c2.Update()
 
-    # --- acc + bkg ---
-    cosTheta_acc_plus_bkg = cosThetaacc_sdme.Clone("cosTheta_acc_plus_bkg")
-    cosTheta_acc_plus_bkg.Add(cosThetabkg_sdme)
-    cosTheta_acc_plus_bkg.SetLineColor(ROOT.kGreen-6)
-    cosTheta_acc_plus_bkg.SetFillColorAlpha(ROOT.kGreen-2, 0.60)
-    cosTheta_acc_plus_bkg.SetFillStyle(1001)
-    cosTheta_acc_plus_bkg.Draw("hist same")
+        graph = eff.GetPaintedGraph()
+        if graph:
+            graph.GetXaxis().SetTitle("cos#theta_{K_{S}} (Helicity frame)")
+            graph.GetYaxis().SetTitle("Efficiency (accmc / genmc)")
+            graph.GetYaxis().SetRangeUser(0.0, 0.1)
+            graph.GetYaxis().SetTitleSize(0.055)
+            graph.GetYaxis().SetTitleOffset(1.15)
+            graph.GetXaxis().SetTitleSize(0.055)
+            graph.GetXaxis().SetLabelSize(0.045)
+            graph.GetYaxis().SetLabelSize(0.045)
 
-    cosThetabkg_sdme.SetLineColor(ROOT.kRed-6)
-    cosThetabkg_sdme.SetFillColorAlpha(ROOT.kRed-4, 0.60)
-    cosThetabkg_sdme.SetFillStyle(1001)  # solid fill
-    cosThetabkg_sdme.Draw("hist same")
+        legend_items = [(graph if graph else cosThetaacc_sdme, "accmc / genmc", "p")]
+        notes = [
+            "",
+            f"Accepted MC integral: {acc_int:.0f}",
+            f"Generated MC integral: {gen_int:.0f}",
+            "#theta = (-1, 0.5)",
+        ]
+    else:
+        notes = ["TEfficiency consistency check failed"]
 
-    # Integral(s) for legend
-    int0 = cosThetadat.Integral()
-    int1 = cosThetaacc_sdme.Integral()
-    int2 = cosThetabkg_sdme.Integral()
+    draw_bottom_info_pad(
+        pad_info,
+        label_text="Efficiency (fitted trees)",
+        legend_items=legend_items,
+        notes=notes,
+    )
 
-    legend = ROOT.TLegend(0.70, 0.85, 0.94, 0.94)
-    legend.AddEntry(cosThetadat, f"data. Integral: {int0:.0f}", "l")
-    legend.AddEntry(cosThetaacc_sdme, f"accmc + bkg. Integral: {int1:.0f}", "l")
-    legend.AddEntry(cosThetabkg_sdme, f"bkgmc. Integral: {int2:.0f}", "l")
-    legend.Draw("same")
-
-
-    c1.Print(f"{allPlots}(")  # open multipage PDF
-
-
-    # -----------------------------
-    # Canvas 2 phi angular plots
-    # -----------------------------
-
-    c2 = ROOT.TCanvas("c2", "c2", 1600, 1200)
-    # c2.Divide(1, 1)
-    # c2.cd(1)
-
-    phidat.SetTitle("twopi_plot outputs")
-    phidat.SetXTitle("#phi(rad) (Helicity frame)")
-    phidat.SetYTitle("Candidates / 0.035")
-    phidat.SetLineColor(ROOT.kBlack)
-    phidat.SetMinimum(0)
-    phidat.Draw("")
-
-    # --- acc + bkg ---
-    phi_acc_plus_bkg = phiacc_sdme.Clone("phi_acc_plus_bkg")
-    phi_acc_plus_bkg.Add(phibkg_sdme)
-    phi_acc_plus_bkg.SetLineColor(ROOT.kGreen-6)
-    phi_acc_plus_bkg.SetFillColorAlpha(ROOT.kGreen-2, 0.60)
-    phi_acc_plus_bkg.SetFillStyle(1001)
-    phi_acc_plus_bkg.Draw("hist same")
-
-    phibkg_sdme.SetLineColor(ROOT.kRed-6)
-    phibkg_sdme.SetFillColorAlpha(ROOT.kRed-4, 0.60)
-    phibkg_sdme.SetFillStyle(1001)  # solid fill
-    phibkg_sdme.Draw("hist same")
-
-    # Integral(s) for legend
-    int3 = phidat.Integral()
-    int4 = phiacc_sdme.Integral()
-    int5 = phibkg_sdme.Integral()
-
-
-    legend = ROOT.TLegend(0.70, 0.85, 0.94, 0.94)
-    legend.AddEntry(phidat, f"data. Integral: {int3:.0f}", "l")
-    legend.AddEntry(phiacc_sdme, f"accmc + bkg. Integral: {int4:.0f}", "l")
-    legend.AddEntry(phibkg_sdme, f"bkgmc. Integral: {int5:.0f}", "l")
-    legend.Draw("same")
-
-    c2.Print(allPlots)  # add to multipage PDF
-
+    add_pdf_page(c2, pdf_path)
 
     # -----------------------------
-    # Canvas 3 Phi angular plots
+    # DIAGNOSTIC PLOT: accmc / efficiency = genmc
     # -----------------------------
+    c3, pad_plot, pad_info = make_canvas_with_bottompad("c3_cosTheta_diag", info_frac=0.22)
+    pad_plot.cd()
 
-    c3 = ROOT.TCanvas("c3", "c3", 1600, 1200)
-    # c3.Divide(1, 1)
-    # c3.cd(1)
+    h_eff = cosThetaacc_sdme.Clone("h_eff_cos")
+    h_eff.Divide(cosThetagen_sdme)
 
-    bigPhidat = Phidat.Clone("bigPhidat")
-    bigPhidat.SetTitle("twopi_plot outputs")
-    bigPhidat.SetXTitle("#Phi(rad) (Helicity frame)")
-    bigPhidat.SetYTitle("Candidates / 0.035")
-    bigPhidat.SetLineColor(ROOT.kBlack)
-    bigPhidat.SetMinimum(0)
-    bigPhidat.Draw("")
+    h_diag = cosThetaacc_sdme.Clone("h_diag_cos")
+    h_diag.Divide(h_eff)
+    h_diag.SetTitle("")
+    h_diag.SetXTitle("cos#theta_{K_{S}} (Helicity frame)")
+    h_diag.SetYTitle("Count")
+    h_diag.SetLineColor(ROOT.kBlue + 1)
+    h_diag.SetLineWidth(2)
+    h_diag.GetXaxis().SetNdivisions(4, 0, 0, True)
+    h_diag.GetYaxis().SetRangeUser(1100, 2000)
+    h_diag.GetYaxis().SetTitleOffset(1.21)
+    h_diag.GetYaxis().SetMaxDigits(3)
+    h_diag.Draw()
 
-    # --- acc + bkg ---
-    Phi_acc_plus_bkg = Phiacc_sdme.Clone("Phi_acc_plus_bkg")
-    Phi_acc_plus_bkg.Add(Phibkg_sdme)
-    Phi_acc_plus_bkg.SetLineColor(ROOT.kGreen-6)
-    Phi_acc_plus_bkg.SetFillColorAlpha(ROOT.kGreen-2, 0.60)
-    Phi_acc_plus_bkg.SetFillStyle(1001)
-    Phi_acc_plus_bkg.Draw("hist same")
+    h_gen = cosThetagen_sdme.Clone("h_gen_cos")
+    h_gen.SetTitle("")
+    h_gen.SetXTitle("cos#theta_{K_{S}} (Helicity frame)")
+    # h_gen.SetYTitle("Generated MC")
+    h_gen.SetLineColor(ROOT.kGreen - 6)
+    h_gen.SetFillColorAlpha(ROOT.kGreen - 2, 0.60)
+    h_gen.SetFillStyle(1001)
+    h_gen.SetLineWidth(2)
+    h_gen.GetYaxis().SetRangeUser(1100, 2000)
+    h_gen.GetYaxis().SetTitleOffset(1.21)
+    h_gen.GetYaxis().SetMaxDigits(3)
+    h_gen.Draw("hist same")
 
-    Phibkg_sdme.SetLineColor(ROOT.kRed-6)
-    Phibkg_sdme.SetFillColorAlpha(ROOT.kRed-4, 0.60)
-    Phibkg_sdme.SetFillStyle(1001)  # solid fill
-    Phibkg_sdme.Draw("hist same")
+    draw_bottom_info_pad(
+        pad_info,
+        label_text="Diagnostic plot (fitted trees)",
+        legend_items=[
+            (h_diag, "accmc / efficiency", "l"),
+            (h_gen, "genmc", "f"),
+        ],
+        notes=[
+            "",
+            f"Integral acc / eff: {integral_between(h_diag, -1.0, 0.5):.0f}",
+            f"Integral genmc: {integral_between(h_gen, -1.0, 0.5):.0f}",
+            "#theta = (-1, 0.5)",
+        ],
+    )
 
-    # Integral(s) for legend
-    int6 = bigPhidat.Integral()
-    int7 = Phiacc_sdme.Integral()
-    int8 = Phibkg_sdme.Integral()
+    add_pdf_page(c3, pdf_path)
 
+# -----------------------------
+# Azimuthal angle of Ks in helicity frame
+# -----------------------------
+def phi_plots(hist, pdf_path):
+    phidat      = hist["phidat"]
+    phiacc_sdme = hist["phiacc_sdme"]
+    phibkg_sdme = hist["phibkg_sdme"]
+    phigen_sdme = hist["phigen_sdme"]
 
-    legend = ROOT.TLegend(0.70, 0.85, 0.94, 0.94)
-    legend.AddEntry(bigPhidat, f"data. Integral: {int6:.0f}", "l")
-    legend.AddEntry(Phiacc_sdme, f"accmc + bkg. Integral: {int7:.0f}", "l")
-    legend.AddEntry(Phibkg_sdme, f"bkgmc. Integral: {int8:.0f}", "l")
-    legend.Draw("same")
+    c1, pad_plot, pad_info = make_canvas_with_bottompad("c_phi", info_frac=0.22)
 
-    c3.Print(allPlots)
+    pad_plot.cd()
 
-     # -----------------------------
-    # Canvas 4 Phi MINUS phi angular plots
-    # -----------------------------
+    h_data = phidat.Clone("h_phi_data")
+    h_acc  = phiacc_sdme.Clone("h_phi_acc")
+    h_bkg  = phibkg_sdme.Clone("h_phi_bkg")
+    h_sum  = h_acc.Clone("h_phi_sum")
+    h_sum.Add(h_bkg)
 
-    c4 = ROOT.TCanvas("c4", "c4", 1600, 1200)
-    # c4.Divide(1, 1)
-    # c4.cd(1)
+    h_data.SetTitle("")
+    h_data.SetXTitle("#phi (rad) (Helicity frame)")
+    h_data.SetYTitle("Candidates / 0.035")
 
-    PhidatMINUSphi = Phidat.Clone("PhidatMINUSphi")
-    PhidatMINUSphi.Add(phidat)
-    PhidatMINUSphi.SetTitle("twopi_plot outputs")
-    PhidatMINUSphi.SetXTitle("#phi(rad) - #Phi(rad) (Helicity frame)")
-    PhidatMINUSphi.SetYTitle("Candidates / bin?")
-    PhidatMINUSphi.SetLineColor(ROOT.kBlack)
-    PhidatMINUSphi.SetMinimum(0)
-    PhidatMINUSphi.Draw("")
+    style_data_mc_overlay(h_data, h_sum, h_bkg)
 
-    # --- acc + bkg ---
-    PhiMINUSphi = Phiacc_sdme.Clone("PhiMINUSphi")
-    PhiMINUSphi.Add(phiacc_sdme)
-    PhiMINUSphi.SetLineColor(ROOT.kGreen-6)
-    PhiMINUSphi.SetFillColorAlpha(ROOT.kGreen-2, 0.60)
-    PhiMINUSphi.SetFillStyle(1001)
-    PhiMINUSphi.Draw("hist same")
+    h_data.Draw()
+    h_sum.Draw("hist same")
+    h_bkg.Draw("hist same")
 
-    PhibkgMINUSbkg = Phibkg_sdme.Clone("PhibkgMINUSbkg")
-    PhibkgMINUSbkg.Add(phibkg_sdme)
-    PhibkgMINUSbkg.SetLineColor(ROOT.kRed-6)
-    PhibkgMINUSbkg.SetFillColorAlpha(ROOT.kRed-4, 0.60)
-    PhibkgMINUSbkg.SetFillStyle(1001)  # solid fill
-    PhibkgMINUSbkg.Draw("hist same")
+    draw_bottom_info_pad(
+        pad_info,
+        label_text="Azmuthal angle of Ks",
+        legend_items=[
+            (h_data, "data", "l"),
+            (h_sum,  "accmc + bkg", "f"),
+            (h_bkg,  "bkgmc", "f"),
+        ],
+        notes=[
+            f"Data int: {h_data.Integral():.0f}",
+            f"Acc int: {h_acc.Integral():.0f}",
+            f"Bkg int: {h_bkg.Integral():.0f}",
+        ],
+    )
 
-
-    # Integral(s) for legend
-    int9 = PhidatMINUSphi.Integral()
-    int10 = PhiMINUSphi.Integral()
-    int11 = PhibkgMINUSbkg.Integral()
-
-
-    legend = ROOT.TLegend(0.70, 0.85, 0.94, 0.94)
-    legend.AddEntry(PhidatMINUSphi, f"data. Integral: {int9:.0f}", "l")
-    legend.AddEntry(PhiMINUSphi, f"accmc + bkg. Integral: {int10:.0f}", "l")
-    legend.AddEntry(PhibkgMINUSbkg, f"bkgmc. Integral: {int11:.0f}", "l")
-    legend.Draw("same")
-
-    c4.Print(allPlots)  # close multipage PDF
+    open_pdf(c1, pdf_path)
 
 
     # -----------------------------
-    # Canvas 5 psi angular plots
+    # Azimuthal EFFICIENCY
     # -----------------------------
+    c2, pad_plot, pad_info = make_canvas_with_bottompad("c2_phi_eff", info_frac=0.22)
+    pad_plot.cd()
 
-    c5 = ROOT.TCanvas("c5", "c5", 1600, 1200)
-    # c5.Divide(1, 1)
-    # c5.cd(1) 
+    legend_items = []
+    notes = []
 
-    psidat.SetTitle("twopi_plot outputs")
-    psidat.SetXTitle("#psi(rad) (Helicity frame)")
-    psidat.SetYTitle("Candidates / 0.035")
-    psidat.SetLineColor(ROOT.kBlack)
-    psidat.SetMinimum(0)
-    psidat.Draw("")
+    # integrals to display in info pad
+    acc_int = integral_between(phiacc_sdme, -1.0, 0.5)
+    gen_int  = integral_between(phigen_sdme, -1.0, 0.5)
 
-    # --- acc + bkg ---
-    psi_acc_plus_bkg = psiacc_sdme.Clone("psi_acc_plus_bkg")
-    psi_acc_plus_bkg.Add(psibkg_sdme)
-    psi_acc_plus_bkg.SetLineColor(ROOT.kGreen-6)
-    psi_acc_plus_bkg.SetFillColorAlpha(ROOT.kGreen-2, 0.60)
-    psi_acc_plus_bkg.SetFillStyle(1001)
-    psi_acc_plus_bkg.Draw("hist same")
+    if ROOT.TEfficiency.CheckConsistency(phiacc_sdme, phigen_sdme):
+        eff = ROOT.TEfficiency(phiacc_sdme, phigen_sdme)
+        eff.SetTitle(";#phi_{K_{S}} (Helicity frame);Efficiency")
+        eff.Draw("AP")
+        c2.Update()
 
-    psibkg_sdme.SetLineColor(ROOT.kRed-6)
-    psibkg_sdme.SetFillColorAlpha(ROOT.kRed-4, 0.60)
-    psibkg_sdme.SetFillStyle(1001)  # solid fill
-    psibkg_sdme.Draw("hist same")
+        graph = eff.GetPaintedGraph()
+        if graph:
+            graph.GetXaxis().SetTitle("#phi_{K_{S}} (Helicity frame)")
+            graph.GetYaxis().SetTitle("Efficiency (accmc / genmc)")
+            graph.GetYaxis().SetRangeUser(0.0, 0.1)
+            graph.GetYaxis().SetTitleSize(0.055)
+            graph.GetYaxis().SetTitleOffset(1.15)
+            graph.GetXaxis().SetTitleSize(0.055)
+            graph.GetXaxis().SetLabelSize(0.045)
+            graph.GetYaxis().SetLabelSize(0.045)
 
-    # Integral(s) for legend
-    int12 = psidat.Integral()
-    int13 = psiacc_sdme.Integral()
-    int14 = psibkg_sdme.Integral()
+        legend_items = [(graph if graph else phiacc_sdme, "accmc / genmc", "p")]
+        notes = [
+            "",
+            f"Accepted MC integral: {acc_int:.0f}",
+            f"Generated MC integral: {gen_int:.0f}",
+            "#phi = (-1, 0.5)",
+        ]
+    else:
+        notes = ["TEfficiency consistency check failed"]
+
+    draw_bottom_info_pad(
+        pad_info,
+        label_text="Efficiency (fitted trees)",
+        legend_items=legend_items,
+        notes=notes,
+    )
+
+    add_pdf_page(c2, pdf_path)
+
+# -----------------------------
+# Polarization angle of Ks in helicity frame
+# -----------------------------
+def bigPhi_plots(hist, pdf_path):
+    Phidat      = hist["Phidat"]
+    Phiacc_sdme = hist["Phiacc_sdme"]
+    Phibkg_sdme = hist["Phibkg_sdme"]
+    Phigen_sdme = hist["Phigen_sdme"]
+
+    c1, pad_plot, pad_info = make_canvas_with_bottompad("c_bigPhi", info_frac=0.22)
+
+    pad_plot.cd()
+
+    h_data = Phidat.Clone("h_bigPhi_data")
+    h_acc  = Phiacc_sdme.Clone("h_bigPhi_acc")
+    h_bkg  = Phibkg_sdme.Clone("h_bigPhi_bkg")
+    h_sum  = h_acc.Clone("h_bigPhi_sum")
+    h_sum.Add(h_bkg)
+
+    h_data.SetTitle("")
+    h_data.SetXTitle("#Phi (rad) (Helicity frame)")
+    h_data.SetYTitle("Candidates / 0.035")
+
+    style_data_mc_overlay(h_data, h_sum, h_bkg)
+
+    h_data.Draw()
+    h_sum.Draw("hist same")
+    h_bkg.Draw("hist same")
+
+    draw_bottom_info_pad(
+        pad_info,
+        label_text="Polarization angle of Ks",
+        legend_items=[
+            (h_data, "data", "l"),
+            (h_sum,  "accmc + bkg", "f"),
+            (h_bkg,  "bkgmc", "f"),
+        ],
+        notes=[
+            f"Data int: {h_data.Integral():.0f}",
+            f"Acc int: {h_acc.Integral():.0f}",
+            f"Bkg int: {h_bkg.Integral():.0f}",
+        ],
+    )
+
+    open_pdf(c1, pdf_path)
+
+    # -----------------------------
+    # Polarization angle EFFICIENCY
+    # -----------------------------
+    c2, pad_plot, pad_info = make_canvas_with_bottompad("c2_bigPhi_eff", info_frac=0.22)
+    pad_plot.cd()
+
+    legend_items = []
+    notes = []
+
+    # integrals to display in info pad
+    acc_int = integral_between(Phiacc_sdme, -3.0, 3.0)
+    gen_int  = integral_between(Phigen_sdme, -3.0, 3.0)
+
+    if ROOT.TEfficiency.CheckConsistency(Phiacc_sdme, Phigen_sdme):
+        eff = ROOT.TEfficiency(Phiacc_sdme, Phigen_sdme)
+        eff.SetTitle(";#Phi_{K_{S}} (Helicity frame);Efficiency")
+        eff.Draw("AP")
+        c2.Update()
+
+        graph = eff.GetPaintedGraph()
+        if graph:
+            graph.GetXaxis().SetTitle("#Phi_{K_{S}} (Helicity frame)")
+            graph.GetYaxis().SetTitle("Efficiency (accmc / genmc)")
+            graph.GetYaxis().SetRangeUser(0.0, 0.1)
+            graph.GetYaxis().SetTitleSize(0.055)
+            graph.GetYaxis().SetTitleOffset(1.15)
+            graph.GetXaxis().SetTitleSize(0.055)
+            graph.GetXaxis().SetLabelSize(0.045)
+            graph.GetYaxis().SetLabelSize(0.045)
+
+        legend_items = [(graph if graph else Phiacc_sdme, "accmc / genmc", "p")]
+        notes = [
+            "Polarization angle.",
+            f"Accepted MC integral: {acc_int:.0f}",
+            f"Generated MC integral: {gen_int:.0f}",
+            "#phi = (-1, 0.5)",
+        ]
+    else:
+        notes = ["TEfficiency consistency check failed"]
+
+    draw_bottom_info_pad(
+        pad_info,
+        label_text="Efficiency (fitted trees)",
+        legend_items=legend_items,
+        notes=notes,
+    )
+
+    add_pdf_page(c2, pdf_path)
+
+# -----------------------------
+# psi = phi - Phi (azimuthal angle minus Polarization angle)
+# -----------------------------
+def phi_minus_bigPhi_plots(hist, pdf_path):
+    psidat      = hist["psidat"]
+    psiacc_sdme = hist["psiacc_sdme"]
+    psibkg_sdme = hist["psibkg_sdme"]
+
+    c, pad_plot, pad_info = make_canvas_with_bottompad("c_psi", info_frac=0.22)
+
+    pad_plot.cd()
+
+    h_data = psidat.Clone("h_psi_data")
+    h_acc  = psiacc_sdme.Clone("h_psi_acc")
+    h_bkg  = psibkg_sdme.Clone("h_psi_bkg")
+    h_sum  = h_acc.Clone("h_psi_sum")
+    h_sum.Add(h_bkg)
+
+    h_data.SetTitle("")
+    h_data.SetXTitle("#phi_{Ks}(rad) - #Phi_{Ks}(rad) (Helicity frame)")
+    h_data.SetYTitle("Candidates / 0.035")
+
+    style_data_mc_overlay(h_data, h_sum, h_bkg)
+
+    h_data.Draw()
+    h_sum.Draw("hist same")
+    h_bkg.Draw("hist same")
+
+    draw_bottom_info_pad(
+        pad_info,
+        label_text="azimuthal - pol. angle",
+        legend_items=[
+            (h_data, "data", "l"),
+            (h_sum,  "accmc + bkg", "f"),
+            (h_bkg,  "bkgmc", "f"),
+        ],
+        notes=[
+            f"Data int: {h_data.Integral():.0f}",
+            f"Acc int: {h_acc.Integral():.0f}",
+            f"Bkg int: {h_bkg.Integral():.0f}",
+        ],
+    )
+
+    close_pdf(c, pdf_path)
 
 
-    legend = ROOT.TLegend(0.70, 0.85, 0.94, 0.94)
-    legend.AddEntry(psidat, f"data. Integral: {int12:.0f}", "l")
-    legend.AddEntry(psiacc_sdme, f"accmc + bkg. Integral: {int13:.0f}", "l")
-    legend.AddEntry(psibkg_sdme, f"bkgmc. Integral: {int14:.0f}", "l")
-    legend.Draw("same")
+# -----------------------------
+# Main
+# -----------------------------
+def main():
+    start_time = time.time()
 
-    c5.Print(f"{allPlots})") # close multipage PDF
+    ensure_plot_dir(allPlots)
+    gluex_style()
+    setup()
+    hist = load_histograms(FND)
 
-    endTime = time.time()
-    print(f"Time to run: {endTime - startTime:.1f} seconds")
+    cosTheta_plots(hist, allPlots)
+    phi_plots(hist, allPlots)
+    bigPhi_plots(hist, allPlots)
+    phi_minus_bigPhi_plots(hist, allPlots)
+
+    end_time = time.time()
+    print(f"Time to run: {end_time - start_time:.1f} seconds")
+
 
 if __name__ == "__main__":
-    setup()
+    main()
