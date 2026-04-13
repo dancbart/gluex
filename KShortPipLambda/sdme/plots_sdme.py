@@ -300,7 +300,7 @@ def cosTheta_plots(hist, pdf_path):
         legend_items=[
             (h_data, "data", "l"),
             (h_sum,  "accmc + bkg", "f"),
-            (h_bkg,  "bkgmc", "f"),
+            (h_bkg,  "bkgnd", "f"),
         ],
         notes=[
             f"{t_bin}",
@@ -448,7 +448,7 @@ def phi_plots(hist, pdf_path):
         legend_items=[
             (h_data, "data", "l"),
             (h_sum,  "accmc + bkg", "f"),
-            (h_bkg,  "bkgmc", "f"),
+            (h_bkg,  "bkgnd", "f"),
         ],
         notes=[
             f"Data int: {h_data.Integral():.0f}",
@@ -544,7 +544,7 @@ def bigPhi_plots(hist, pdf_path):
         legend_items=[
             (h_data, "data", "l"),
             (h_sum,  "accmc + bkg", "f"),
-            (h_bkg,  "bkgmc", "f"),
+            (h_bkg,  "bkgnd", "f"),
         ],
         notes=[
             f"Data int: {h_data.Integral():.0f}",
@@ -638,7 +638,7 @@ def phi_minus_bigPhi_plots(hist, pdf_path):
         legend_items=[
             (h_data, "data", "l"),
             (h_sum,  "accmc + bkg", "f"),
-            (h_bkg,  "bkgmc", "f"),
+            (h_bkg,  "bkgnd", "f"),
         ],
         notes=[
             f"Data int: {h_data.Integral():.0f}",
