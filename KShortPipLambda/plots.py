@@ -14,8 +14,9 @@ ROOT.TGaxis.SetMaxDigits(3)
 # ------------------------------------------------------------
 
 # ------ Use to plot variables used as 'global' cuts (beam energy, unused shower, etc).  These are unskimmed files. ---------------------
-FND_unSkimmed = "/volatile/halld/home/dbarton/pipkslamb/data/fall2018/flatten/tree_pipkslamb__B4_M16_M18_FSFlat_sum_ALLpols_AMO.root"
-FND_unSkimmed_MC = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/MCWjob4434/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSFlat_sp18-fa18_polALL.root"
+# FND_unSkimmed = "/volatile/halld/home/dbarton/pipkslamb/data/fall2018/flatten/tree_pipkslamb__B4_M16_M18_FSFlat_sum_ALLpols_AMO.root"
+FND_unSkimmed = "/volatile/halld/home/dbarton/pipkslamb/data/sp18fa18sp20/tree_pipkslamb__B4_M16_M18_FSFlat_sp18fa18sp20_40856_73266_allPols.root"
+FND_unSkimmed_MC = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/MCWjob4434/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSFlat_sp18-fa18_ALL.root"
 # Not used:
 # FND_unSkimmed_MC_THROWN.  For plotting, use 'FND_signalSkims_MC_THROWN' (created below).
 
@@ -107,6 +108,10 @@ def setup():
 
     ROOT.FSModeCollection.addModeInfo("100000000_1100").addCategory("m100000000_1100")
 
+    ROOT.FSCut.defineCut("tprimeKsLow", "TPRIMEKS > 0.0 && TPRIMEKS < 0.2")
+    ROOT.FSCut.defineCut("tprimeKsMid", "TPRIMEKS > 0.2 && TPRIMEKS < 0.6")
+    ROOT.FSCut.defineCut("tprimeKsHigh", "TPRIMEKS > 0.6 && TPRIMEKS < 1.0")
+    
     ROOT.FSCut.defineCut("tRange110", f"abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))>0.1 && abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))<1.0")
     ROOT.FSCut.defineCut("tRange13", f"abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))>0.1 && abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))<0.3")
     ROOT.FSCut.defineCut("tRange35", f"abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))>0.3 && abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))<0.5")
@@ -142,7 +147,7 @@ def setup_genmc():
 # -------------------------- for reference only ----------------------------
 # These cuts are already applied in the skimming script.  They are shown here for
 # reference only.
-generalCuts_eventSelection = "CUT(tRange110,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ)"
+generalCuts_eventSelection = "CUT(tRange110,chi2DOF,unusedTracks,coherentPeak,targetZ)"
 # --------------------------------------------------------------------------
 
 generalCuts = "CUT(tRange110,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ,flightLengthKShort,flightLengthLambda,rejectSigma1385)"
@@ -423,6 +428,180 @@ def draw_notes_pad(
     info_pad.Update()
 
 # ------------------------------------------------------------
+# Fit helper functions
+# ------------------------------------------------------------
+
+def make_breit_wigner(name, xmin, xmax,
+                      amp=None, mean=None, width=None):
+    """
+    Breit-Wigner signal: breitwigner(0)
+    ROOT convention: [0]=amplitude, [1]=mean, [2]=width
+    """
+    f = ROOT.TF1(name, "breitwigner(0)", xmin, xmax)
+
+    f.SetParameter(0, amp   if amp   is not None else 1000.0)
+    f.SetParameter(1, mean  if mean  is not None else (xmin + xmax) / 2.0)
+    f.SetParameter(2, width if width is not None else 0.010)
+
+    keep(f)
+    return f
+
+
+def make_expo2(name, xmin, xmax,
+               p0=None, p1=None, p2=None):
+    """Background: exp(p0 + p1*x + p2*x^2)"""
+    f = ROOT.TF1(name, "TMath::Exp([0] + [1]*x + [2]*x*x)", xmin, xmax)
+
+    f.SetParName(0, "expo_p0")
+    f.SetParName(1, "expo_p1")
+    f.SetParName(2, "expo_p2")
+
+    f.SetParameter(0, p0 if p0 is not None else  0.0)
+    f.SetParameter(1, p1 if p1 is not None else  1.0)
+    f.SetParameter(2, p2 if p2 is not None else  0.0)
+
+    keep(f)
+    return f
+
+
+def make_voigtian(name, xmin, xmax,
+                  amp=None, mean=None, sigma=None, width=None):
+    """
+    Signal: amp * Voigt(x - mean, sigma, width)
+
+    sigma = Gaussian detector resolution
+    width = Lorentzian/natural width
+    Ref: https://root.cern.ch/root/html524/TMath.html#TMath:Voigt
+    """
+    f = ROOT.TF1(name, "[0]*TMath::Voigt(x - [1], [2], [3])", xmin, xmax)
+
+    f.SetParName(0, "voigt_amp")
+    f.SetParName(1, "voigt_mean")
+    f.SetParName(2, "voigt_sigma")
+    f.SetParName(3, "voigt_width")
+
+    f.SetParameter(0, amp   if amp   is not None else 1000.0)
+    f.SetParameter(1, mean  if mean  is not None else (xmin + xmax) / 2.0)
+    f.SetParameter(2, sigma if sigma is not None else 0.005)
+    f.SetParameter(3, width if width is not None else 0.005)
+
+    keep(f)
+    return f
+
+
+
+
+def make_voigtian_plus_expo2(name, xmin, xmax,
+                              amp=None, mean=None, sigma=None, width=None,
+                              p0=None, p1=None, p2=None):
+    f = ROOT.TF1(name, "[0]*TMath::Voigt(x - [1], [2], [3]) + TMath::Exp([4] + [5]*x + [6]*x*x)", xmin, xmax)
+    
+    # Initialize with generic defaults.  Change when calling function.
+    f.SetParameter(0, amp   if amp   is not None else 1.0)
+    f.SetParameter(1, mean  if mean  is not None else (xmin + xmax) / 2.0)
+    f.SetParameter(2, sigma if sigma is not None else 1.0)
+    f.SetParameter(3, width if width is not None else 1.0)
+    f.SetParameter(4, p0    if p0    is not None else 1.0)
+    f.SetParameter(5, p1    if p1    is not None else 1.0)
+    f.SetParameter(6, p2    if p2    is not None else 1.0)
+
+    keep(f)
+    return f
+
+# ------------------------------------------------------------
+# Functions to plot signal and background lines individually
+# ------------------------------------------------------------
+
+def make_component_funcs(f, xmin, xmax):
+    """
+    Extract Voigtian and Expo2 components from a combined fit TF1.
+    Parameters: [0-3] = Voigtian, [4-6] = Expo2
+    """
+    f_voigt = ROOT.TF1(
+        f"{f.GetName()}_voigt",
+        "[0]*TMath::Voigt(x - [1], [2], [3])",
+        xmin, xmax
+    )
+    for i in range(4):
+        f_voigt.SetParameter(i, f.GetParameter(i))
+
+    f_expo2 = ROOT.TF1(
+        f"{f.GetName()}_expo2",
+        "TMath::Exp([0] + [1]*x + [2]*x*x)",
+        xmin, xmax
+    )
+    for i in range(3):
+        f_expo2.SetParameter(i, f.GetParameter(i + 4))  # offset by 4
+
+    keep(f_voigt)
+    keep(f_expo2)
+    return f_voigt, f_expo2
+
+# ------------------------------------------------------------
+# Fit integral helpers (signal & background)
+# ------------------------------------------------------------
+
+def fit_integral_signal(f, xmin, xmax, bin_width=1.0, name=None):
+    """
+    Signal yield from Voigtian component of combined fit.
+    Assumes [0-3] = Voigtian.
+    """
+    if name is None:
+        name = f"f_sig_{f.GetName()}"
+
+    f_sig = ROOT.TF1(
+        name,
+        "[0]*TMath::Voigt(x - [1], [2], [3])",
+        xmin,
+        xmax
+    )
+
+    for i in range(4):
+        f_sig.SetParameter(i, f.GetParameter(i))
+
+    keep(f_sig)
+    result = f_sig.Integral(xmin, xmax, 1e-6) / bin_width
+    return result
+
+
+def fit_integral_background(f, xmin, xmax, bin_width=1.0, name=None):
+    """
+    Background yield from exponential component of combined fit.
+    Assumes [4-6] = exponential.
+    """
+    if name is None:
+        name = f"f_bkg_{f.GetName()}"
+
+    f_bkg = ROOT.TF1(
+        name,
+        "TMath::Exp([0] + [1]*x + [2]*x*x)",
+        xmin,
+        xmax
+    )
+
+    for i in range(3):
+        f_bkg.SetParameter(i, f.GetParameter(i + 4))
+
+    keep(f_bkg)
+    result =  f_bkg.Integral(xmin, xmax, 1e-6) / bin_width
+    return result
+
+
+def compute_figureOfMerit(f, xmin, xmax, bin_width=1.0):
+    """
+    Compute fitted signal, fitted background, S/B, and S/sqrt(S+B)
+    over the selected mass window.
+    """
+    S = fit_integral_signal(f, xmin, xmax, bin_width=bin_width)
+    B = fit_integral_background(f, xmin, xmax, bin_width=bin_width)
+
+    SB = S / B if B > 0 else 0.0
+    significance = S / (S + B)**0.5 if (S + B) > 0 else 0.0
+
+    return S, B, SB, significance
+
+
+# ------------------------------------------------------------
 # Other helper functions
 # ------------------------------------------------------------
 
@@ -486,313 +665,806 @@ def global_eventSelection_Cuts(pdf_path):
     c = ROOT.TCanvas("c_eventCuts_unusedE", "c_eventCuts_unusedE", 1000, 1300)
     keep(c)
 
-    panels = make_panel_grid(c, ncols=1, nrows=1, info_frac=0.22)
+    panels = make_panel_grid(c, ncols=1, nrows=1, info_frac=0.36)
     p = panels[0]
     p["plot"].cd()
-    ROOT.gPad.SetLogy(True)
 
     h1 = fs_get_th1(
-        FND_unSkimmed,
+        FND_eventSelectionSkims,
         "EnUnusedSh",
-        "(100,0.0,1.0)",
-        "CUT(tRange110,rf,chi2DOF,unusedTracks,coherentPeak,targetZ)"
+        "(100,0.06,1.0)",
+        "CUT()"
     )
-    h1.SetXTitle("E_{unused} [GeV]")
-    h1.SetYTitle("Events")
+    h1.SetXTitle("Unused shower energy [GeV]")
+    h1.SetYTitle("Combos")
+    h1.SetLineColor(ROOT.kBlack)
+
+    h1b = fs_get_th1(
+        FND_eventSelectionSkims_MC,
+        "EnUnusedSh",
+        "(100,0.06,1.0)",
+        "CUT()"
+    )
+    h1b.SetXTitle("Unused shower energy [GeV]")
+    h1b.SetYTitle("Combos")
+    h1b.SetLineColor(ROOT.kBlack)
+    h1b.SetFillColor(ROOT.kBlue)
+
+    integral_data = integral_between(h1, 0.1, 1.0)
+    integral_MC_raw   = integral_between(h1b, 0.1, 1.0)
+    if integral_MC_raw > 0:
+        scaleFactor = integral_data / integral_MC_raw
+        h1b.Scale(scaleFactor)
+    else:
+        print("WARNING: MC integral is zero, not scaling")
+    integral_MC_scaled = integral_between(h1b, 0.1, 1.0)
+
+    # after scaling
+    h1b.SetMinimum(0.5)
     h1.SetMinimum(0.5)
-    h1.Draw("hist")
+
+    h1b.Draw("hist")
+    h1.Draw("pE same")   # use E1 instead of pE for safer error bars
+
+    # p["plot"].SetLogy(1)
+    p["plot"].Modified()
+    p["plot"].Update()
+
 
     if bggen:
         draw_mc_same(
             FND_unSkimmed, "EnUnusedSh", "(100,0.0,1.0)",
-            "CUT(tRange110,rf,chi2DOF,unusedTracks,coherentPeak,targetZ)"
+            "CUT()"
         )
-    draw_vertical_lines(h1, [0.1])
 
     draw_info_pad(
         p["info_main"],
-        file_label(FND_unSkimmed),
-        legend_items=[(h1, "Data", "l")],
-        notes=["Cut: E_{unused} < 0.1 GeV", "log scale"]
+        "#bf{No cut applied on this variable.}",
+        legend_items=[(h1, "Data " "(integral: " f"{integral_data:.0f})", "pE"),
+                      (h1b, f"MC scaled (raw: {integral_MC_raw:.0f} -> scaled: {integral_MC_scaled:.0f})", "f"),
+                      ],
+        # notes=["Cut: E_{unused} < 0.1 GeV", "log scale"],
+        notes=["Unused Shower Energy",
+                # "Log scale",
+               "Integral between (0.1, 1.0)"
+               ],
+        
+        # middle pad tweaks
+        legend_box=(0.33, 0.18, 0.96, 0.84),
+        legend_text_size=0.12,
+
+        label_pos=(0.06, 0.90),
+        label_size=0.10,
+
+        notes_start_y=0.62,
+        notes_text_size=0.12,
+        notes_step=0.13,
     )
     draw_notes_pad(
         p["info_notes"],
         title="Cuts used",
         notes=[
-            "Histogram cuts:",
-            "CUT(tRange110,rf,chi2DOF,unusedTracks,coherentPeak,targetZ)",
-            "Plotted variable: EnUnusedSh",
+            "Global cuts: CUT(tRange110,chi2DOF,unusedTracks,coherentPeak,targetZ)",
+            "Histogram cuts: none",
+            "#bf{Notes:} Signal MC in good agreement with DATA.  Therefore, it is ",
+            "unlikely events from #it{Unused shower energy} are wrong topology.",
+            "#bf{Further Study:} consider generating background MC with different",
+             "topology (i.e. an extra #pi^{0}, etc.) and compare #it{that} to data.",
         ],
+
+        # bottom pad tweaks
+        title_pos=(0.06, 0.88),
+        title_size=0.11,
+
+        notes_start_y=0.72,
+        notes_text_size=0.10,
+        notes_step=0.12,
+
     )
 
+    # c.Print(pdf_path)
     c.Print(f"{pdf_path}(")
 
 
-    # ============================================================
-    # Page 2: Production vertex z
-    # ============================================================
-    c = ROOT.TCanvas("c_eventCuts_targetZ", "c_eventCuts_targetZ", 1000, 1300)
+    # # ============================================================
+    # # Page 2: Production vertex z
+    # # ============================================================
+    # c = ROOT.TCanvas("c_eventCuts_targetZ", "c_eventCuts_targetZ", 1000, 1300)
+    # keep(c)
+
+    # panels = make_panel_grid(c, ncols=1, nrows=1, info_frac=0.22)
+    # p = panels[0]
+    # p["plot"].cd()
+    # ROOT.gPad.SetLogy(False)
+
+    # h2 = fs_get_th1(
+    #     FND_unSkimmed,
+    #     "ProdVz",
+    #     "(100,0.,100.0)",
+    #     "CUT(tRange110,rf,chi2DOF,unusedE,unusedTracks,coherentPeak)"
+    # )
+    # h2.SetXTitle("Production vertex z-position [cm]")
+    # h2.SetYTitle("Events")
+    # h2.Draw("hist")
+
+    # if bggen:
+    #     draw_mc_same(
+    #         FND_unSkimmed, "ProdVz", "(100,0.,100.0)",
+    #         "CUT(tRange110,rf,chi2DOF,unusedE,unusedTracks,coherentPeak)"
+    #     )
+    # draw_vertical_lines(h2, [52.0, 78.0])
+
+    # draw_info_pad(
+    #     p["info_main"],
+    #     file_label(FND_unSkimmed),
+    #     legend_items=[(h2, "Data", "l")],
+    #     notes=["Cut: 52 < V_{z} < 78 cm"],
+
+    #     # --- layout tweaks ---
+    #     legend_box=(0.44, 0.22, 0.96, 0.84),
+    #     legend_text_size=0.13,
+
+    #     label_pos=(0.06, 0.90),
+    #     label_size=0.16,
+
+    #     notes_start_y=0.68,
+    #     notes_text_size=0.16,
+    #     notes_step=0.08,
+
+
+    # )
+    # draw_notes_pad(
+    #     p["info_notes"],
+    #     title="Cuts used",
+    #     notes=[
+    #         "Histogram cuts:",
+    #         "CUT(tRange110,rf,chi2DOF,unusedE,unusedTracks,coherentPeak)",
+    #         "Plotted variable: ProdVz",
+    #     ],
+
+    #     # --- bottom pad tweaks ---
+    #     title_pos=(0.06, 0.88),
+    #     title_size=0.11,
+
+    #     notes_start_y=0.75,
+    #     notes_text_size=0.08,
+    #     notes_step=0.10,
+
+    # )
+
+    # c.Print(pdf_path)
+
+
+    # # ============================================================
+    # # Page 3: t-range
+    # # ============================================================
+    # c = ROOT.TCanvas("c_eventCuts_tRange", "c_eventCuts_tRange", 1000, 1300)
+    # keep(c)
+
+    # panels = make_panel_grid(c, ncols=1, nrows=1, info_frac=0.22)
+    # p = panels[0]
+    # p["plot"].cd()
+
+    # h3 = fs_get_th1(
+    #     FND_unSkimmed,
+    #     f"abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))",
+    #     "(100,0,2)",
+    #     "CUT(rf,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ)"
+    # )
+    # h3.SetXTitle("|-t| [GeV^{2}]")
+    # h3.SetYTitle("Events")
+    # h3.Draw("hist")
+
+    # if bggen:
+    #     draw_mc_same(
+    #         FND_unSkimmed,
+    #         f"abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))",
+    #         "(100,0,2)",
+    #         "CUT(rf,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ)"
+    #     )
+    # draw_vertical_lines(h3, [0.1, 1.0])
+
+    # draw_info_pad(
+    #     p["info_main"],
+    #     file_label(FND_unSkimmed),
+    #     legend_items=[(h3, "Data", "l")],
+    #     notes=["Cut: 0.1 < |-t| < 1.0"],
+
+    #     # --- layout tweaks ---
+    #     legend_box=(0.44, 0.22, 0.96, 0.84),
+    #     legend_text_size=0.13,
+
+    #     label_pos=(0.06, 0.90),
+    #     label_size=0.16,
+
+    #     notes_start_y=0.68,
+    #     notes_text_size=0.16,
+    #     notes_step=0.08,
+
+    # )
+    # draw_notes_pad(
+    #     p["info_notes"],
+    #     title="Cuts used",
+    #     notes=[
+    #         "Histogram cuts:",
+    #         "CUT(rf,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ)",
+    #         f"Plotted variable: abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))",
+    #     ],
+
+    #     # --- bottom pad tweaks ---
+    #     title_pos=(0.06, 0.88),
+    #     title_size=0.11,
+
+    #     notes_start_y=0.75,
+    #     notes_text_size=0.08,
+    #     notes_step=0.10,
+
+    # )
+
+    # c.Print(pdf_path)
+
+
+    # # ============================================================
+    # # Page 4: Beam energy / coherent peak
+    # # ============================================================
+    # c = ROOT.TCanvas("c_eventCuts_beamE", "c_eventCuts_beamE", 1000, 1300)
+    # keep(c)
+
+    # panels = make_panel_grid(c, ncols=1, nrows=1, info_frac=0.22)
+    # p = panels[0]
+    # p["plot"].cd()
+
+    # h4 = fs_get_th1(
+    #     FND_unSkimmed,
+    #     "EnPB",
+    #     "(125,5,12)",
+    #     "CUT(tRange110,rf,chi2DOF,unusedE,unusedTracks,targetZ)"
+    # )
+    # h4.SetXTitle("E_{beam} [GeV]")
+    # h4.SetYTitle("Events")
+    # h4.Draw("hist")
+
+    # if bggen:
+    #     draw_mc_same(
+    #         FND_unSkimmed, "EnPB", "(125,5,12)",
+    #         "CUT(tRange110,rf,chi2DOF,unusedE,unusedTracks,targetZ)"
+    #     )
+    # draw_vertical_lines(h4, [8.2, 8.6])
+
+    # draw_info_pad(
+    #     p["info_main"],
+    #     file_label(FND_unSkimmed),
+    #     legend_items=[(h4, "Data", "l")],
+    #     notes=["Coherent peak", "8.2 < E_{beam} < 8.6 GeV"],
+
+    #     # --- layout tweaks ---
+    #     legend_box=(0.44, 0.22, 0.96, 0.84),
+    #     legend_text_size=0.13,
+
+    #     label_pos=(0.06, 0.90),
+    #     label_size=0.16,
+
+    #     notes_start_y=0.68,
+    #     notes_text_size=0.16,
+    #     notes_step=0.08,
+
+    # )
+    # draw_notes_pad(
+    #     p["info_notes"],
+    #     title="Cuts used",
+    #     notes=[
+    #         "Histogram cuts:",
+    #         "CUT(tRange110,rf,chi2DOF,unusedE,unusedTracks,targetZ)",
+    #         "Plotted variable: EnPB",
+    #     ],
+
+    #     # --- bottom pad tweaks ---
+    #     title_pos=(0.06, 0.88),
+    #     title_size=0.11,
+
+    #     notes_start_y=0.75,
+    #     notes_text_size=0.08,
+    #     notes_step=0.10,
+
+    # )
+
+    # c.Print(pdf_path)
+
+
+    # # ============================================================
+    # # Page 5: chi2/dof
+    # # ============================================================
+    # c = ROOT.TCanvas("c_eventCuts_chi2", "c_eventCuts_chi2", 1000, 1300)
+    # keep(c)
+
+    # panels = make_panel_grid(c, ncols=1, nrows=1, info_frac=0.22)
+    # p = panels[0]
+    # p["plot"].cd()
+
+    # h5 = fs_get_th1(
+    #     FND_unSkimmed,
+    #     "Chi2DOF",
+    #     "(80,0,20)",
+    #     "CUT(tRange110,rf,unusedE,unusedTracks,coherentPeak,targetZ)"
+    # )
+    # h5.SetXTitle("#chi^{2}/dof")
+    # h5.SetYTitle("Events")
+    # h5.Draw("hist")
+
+    # if bggen:
+    #     draw_mc_same(
+    #         FND_unSkimmed, "Chi2DOF", "(80,0,20)",
+    #         "CUT(tRange110,rf,unusedE,unusedTracks,coherentPeak,targetZ)"
+    #     )
+    # draw_vertical_lines(h5, [5.0])
+
+    # draw_info_pad(
+    #     p["info_main"],
+    #     file_label(FND_unSkimmed),
+    #     legend_items=[(h5, "Data", "l")],
+    #     notes=["Cut: #chi^{2}/dof < 5"],
+
+    #     # --- layout tweaks ---
+    #     legend_box=(0.44, 0.22, 0.96, 0.84),
+    #     legend_text_size=0.13,
+
+    #     label_pos=(0.06, 0.90),
+    #     label_size=0.16,
+
+    #     notes_start_y=0.68,
+    #     notes_text_size=0.16,
+    #     notes_step=0.08,
+
+    # )
+    # draw_notes_pad(
+    #     p["info_notes"],
+    #     title="Cuts used",
+    #     notes=[
+    #         "Histogram cuts:",
+    #         "CUT(tRange110,rf,unusedE,unusedTracks,coherentPeak,targetZ)",
+    #         "Plotted variable: Chi2DOF",
+    #     ],
+
+    #     # --- bottom pad tweaks ---
+    #     title_pos=(0.06, 0.88),
+    #     title_size=0.11,
+
+    #     notes_start_y=0.75,
+    #     notes_text_size=0.08,
+    #     notes_step=0.10,
+
+    # )
+
+    # c.Print(pdf_path)
+
+
+    # # ============================================================
+    # # Page 6: Lambda flight length
+    # # ============================================================
+    # c = ROOT.TCanvas("c_eventCuts_lambdaFL", "c_eventCuts_lambdaFL", 1000, 1300)
+    # keep(c)
+
+    # panels = make_panel_grid(c, ncols=1, nrows=1, info_frac=0.22)
+    # p = panels[0]
+    # p["plot"].cd()
+
+    # h6 = fs_get_th1(
+    #     FND_unSkimmed,
+    #     "VeeLP1",
+    #     "(60,0,10)",
+    #     "CUT(tRange110,rf,chi2DOF,unusedE,coherentPeak,Lambda,targetZ)"
+    # )
+    # h6.SetXTitle("#Lambda flight length [cm]")
+    # h6.SetYTitle("Events")
+    # h6.Draw("hist")
+    # draw_vertical_lines(h6, [2.0])
+
+    # draw_info_pad(
+    #     p["info_main"],
+    #     file_label(FND_unSkimmed),
+    #     legend_items=[(h6, "Data", "l")],
+    #     notes=["Cut: L_{#Lambda} > 2 cm"],
+
+    #     # --- layout tweaks ---
+    #     legend_box=(0.44, 0.22, 0.96, 0.84),
+    #     legend_text_size=0.13,
+
+    #     label_pos=(0.06, 0.90),
+    #     label_size=0.16,
+
+    #     notes_start_y=0.68,
+    #     notes_text_size=0.16,
+    #     notes_step=0.08,
+
+    # )
+    # draw_notes_pad(
+    #     p["info_notes"],
+    #     title="Cuts used",
+    #     notes=[
+    #         "Histogram cuts:",
+    #         "CUT(tRange110,rf,chi2DOF,unusedE,coherentPeak,Lambda,targetZ)",
+    #         "Plotted variable: VeeLP1",
+    #     ],
+
+    #     # --- bottom pad tweaks ---
+    #     title_pos=(0.06, 0.88),
+    #     title_size=0.11,
+
+    #     notes_start_y=0.75,
+    #     notes_text_size=0.08,
+    #     notes_step=0.10,
+
+    # )
+
+    # c.Print(pdf_path)
+
+
+    # # ============================================================
+    # # Page 7: KShort flight length
+    # # ============================================================
+    # c = ROOT.TCanvas("c_eventCuts_kshortFL", "c_eventCuts_kshortFL", 1000, 1300)
+    # keep(c)
+
+    # panels = make_panel_grid(c, ncols=1, nrows=1, info_frac=0.22)
+    # p = panels[0]
+    # p["plot"].cd()
+
+    # h7 = fs_get_th1(
+    #     FND_unSkimmed,
+    #     "VeeLP2",
+    #     "(60,0,10)",
+    #     "CUT(tRange110,rf,chi2DOF,unusedE,coherentPeak,KShort,targetZ)"
+    # )
+    # h7.SetXTitle("K_{S} flight length [cm]")
+    # h7.SetYTitle("Events")
+    # h7.Draw("hist")
+    # draw_vertical_lines(h7, [2.0])
+
+    # draw_info_pad(
+    #     p["info_main"],
+    #     file_label(FND_unSkimmed),
+    #     legend_items=[(h7, "Data", "l")],
+    #     notes=["Cut: L_{K_{S}} > 2 cm"],
+
+    #     # --- layout tweaks ---
+    #     legend_box=(0.44, 0.22, 0.96, 0.84),
+    #     legend_text_size=0.13,
+
+    #     label_pos=(0.06, 0.90),
+    #     label_size=0.16,
+
+    #     notes_start_y=0.68,
+    #     notes_text_size=0.16,
+    #     notes_step=0.08,
+
+    # )
+    # draw_notes_pad(
+    #     p["info_notes"],
+    #     title="Cuts used",
+    #     notes=[
+    #         "Histogram cuts:",
+    #         "CUT(tRange110,rf,chi2DOF,unusedE,coherentPeak,KShort,targetZ)",
+    #         "Plotted variable: VeeLP2",
+    #     ],
+
+    #     # --- bottom pad tweaks ---
+    #     title_pos=(0.06, 0.88),
+    #     title_size=0.11,
+
+    #     notes_start_y=0.75,
+    #     notes_text_size=0.08,
+    #     notes_step=0.10,
+
+    # )
+
+    # c.Print(pdf_path)
+
+
+
+
+# ------------------------------------------------------------
+# Helpers for mand/t diagnostic plots
+# ------------------------------------------------------------
+def style_th1_basic(h, xtitle, ytitle):
+    h.SetXTitle(xtitle)
+    h.SetYTitle(ytitle)
+    h.SetLineColor(ROOT.kBlack)
+    h.SetLineWidth(2)
+    h.SetMinimum(0.0)
+
+
+def style_th2_basic(h, xtitle, ytitle):
+    h.SetXTitle(xtitle)
+    h.SetYTitle(ytitle)
+
+
+# ============================================================
+# DELTA t PLOTS
+# ============================================================
+
+# # -----------------------------
+# # Define variables for t_prime_Ks: t' = |t - t_0|
+# # -----------------------------
+# p3_ks ="2"   # KShort
+# p4_ks = "1,3"   # recoil Lambda
+
+# s_ks    = "MASS2(GLUEXBEAM,GLUEXTARGET)"
+# sqs_ks  = f"sqrt({s_ks})"
+# m1sq_ks = "0.0"
+# m2sq_ks = "MASS2(GLUEXTARGET)"
+# m3sq_ks = f"MASS2({p3_ks})"
+# m4sq_ks = f"MASS2({p4_ks})"
+
+# E1_ks   = f"(({s_ks})+({m1sq_ks})-({m2sq_ks}))/(2*({sqs_ks}))"
+# E3_ks   = f"(({s_ks})+({m3sq_ks})-({m4sq_ks}))/(2*({sqs_ks}))"
+# p1_ks   = f"sqrt(({E1_ks})*({E1_ks})-({m1sq_ks}))"      # = E1 for photon
+# p3cm_ks = f"sqrt(({E3_ks})*({E3_ks})-({m3sq_ks}))"
+
+# t_ks    = f"MASS2(GLUEXBEAM,-{p3_ks})"
+# t0_ks   = f"({m1sq_ks})+({m3sq_ks})-2*((({E1_ks})*({E3_ks}))-(({p1_ks})*({p3cm_ks})))"
+
+# tprime_ks     = f"(({t_ks})-({t0_ks}))"
+
+# # -----------------------------
+# # Define variables for t_prime_Pip: t' = |t - t_0|
+# # -----------------------------
+# p3_pip = "3"   # PiPlus
+# p4_pip = "1,2"   # recoil Lambda
+
+# s_pip    = "MASS2(GLUEXBEAM,GLUEXTARGET)"
+# sqs_pip  = f"sqrt({s_pip})"
+# m1sq_pip = "0.0"
+# m2sq_pip = "MASS2(GLUEXTARGET)"
+# m3sq_pip = f"MASS2({p3_pip})"
+# m4sq_pip = f"MASS2({p4_pip})"
+
+# E1_pip   = f"(({s_pip})+({m1sq_pip})-({m2sq_pip}))/(2*({sqs_pip}))"
+# E3_pip   = f"(({s_pip})+({m3sq_pip})-({m4sq_pip}))/(2*({sqs_pip}))"
+# p1_pip   = f"sqrt(({E1_pip})*({E1_pip})-({m1sq_pip}))"      # = E1 for photon
+# p3cm_pip = f"sqrt(({E3_pip})*({E3_pip})-({m3sq_pip}))"
+
+# t_pip    = f"MASS2(GLUEXBEAM,-{p3_pip})"
+# t0_pip   = f"({m1sq_pip})+({m3sq_pip})-2*((({E1_pip})*({E3_pip}))-(({p1_pip})*({p3cm_pip})))"
+
+# tprime_pip     = f"(({t_pip})-({t0_pip}))"
+
+
+# ------------------------------------------------------------
+# Delta t = t_KS - t_pi+
+# ------------------------------------------------------------
+def deltaTPlots_KShort_vs_PiPlus(pdf_path):
+    c = ROOT.TCanvas("c_delta_t_ks_pip", "c_delta_t_ks_pip", 1000, 1300)
     keep(c)
 
-    panels = make_panel_grid(c, ncols=1, nrows=1, info_frac=0.22)
+    panels = make_panel_grid(c, ncols=1, nrows=1, info_frac=0.36)
     p = panels[0]
+
     p["plot"].cd()
-    ROOT.gPad.SetLogy(False)
+    ROOT.gPad.SetRightMargin(0.14)
 
-    h2 = fs_get_th1(
-        FND_unSkimmed,
-        "ProdVz",
-        "(100,0.,100.0)",
-        "CUT(tRange110,rf,chi2DOF,unusedE,unusedTracks,coherentPeak)"
+    expr = f"(-1*MASS2(GLUEXBEAM,-{DecayingKShort})) - (-1*MASS2(GLUEXBEAM,-{PiPlus1})):MASS({DecayingKShort},{PiPlus1})"
+
+    h = fs_get_th2(
+        FND_eventSelectionSkims,
+        expr,
+        "(100,0.4,4.0,100,-10.0,10.0)",
+        f"CUT({baseCuts},{sidebandCuts})"
     )
-    h2.SetXTitle("Production vertex z-position [cm]")
-    h2.SetYTitle("Events")
-    h2.Draw("hist")
 
-    if bggen:
-        draw_mc_same(
-            FND_unSkimmed, "ProdVz", "(100,0.,100.0)",
-            "CUT(tRange110,rf,chi2DOF,unusedE,unusedTracks,coherentPeak)"
-        )
-    draw_vertical_lines(h2, [52.0, 78.0])
+    style_th2_basic(
+        h,
+        "M(K_{S}#pi^{+}) [GeV/c^{2}]",
+        "t_{K_{S}} - t_{#pi^{+}} [GeV^{2}]"
+    )
+    h.Draw("colz")
 
     draw_info_pad(
         p["info_main"],
-        file_label(FND_unSkimmed),
-        legend_items=[(h2, "Data", "l")],
-        notes=["Cut: 52 < V_{z} < 78 cm"]
+        file_label(FND_eventSelectionSkims),
+        # legend_items=[(h, "Data density", "f")],
+        notes=[
+            "#Delta t",
+        ],
+        # --- layout tweaks ---
+        legend_box=(0.44, 0.22, 0.96, 0.84),
+        legend_text_size=0.13,
+
+        label_pos=(0.06, 0.90),
+        label_size=0.16,
+
+        notes_start_y=0.68,
+        notes_text_size=0.16,
+        notes_step=0.08,
     )
+
     draw_notes_pad(
         p["info_notes"],
         title="Cuts used",
         notes=[
-            "Histogram cuts:",
-            "CUT(tRange110,rf,chi2DOF,unusedE,unusedTracks,coherentPeak)",
-            "Plotted variable: ProdVz",
+            f"Global cuts: {generalCuts_eventSelection}",
+            f"Histogram cuts: CUT({baseCuts},{sidebandCuts})",
+            f"x = MASS({DecayingKShort},{PiPlus1})",
+            f"y = (-1*MASS2(GLUEXBEAM,-{DecayingKShort})) - (-1*MASS2(GLUEXBEAM,-{PiPlus1}))",
         ],
+        # --- bottom pad tweaks ---
+        title_pos=(0.06, 0.88),
+        title_size=0.11,
+
+        notes_start_y=0.75,
+        notes_text_size=0.08,
+        notes_step=0.10,
     )
 
     c.Print(pdf_path)
+    # c.Print(f"{pdf_path}(")
+    ROOT.FSHistogram.clearHistogramCache()
 
+# ------------------------------------------------------------
+# Delta t' = t'_KS - t'_pi+ - USING FSROOT'S IN-LINE MACRO CREATOR
+# ------------------------------------------------------------
 
-    # ============================================================
-    # Page 3: t-range
-    # ============================================================
-    c = ROOT.TCanvas("c_eventCuts_tRange", "c_eventCuts_tRange", 1000, 1300)
+# K. Saldana 4/17/2026
+# t' = t-t0
+# MASS2(P1-P3) - ( MASS(1) + MASS(3) - 2*((E1*E3) -MOMENTUM(P1,P3)))
+
+# K. Saldana 4/17/2026
+# FSMode::defineMacro("E1",3,(MASS2(1,3)+MASS(1)+MASS(3))/(2*sqrt(MASS2(1,3))))
+
+def deltaTPrimePlots_KShort_vs_PiPlus(pdf_path):
+    c = ROOT.TCanvas("c_delta_tPrime_ks_pip", "c_delta_tPrime_ks_pip", 1000, 1300)
     keep(c)
 
-    panels = make_panel_grid(c, ncols=1, nrows=1, info_frac=0.22)
+    panels = make_panel_grid(c, ncols=1, nrows=1, info_frac=0.36)
     p = panels[0]
+
     p["plot"].cd()
+    ROOT.gPad.SetRightMargin(0.14)
 
-    h3 = fs_get_th1(
-        FND_unSkimmed,
-        f"abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))",
-        "(100,0,2)",
-        "CUT(rf,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ)"
+    # Define a simple test macro.
+    # E1(I,J) = energy of particle I in the rest frame of system I+J
+    # ROOT.FSTree.defineMacro("E1",2,"((MASS2([I],[J]) + MASS2([I]) - MASS2([J]))/(2*sqrt(MASS2([I],[J]))))")
+
+    ROOT.FSTree.defineMacro(
+    "E1",
+    2,
+    "((pow(EnP[I]+EnP[J],2)"
+    "-pow(PxP[I]+PxP[J],2)"
+    "-pow(PyP[I]+PyP[J],2)"
+    "-pow(PzP[I]+PzP[J],2)"
+    "+"
+    "pow(EnP[I],2)-pow(PxP[I],2)-pow(PyP[I],2)-pow(PzP[I],2)"
+    "-"
+    "(pow(EnP[J],2)-pow(PxP[J],2)-pow(PyP[J],2)-pow(PzP[J],2)))"
+    "/"
+    "(2*sqrt(pow(EnP[I]+EnP[J],2)"
+    "-pow(PxP[I]+PxP[J],2)"
+    "-pow(PyP[I]+PyP[J],2)"
+    "-pow(PzP[I]+PzP[J],2))))"
     )
-    h3.SetXTitle("|-t| [GeV^{2}]")
-    h3.SetYTitle("Events")
-    h3.Draw("hist")
 
-    if bggen:
-        draw_mc_same(
-            FND_unSkimmed,
-            f"abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))",
-            "(100,0,2)",
-            "CUT(rf,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ)"
-        )
-    draw_vertical_lines(h3, [0.1, 1.0])
+    expr = f"E1({DecayingLambda};{DecayingKShort}) - E1({DecayingLambda};{PiPlus1}):MASS({DecayingKShort},{PiPlus1})"
+
+    h = fs_get_th2(
+        FND_eventSelectionSkims,
+        expr,
+        "(100,0.4,4.0,100,0.0,4.0)",
+        f"CUT({baseCuts},{sidebandCuts})"
+    )
+
+    style_th2_basic(
+        h,
+        "M(K_{S}#pi^{+}) [GeV/c^{2}]",
+        "t'_{K_{S}} - t'_{#pi^{+}} [GeV^{2}]"
+    )
+
+    h.Draw("colz")
 
     draw_info_pad(
         p["info_main"],
-        file_label(FND_unSkimmed),
-        legend_items=[(h3, "Data", "l")],
-        notes=["Cut: 0.1 < |-t| < 1.0"]
+        file_label(FND_eventSelectionSkims),
+        notes=["#Delta t'"],
+        legend_box=(0.44, 0.22, 0.96, 0.84),
+        legend_text_size=0.13,
+        label_pos=(0.06, 0.90),
+        label_size=0.16,
+        notes_start_y=0.68,
+        notes_text_size=0.16,
+        notes_step=0.08,
     )
+
     draw_notes_pad(
         p["info_notes"],
         title="Cuts used",
         notes=[
-            "Histogram cuts:",
-            "CUT(rf,chi2DOF,unusedE,unusedTracks,coherentPeak,targetZ)",
-            f"Plotted variable: abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))",
+            f"Global cuts: {generalCuts_eventSelection}",
+            f"Histogram cuts: CUT({baseCuts},{sidebandCuts})",
+            f"x = MASS({DecayingKShort},{PiPlus1})",
+            "y = E1({DecayingLambda};{DecayingKShort}) - E1({DecayingLambda};{PiPlus1})",
         ],
+        title_pos=(0.06, 0.88),
+        title_size=0.11,
+        notes_start_y=0.75,
+        notes_text_size=0.08,
+        notes_step=0.10,
     )
 
     c.Print(pdf_path)
+    # c.Print(f"{pdf_path})")
+    ROOT.FSHistogram.clearHistogramCache()
 
+# ------------------------------------------------------------
+# Delta t' = t'_KS - t'_pi+ - TO MAKE THIS VERSION, EDIT FSROOT TO ADD THE MACRO.
+# ------------------------------------------------------------
 
-    # ============================================================
-    # Page 4: Beam energy / coherent peak
-    # ============================================================
-    c = ROOT.TCanvas("c_eventCuts_beamE", "c_eventCuts_beamE", 1000, 1300)
-    keep(c)
+# print("Testing FSMath::tprime...")
+# ROOT.gROOT.ProcessLine(
+#     "double test_tprime = FSMath::tprime("
+#     "1,0,0,1,"
+#     "0,0,0,0.938272,"
+#     "0,0,1,1.2,"
+#     "0,0,-1,1.5);"
+# )
 
-    panels = make_panel_grid(c, ncols=1, nrows=1, info_frac=0.22)
-    p = panels[0]
-    p["plot"].cd()
+# print("testing which .so file is loaded...")
+# print(ROOT.gSystem.ListLibraries())
 
-    h4 = fs_get_th1(
-        FND_unSkimmed,
-        "EnPB",
-        "(125,5,12)",
-        "CUT(tRange110,rf,chi2DOF,unusedE,unusedTracks,targetZ)"
-    )
-    h4.SetXTitle("E_{beam} [GeV]")
-    h4.SetYTitle("Events")
-    h4.Draw("hist")
+# def deltaTPrimePlots_KShort_vs_PiPlus(pdf_path):
+#     c = ROOT.TCanvas("c_delta_tprime_ks_pip", "c_delta_tprime_ks_pip", 1000, 1300)
+#     keep(c)
 
-    if bggen:
-        draw_mc_same(
-            FND_unSkimmed, "EnPB", "(125,5,12)",
-            "CUT(tRange110,rf,chi2DOF,unusedE,unusedTracks,targetZ)"
-        )
-    draw_vertical_lines(h4, [8.2, 8.6])
+#     panels = make_panel_grid(c, ncols=1, nrows=1, info_frac=0.36)
+#     p = panels[0]
 
-    draw_info_pad(
-        p["info_main"],
-        file_label(FND_unSkimmed),
-        legend_items=[(h4, "Data", "l")],
-        notes=["Coherent peak", "8.2 < E_{beam} < 8.6 GeV"]
-    )
-    draw_notes_pad(
-        p["info_notes"],
-        title="Cuts used",
-        notes=[
-            "Histogram cuts:",
-            "CUT(tRange110,rf,chi2DOF,unusedE,unusedTracks,targetZ)",
-            "Plotted variable: EnPB",
-        ],
-    )
+#     p["plot"].cd()
+#     ROOT.gPad.SetRightMargin(0.14)
 
-    c.Print(pdf_path)
+#     h = fs_get_th2(
+#         FND_eventSelectionSkims,
+#         f"TPRIMEKS-TPRIMEPIP:MASS({DecayingKShort},{PiPlus1})",
+#         "(100,0.4,4.0,100,-2.0,2.0)",
+#         f"CUT({baseCuts},{sidebandCuts})"
+#     )
 
+#     h.SetXTitle("M(K_{S}#pi^{+}) [GeV/c^{2}]")
+#     h.SetYTitle("t'_{K_{S}} - t'_{#pi^{+}} [GeV^{2}]")
+#     h.Draw("colz")
 
-    # ============================================================
-    # Page 5: chi2/dof
-    # ============================================================
-    c = ROOT.TCanvas("c_eventCuts_chi2", "c_eventCuts_chi2", 1000, 1300)
-    keep(c)
+#     draw_info_pad(
+#         p["info_main"],
+#         file_label(FND_eventSelectionSkims),
+#         legend_items=[(h, "Data density", "f")],
+#         notes=["#Delta t' diagnostic plot"],
+        
+#         legend_box=(0.62, 0.24, 0.96, 0.84),
+#         legend_text_size=0.10,
+#         label_pos=(0.06, 0.90),
+#         label_size=0.10,
+#         notes_start_y=0.68,
+#         notes_text_size=0.09,
+#         notes_step=0.12,
+#     )
 
-    panels = make_panel_grid(c, ncols=1, nrows=1, info_frac=0.22)
-    p = panels[0]
-    p["plot"].cd()
+#     draw_notes_pad(
+#         p["info_notes"],
+#         title="Cuts used",
+#         notes=[
+#             f"Global cuts: {generalCuts_eventSelection}",
+#             f"Histogram cuts: CUT({baseCuts},{sidebandCuts})",
+#             f"x = MASS({DecayingKShort},{PiPlus1})",
+#             "y = TPRIMEKS - TPRIMEPIP",
+#             ],
+        
+#         title_pos=(0.06, 0.88),
+#         title_size=0.11,
+#         notes_start_y=0.70,
+#         notes_text_size=0.075,
+#         notes_step=0.15,
+#     )
 
-    h5 = fs_get_th1(
-        FND_unSkimmed,
-        "Chi2DOF",
-        "(80,0,20)",
-        "CUT(tRange110,rf,unusedE,unusedTracks,coherentPeak,targetZ)"
-    )
-    h5.SetXTitle("#chi^{2}/dof")
-    h5.SetYTitle("Events")
-    h5.Draw("hist")
+#     # c.Print(pdf_path)
+#     c.Print(f"{pdf_path})")
+#     ROOT.FSHistogram.clearHistogramCache()
 
-    if bggen:
-        draw_mc_same(
-            FND_unSkimmed, "Chi2DOF", "(80,0,20)",
-            "CUT(tRange110,rf,unusedE,unusedTracks,coherentPeak,targetZ)"
-        )
-    draw_vertical_lines(h5, [5.0])
-
-    draw_info_pad(
-        p["info_main"],
-        file_label(FND_unSkimmed),
-        legend_items=[(h5, "Data", "l")],
-        notes=["Cut: #chi^{2}/dof < 5"]
-    )
-    draw_notes_pad(
-        p["info_notes"],
-        title="Cuts used",
-        notes=[
-            "Histogram cuts:",
-            "CUT(tRange110,rf,unusedE,unusedTracks,coherentPeak,targetZ)",
-            "Plotted variable: Chi2DOF",
-        ],
-    )
-
-    c.Print(pdf_path)
-
-
-    # ============================================================
-    # Page 6: Lambda flight length
-    # ============================================================
-    c = ROOT.TCanvas("c_eventCuts_lambdaFL", "c_eventCuts_lambdaFL", 1000, 1300)
-    keep(c)
-
-    panels = make_panel_grid(c, ncols=1, nrows=1, info_frac=0.22)
-    p = panels[0]
-    p["plot"].cd()
-
-    h6 = fs_get_th1(
-        FND_unSkimmed,
-        "VeeLP1",
-        "(60,0,10)",
-        "CUT(tRange110,rf,chi2DOF,unusedE,coherentPeak,Lambda,targetZ)"
-    )
-    h6.SetXTitle("#Lambda flight length [cm]")
-    h6.SetYTitle("Events")
-    h6.Draw("hist")
-    draw_vertical_lines(h6, [2.0])
-
-    draw_info_pad(
-        p["info_main"],
-        file_label(FND_unSkimmed),
-        legend_items=[(h6, "Data", "l")],
-        notes=["Cut: L_{#Lambda} > 2 cm"]
-    )
-    draw_notes_pad(
-        p["info_notes"],
-        title="Cuts used",
-        notes=[
-            "Histogram cuts:",
-            "CUT(tRange110,rf,chi2DOF,unusedE,coherentPeak,Lambda,targetZ)",
-            "Plotted variable: VeeLP1",
-        ],
-    )
-
-    c.Print(pdf_path)
-
-
-    # ============================================================
-    # Page 7: KShort flight length
-    # ============================================================
-    c = ROOT.TCanvas("c_eventCuts_kshortFL", "c_eventCuts_kshortFL", 1000, 1300)
-    keep(c)
-
-    panels = make_panel_grid(c, ncols=1, nrows=1, info_frac=0.22)
-    p = panels[0]
-    p["plot"].cd()
-
-    h7 = fs_get_th1(
-        FND_unSkimmed,
-        "VeeLP2",
-        "(60,0,10)",
-        "CUT(tRange110,rf,chi2DOF,unusedE,coherentPeak,KShort,targetZ)"
-    )
-    h7.SetXTitle("K_{S} flight length [cm]")
-    h7.SetYTitle("Events")
-    h7.Draw("hist")
-    draw_vertical_lines(h7, [2.0])
-
-    draw_info_pad(
-        p["info_main"],
-        file_label(FND_unSkimmed),
-        legend_items=[(h7, "Data", "l")],
-        notes=["Cut: L_{K_{S}} > 2 cm"]
-    )
-    draw_notes_pad(
-        p["info_notes"],
-        title="Cuts used",
-        notes=[
-            "Histogram cuts:",
-            "CUT(tRange110,rf,chi2DOF,unusedE,coherentPeak,KShort,targetZ)",
-            "Plotted variable: VeeLP2",
-        ],
-    )
-
-    c.Print(pdf_path)
 
 # ------------------------------------------------------------
 # KSHORT & LAMBDA MASS PLOTS
@@ -950,6 +1622,8 @@ def massPlots_KShort_cutComparisons(pdf_path):
 
 
 # -------- KSHORT FLIGHTLENGTH STUDY -------------
+
+# -------- KSHORT FLIGHTLENGTH STUDY -------------
 def massPlots_KShort_flightLength(pdf_path):
     c = ROOT.TCanvas("c_mass_ks", "c_mass_ks", 1000, 1300)
     keep(c)
@@ -972,27 +1646,94 @@ def massPlots_KShort_flightLength(pdf_path):
         "CUT(rejectSigma1385,flightLengthKShort,rf,Lambda)"
     )
 
-    hData_FLoff.SetXTitle("M(#pi^{+}#pi^{-}) [GeV/c^{2}]")
-    hData_FLoff.SetYTitle("Counts / 5 MeV")
-    hData_FLoff.SetLineColor(ROOT.kBlack)
+    fit_FLoff = make_voigtian_plus_expo2(
+        name="fit_ks_FLoff_voigt_exp",
+        xmin=0.35,
+        xmax=0.65,
+        amp=8.0,
+        mean=0.4976,
+        sigma=0.003,
+        width=0.0025,
+        p0=1.0,
+        p1=2.0,
+        p2=0.0,
+    )
+    fit_FLoff.SetParLimits(2, 0.0001, 0.01)   # sigma
+    fit_FLoff.SetParLimits(3, 0.0001, 0.01)   # width
 
-    hData_FLon.SetLineColor(ROOT.kBlack)
+    fit_FLon = make_voigtian_plus_expo2(
+        name="fit_ks_FLon_voigt_exp",
+        xmin=0.35,
+        xmax=0.65,
+        amp=8.0,
+        mean=0.4976,
+        sigma=0.003,
+        width=0.0025,
+        p0=0.0,
+        p1=0.3,
+        p2=0.0,
+    )
+    fit_FLon.SetParLimits(2, 0.0001, 0.01)   # sigma
+    fit_FLon.SetParLimits(3, 0.0001, 0.01)   # width
+
     hData_FLon.SetFillColor(ROOT.kBlue)
-
     hData_FLoff.Draw("pE")
-    hData_FLon.Draw("hist same")
 
-    integral_FLoff = integral_between(hData_FLoff, 0.35, 0.65)
-    integral_FLon = integral_between(hData_FLon, 0.35, 0.65)
+    hData_FLoff.Fit(fit_FLoff, "R0")
+    hData_FLon.Fit(fit_FLon, "R0")
+
+    fit_FLoff.SetLineColor(ROOT.kBlack)
+    fit_FLoff.SetLineWidth(2)
+
+    fit_FLon.SetLineColor(ROOT.kRed)
+    fit_FLon.SetLineWidth(2)
+
+    fit_FLoff.Draw("same")
+
+    fit_FLoff_voigt, fit_FLoff_expo2 = make_component_funcs(fit_FLoff, xmin=0.35, xmax=0.65)
+    fit_FLoff_voigt.SetLineColor(ROOT.kBlue)
+    fit_FLoff_expo2.SetLineColor(ROOT.kRed)
+    fit_FLoff_voigt.Draw("same")
+    fit_FLoff_expo2.Draw("same")
+
+    p["plot"].Modified()
+    p["plot"].Update()
+
+    # ----- Integration limits for signal and background functions
+    xmin, xmax = 0.4676, 0.5276   # K_S mass 0.4976 +/- 0.03
+    bin_width = hData_FLoff.GetXaxis().GetBinWidth(1)
+
+    # integrate under histograms
+    integral_FLoff = integral_between(hData_FLoff, xmin, xmax)
+    integral_FLon  = integral_between(hData_FLon,  xmin, xmax)
+
+    # integrate under signal and background components separately
+    integral_fit_FLoff_voigt = fit_integral_signal(fit_FLoff,     xmin, xmax, bin_width=bin_width)
+    integral_fit_FLoff_expo2 = fit_integral_background(fit_FLoff, xmin, xmax, bin_width=bin_width)
+
+    # ----- Figures of merit
+    S_off, B_off, SB_off, significance_off = compute_figureOfMerit(
+        fit_FLoff, xmin, xmax, bin_width=bin_width
+    )
+    S_on, B_on, SB_on, significance_on = compute_figureOfMerit(
+        fit_FLon, xmin, xmax, bin_width=bin_width
+    )
 
     draw_info_pad(
         p["info_main"],
         file_label(FND_eventSelectionSkims),
         legend_items=[
-            (hData_FLoff, "Ks FL OFF " "(Integral: " f"{integral_FLoff:.0f})", "pE"),
-            (hData_FLon, "Ks FL ON " "(Integral: " f"{integral_FLon:.0f})", "f"),
+            (hData_FLoff, "Ks FL OFF " f"(Integral: {integral_FLoff:.0f})", "pE"),
+            (hData_FLon,  "Ks FL ON "  f"(Integral: {integral_FLon:.0f})",  "f"),
+            (fit_FLoff,   "Ks FL OFF Fit", "l"),
+            (fit_FLon,    "Ks FL ON Fit",  "l"),
         ],
-        notes=["K_{S} Flightlength #bf{(FL)} study"],
+        notes=[
+            f"S/B FL_OFF: {SB_off:.2f}",
+            f"S/B FL_ON:  {SB_on:.2f}",
+            f"Significance (S/#sqrt{{S+B}}) FL_OFF: {significance_off:.2f}",
+            f"Significance (S/#sqrt{{S+B}}) FL_ON:  {significance_on:.2f}",
+        ],
 
         # --- layout tweaks ---
         legend_box=(0.48, 0.22, 0.96, 0.84),
@@ -1001,32 +1742,113 @@ def massPlots_KShort_flightLength(pdf_path):
         label_pos=(0.06, 0.90),
         label_size=0.16,
 
-        notes_start_y=0.68,
-        notes_text_size=0.16,
-        notes_step=0.08,
+        notes_start_y=0.70,
+        notes_text_size=0.118,
+        notes_step=0.16,
     )
 
     draw_notes_pad(
         p["info_notes"],
-        title="Cuts used",
+        title="#bf{Cuts used}",
         notes=[
             f"Global cuts: {generalCuts_eventSelection}",
-            "Flightlength OFF cuts: CUT(rejectSigma1385,rf,Lambda)",
-            "Flightlength ON cuts: CUT(rejectSigma1385,flightLengthKShort,rf,Lambda)",
+            "hist FL_OFF: CUT(rejectSigma1385,rf,Lambda)",
+            "hist FL_ON: CUT(rejectSigma1385,flightLengthKShort,rf,Lambda)",
+            "#bf{Figure of merit raw values}",
+            f"Sig FL_OFF: {S_off:.0f}, Bkg FL_OFF: {B_off:.0f}. Compare to #rightarrow  voigt: {integral_fit_FLoff_voigt:.0f}, exp: {integral_fit_FLoff_expo2:.0f}",
+            f"Sig FL_ON:  {S_on:.0f}, Bkg FL_ON:  {B_on:.0f}",
         ],
 
         # --- bottom pad tweaks ---
         title_pos=(0.06, 0.88),
         title_size=0.11,
 
-        notes_start_y=0.70,
+        notes_start_y=0.72,
         notes_text_size=0.075,
-        notes_step=0.16,
+        notes_step=0.11,
     )
 
-    c.Print(pdf_path)
-    # c.Print(f"{pdf_path}(")
+    # c.Print(pdf_path)
+    c.Print(f"{pdf_path}(")
     ROOT.FSHistogram.clearHistogramCache()
+
+# def massPlots_KShort_flightLength(pdf_path):
+#     c = ROOT.TCanvas("c_mass_ks", "c_mass_ks", 1000, 1300)
+#     keep(c)
+
+#     panels = make_panel_grid(c, ncols=1, nrows=1, info_frac=0.36)
+#     p = panels[0]
+#     p["plot"].cd()
+
+#     hData_FLoff = fs_get_th1(
+#         FND_eventSelectionSkims,
+#         f"MASS({DecayingKShort})",
+#         "(60,0.35,0.65)",
+#         "CUT(rejectSigma1385,rf,Lambda)"
+#     )
+
+#     hData_FLon = fs_get_th1(
+#         FND_eventSelectionSkims,
+#         f"MASS({DecayingKShort})",
+#         "(60,0.35,0.65)",
+#         "CUT(rejectSigma1385,flightLengthKShort,rf,Lambda)"
+#     )
+
+#     hData_FLoff.SetXTitle("M(#pi^{+}#pi^{-}) [GeV/c^{2}]")
+#     hData_FLoff.SetYTitle("Counts / 5 MeV")
+#     hData_FLoff.SetLineColor(ROOT.kBlack)
+
+#     hData_FLon.SetLineColor(ROOT.kBlack)
+#     hData_FLon.SetFillColor(ROOT.kBlue)
+
+#     hData_FLoff.Draw("pE")
+#     hData_FLon.Draw("hist same")
+
+#     integral_FLoff = integral_between(hData_FLoff, 0.35, 0.65)
+#     integral_FLon = integral_between(hData_FLon, 0.35, 0.65)
+
+#     draw_info_pad(
+#         p["info_main"],
+#         file_label(FND_eventSelectionSkims),
+#         legend_items=[
+#             (hData_FLoff, "Ks FL OFF " "(Integral: " f"{integral_FLoff:.0f})", "pE"),
+#             (hData_FLon, "Ks FL ON " "(Integral: " f"{integral_FLon:.0f})", "f"),
+#         ],
+#         notes=["K_{S} Flightlength #bf{(FL)} study"],
+
+#         # --- layout tweaks ---
+#         legend_box=(0.48, 0.22, 0.96, 0.84),
+#         legend_text_size=0.13,
+
+#         label_pos=(0.06, 0.90),
+#         label_size=0.16,
+
+#         notes_start_y=0.68,
+#         notes_text_size=0.16,
+#         notes_step=0.08,
+#     )
+
+#     draw_notes_pad(
+#         p["info_notes"],
+#         title="Cuts used",
+#         notes=[
+#             f"Global cuts: {generalCuts_eventSelection}",
+#             "Flightlength OFF cuts: CUT(rejectSigma1385,rf,Lambda)",
+#             "Flightlength ON cuts: CUT(rejectSigma1385,flightLengthKShort,rf,Lambda)",
+#         ],
+
+#         # --- bottom pad tweaks ---
+#         title_pos=(0.06, 0.88),
+#         title_size=0.11,
+
+#         notes_start_y=0.70,
+#         notes_text_size=0.075,
+#         notes_step=0.16,
+#     )
+
+#     c.Print(pdf_path)
+#     # c.Print(f"{pdf_path}(")
+#     ROOT.FSHistogram.clearHistogramCache()
 
 
 
@@ -1124,7 +1946,7 @@ def massPlots_KShort_sideBands(pdf_path):
     )
 
     c.Print(pdf_path)
-    # c.Print(f"{pdf_path}(")
+    # c.Print(f"{pdf_path})")
     ROOT.FSHistogram.clearHistogramCache()
 
 
@@ -1321,19 +2143,86 @@ def massPlots_Lambda_flightLength(pdf_path):
         "CUT(rejectSigma1385,flightLengthLambda,rf,KShort)"
     )
 
-    hData_FLoff.SetXTitle("M(p #pi^{-}) [GeV/c^{2}]")
-    hData_FLoff.SetYTitle("Counts / 5 MeV")
-    hData_FLoff.SetLineColor(ROOT.kBlack)
-    # hData_FLoff.SetFillColor(ROOT.kBlack)
+    fit_FLoff = make_voigtian_plus_expo2(
+    name="fit_lambda_FLoff_voigt_exp",
+    xmin=1.08,
+    xmax=1.20,
+    amp=8.0,
+    mean=1.1157,
+    sigma=0.003,
+    width=0.0029,
+    p0=1.0,
+    p1=2.0,
+    p2=0.0,
+    )
 
-    hData_FLon.SetLineColor(ROOT.kBlack)
+    fit_FLon = make_voigtian_plus_expo2(
+    name="fit_lambda_FLon_voigt_exp",
+    xmin=1.08,
+    xmax=1.20,
+    amp=8.0,
+    mean=1.1157,
+    sigma=0.003,
+    width=0.0025,
+    p0=0.0,
+    p1=0.3,
+    p2=0.0,
+    )
+
     hData_FLon.SetFillColor(ROOT.kBlue)
-
     hData_FLoff.Draw("pE")
-    hData_FLon.Draw("hist same")
+    # hData_FLon.Draw("hist same")
 
-    integral_FLoff = integral_between(hData_FLoff, 1.08,1.20)
-    integral_FLon = integral_between(hData_FLon, 1.08,1.20)
+    # Fitting
+    fit_FLoff.SetParLimits(2, 0.0001, 0.01)   # sigma
+    fit_FLoff.SetParLimits(3, 0.0001, 0.01)   # width
+    
+    hData_FLoff.Fit(fit_FLoff, "R0")
+    hData_FLon.Fit(fit_FLon, "R0")
+
+    fit_FLoff.SetLineColor(ROOT.kBlack)
+    fit_FLoff.SetLineWidth(2)
+
+    fit_FLon.SetLineColor(ROOT.kRed)
+    fit_FLon.SetLineWidth(2)
+
+    fit_FLoff.Draw("same")
+    # fit_FLon.Draw("same")
+
+    fit_FLoff_voigt, fit_FLoff_expo2 = make_component_funcs(fit_FLoff, xmin=1.08, xmax=1.20)
+    fit_FLoff_voigt.SetLineColor(ROOT.kBlue)
+    fit_FLoff_expo2.SetLineColor(ROOT.kRed)
+    fit_FLoff_voigt.Draw("same")
+    fit_FLoff_expo2.Draw("same")
+
+    p["plot"].Modified()
+    p["plot"].Update()
+
+    # draw lines at 1.119 +/- 0.01375
+    # draw_vertical_lines(hData_FLon, [1.10525,1.13275])
+
+    # ----- Integration limits for signal and background functions
+    xmin, xmax = 1.10525, 1.13275
+    bin_width = hData_FLoff.GetXaxis().GetBinWidth(1)
+
+    # integrate under total fit(s)
+    integral_FLoff = integral_between(hData_FLoff, 1.10525, 1.13275)
+    integral_FLon  = integral_between(hData_FLon,  1.10525, 1.13275)
+
+    # integrate under signal and background components separately.
+    # NOTE: The integrals below are already calculated by 'compute_figureOfMerit' function;
+    # They are created here only as a double-check.
+    integral_fit_FLoff_voigt = fit_integral_signal(fit_FLoff,     1.10525, 1.13275, bin_width=bin_width)
+    integral_fit_FLoff_expo2 = fit_integral_background(fit_FLoff, 1.10525, 1.13275, bin_width=bin_width)
+
+    # ----- Sig/Bkg ratios flightlength OFF
+    S_off, B_off, SB_off, significance_off = compute_figureOfMerit(
+            fit_FLoff, xmin, xmax, bin_width=bin_width
+        )
+    # ----- Sig/Bkg ratios flightlength ON
+    S_on, B_on, SB_on, significance_on = compute_figureOfMerit(
+            fit_FLon, xmin, xmax, bin_width=bin_width
+        )
 
     draw_info_pad(
         p["info_main"],
@@ -1341,8 +2230,15 @@ def massPlots_Lambda_flightLength(pdf_path):
         legend_items=[
             (hData_FLoff, "Lamb FL OFF " "(Integral: " f"{integral_FLoff:.0f})", "pE"),
             (hData_FLon, "Lamb FL ON " "(Integral: " f"{integral_FLon:.0f})", "f"),
+            (fit_FLoff, "Lamb FL OFF Fit", "l"),
+            (fit_FLon, "Lamb FL ON Fit", "l"),
         ],
-        notes=["Lambda Flightlength #bf{FL} study"],
+        notes=[
+            f"Signal / Background FL_OFF: {SB_off:.2f}",
+            f"Signal / Background FL_ON:  {SB_on:.2f}",
+            f"Significance (Sig/#sqrt{{Sig+Bkg}}) FL_OFF: {significance_off:.2f}",
+            f"Significance (Sig/#sqrt{{Sig+Bkg}}) FL_ON:  {significance_on:.2f}",
+        ],
 
         # --- layout tweaks ---
         legend_box=(0.48, 0.22, 0.96, 0.84),
@@ -1351,31 +2247,34 @@ def massPlots_Lambda_flightLength(pdf_path):
         label_pos=(0.06, 0.90),
         label_size=0.16,
 
-        notes_start_y=0.68,
-        notes_text_size=0.16,
-        notes_step=0.08,
+        notes_start_y=0.70,
+        notes_text_size=0.118,
+        notes_step=0.16,
     )
 
     draw_notes_pad(
         p["info_notes"],
-        title="Cuts used",
-        notes=[
+        title="#bf{Cuts used}",
+            notes=[
             f"Global cuts: {generalCuts_eventSelection}",
-            "Flightlength OFF cuts: CUT(rejectSigma1385,rf,KShort)",
-            "Flightlength ON cuts: CUT(rejectSigma1385,flightLengthLambda,rf,KShort)",
+            "hist FL_OFF: CUT(rejectSigma1385,rf,KShort)",
+            "hist FL_ON: CUT(rejectSigma1385,flightLengthLambda,rf,KShort)",
+            "#bf{Figure of merit raw values}",
+            f"Sig FL_OFF: {S_off:.0f}, Bkg FL_OFF: {B_off:.0f}. Compare to #rightarrow  voigt: {integral_fit_FLoff_voigt:.0f}, exp: {integral_fit_FLoff_expo2:.0f}",
+            f"Sig FL_ON:  {S_on:.0f}, Bkg FL_ON:  {B_on:.0f}",
         ],
 
         # --- bottom pad tweaks ---
         title_pos=(0.06, 0.88),
         title_size=0.11,
 
-        notes_start_y=0.70,
+        notes_start_y=0.72,
         notes_text_size=0.075,
-        notes_step=0.16,
+        notes_step=0.11,
     )
 
-    c.Print(pdf_path)
-    # c.Print(f"{pdf_path})")
+    # c.Print(pdf_path)
+    c.Print(f"{pdf_path})")
     ROOT.FSHistogram.clearHistogramCache()
 
 
@@ -1927,19 +2826,26 @@ def massPlots_KStar_sidebands(pdf_path):
         FND_eventSelectionSkims,
         f"MASS({DecayingKShort},{PiPlus1})",
         "(50,0.5,2.5)",
-        f"CUT({baseCuts},{sidebandCuts})"
+        "CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)"
     )
     hSig = fs_get_th1(
         FND_eventSelectionSkims,
         f"MASS({DecayingKShort},{PiPlus1})",
         "(50,0.5,2.5)",
-        f"CUT({baseCuts})*CUTWT({sidebandCuts})"
+        f"CUT(unusedE,flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT({sidebandCuts})"
+    )
+    hSig2 = fs_get_th1(
+        FND_eventSelectionSkims,
+        f"MASS({DecayingKShort},{PiPlus1})",
+        "(50,0.5,2.5)",
+        f"CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT({sidebandCuts})"
     )
     hBkg = fs_get_th1(
         FND_eventSelectionSkims,
         f"MASS({DecayingKShort},{PiPlus1})",
         "(50,0.5,2.5)",
-        f"CUT({baseCuts})*CUTSBWT({sidebandCuts})"
+        f"CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT({sidebandCuts})"
+
     )
     hBkgNegative = hBkg.Clone("hBkgNegative")
     hBkgNegative.Scale(-1.0)
@@ -1950,11 +2856,14 @@ def massPlots_KStar_sidebands(pdf_path):
 
     hSig.SetLineColor(ROOT.kBlack)
     hSig.SetFillColor(ROOT.kBlue)
+    hSig2.SetLineColor(ROOT.kBlack)
+    hSig2.SetFillColor(ROOT.kMagenta)
     hBkgNegative.SetLineColor(ROOT.kBlack)
     hBkgNegative.SetFillColor(ROOT.kRed)
 
 
     hData.Draw("pE")
+    hSig2.Draw("hist same")
     hSig.Draw("hist same")
     hBkgNegative.Draw("hist same")
 
@@ -1963,15 +2872,17 @@ def massPlots_KStar_sidebands(pdf_path):
 
     integral_kStar = integral_between(hData, 0.8, 1.0)
     integral_kStarSig = integral_between(hSig, 0.8, 1.0)
+    integral_kStarSig2 = integral_between(hSig2, 0.8, 1.0)
     integral_kStarBkg = integral_between(hBkg, 0.8, 1.0)
 
     draw_info_pad(
         p["info_main"],
         file_label(FND_eventSelectionSkims),
         legend_items=[
-            (hData, "kStar " "(Integral: " f"{integral_kStar:.0f})", "pE"),
-            (hSig, "kStar Signal " "(Integral: " f"{integral_kStarSig:.0f})", "f"),
-            (hBkgNegative, "kStar background " "(Integral: " f"{integral_kStarBkg:.0f})", "f"),
+            (hData, "K* " "(Integral: " f"{integral_kStar:.0f})", "pE"),
+            (hSig, "K* Sig " "(Integral: " f"{integral_kStarSig:.0f})", "f"),
+            (hSig2, "K* Sig (w/o unusd shwr cut) " "(Int: " f"{integral_kStarSig2:.0f})", "f"),
+            (hBkgNegative, "K* background " "(Integral: " f"{integral_kStarBkg:.0f})", "f"),
         ],
         notes=[
             "kStar sideband subtraction study",
@@ -1979,7 +2890,7 @@ def massPlots_KStar_sidebands(pdf_path):
             "M(Ks #pi^{+}) = (0.8, 1.0) GeV/c^{2}",
         ],
 
-        # new optional controls
+        # middle pad tweaks
         legend_box=(0.48, 0.18, 0.96, 0.84),
         legend_text_size=0.10,
 
@@ -1994,22 +2905,27 @@ def massPlots_KStar_sidebands(pdf_path):
         p["info_notes"],
         title="Cuts used",
         notes=[
-            f"Data: CUT({baseCuts},{sidebandCuts})",
-            f"Signal weight: CUT({baseCuts})*CUTWT({sidebandCuts})",
-            f"Sideband weight: CUT({baseCuts})*CUTSBWT({sidebandCuts})",
+            (0.08, "Global cuts: CUT(tRange110,chi2DOF,unusedTracks,coherentPeak,targetZ)"),
+            (0.08, "Data: CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)"),
+            (0.08, "Signal: CUT(unusedE,flightLengthKShort,flightLengthLambda,rejectSigma1385)"),
+            (0.10, f"*CUTWT({sidebandCuts})"),
+            (0.08, "Signal w/o unusd shwr: CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)"),
+            (0.10, f"*CUTWT({sidebandCuts})"),
+            (0.08, "Background: CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)"),
+            (0.10, f"*CUTSBWT({sidebandCuts})"),
         ],
 
-        # new optional controls
+        # bottom pad tweaks
         title_pos=(0.06, 0.88),
         title_size=0.11,
 
-        notes_start_y=0.68,
-        notes_text_size=0.075,
-        notes_step=0.16,
+        notes_start_y=0.72,
+        notes_text_size=0.060,
+        notes_step=0.09,
     )
 
-    c.Print(pdf_path)
-    # c.Print(f"{pdf_path})")
+    # c.Print(pdf_path)
+    c.Print(f"{pdf_path})")
 
 def missingMassPlots_KStar_sidebands(pdf_path):
     c = ROOT.TCanvas("c_mm_kstar_sidebands", "c_mm_kstar_sidebands", 1000, 1300)
@@ -2804,30 +3720,32 @@ def main():
     setup()
     setup_genmc()
 
-    global_eventSelection_Cuts(allPlots)
-    massPlots_KShort_cutComparisons(allPlots)
+    # global_eventSelection_Cuts(allPlots)
+    # deltaTPlots_KShort_vs_PiPlus(allPlots)
+    # deltaTPrimePlots_KShort_vs_PiPlus(allPlots)
+    # massPlots_KShort_cutComparisons(allPlots)
     massPlots_KShort_flightLength(allPlots)
-    massPlots_KShort_sideBands(allPlots)
-    massPlots_KShort_missingMass(allPlots)
-    massPlots_KShort_FINAL_SELECTION(allPlots)
+    # massPlots_KShort_sideBands(allPlots)
+    # massPlots_KShort_missingMass(allPlots)
+    # massPlots_KShort_FINAL_SELECTION(allPlots)
     massPlots_Lambda_flightLength(allPlots)
-    massPlots_Lambda_sideBands(allPlots)
-    massPlots_Lambda_missingMass(allPlots)
-    massPlots_Lambda_FINAL_SELECTION(allPlots)
-    deltaMassPlots_KShort(allPlots)
-    deltaMassPlots_Lambda(allPlots)
-    massPlots_lambdaPiBackground(allPlots)
-    massPlots_KStar_sidebands(allPlots)
-    missingMassPlots_KStar_sidebands(allPlots)
-    massPlots_KStar_Signal_DATA_and_MC(allPlots)
-    massPlots_KStar_FIT_RESULTS(allPlots)
-    cosThetaGJ_KShort(allPlots)
-    cosThetaHelicity_KShort_eventSelectionSkim(allPlots)
-    cosThetaHelicity_KShort_ampToolsSkim(allPlots)
-    cosTheta_vs_lambdaPi_eventSelection(allPlots)
-    cosTheta_vs_lambdaPi_ampToolsSkim(allPlots)
-    cosThetaHelicity_KShort_MC(allPlots)
-    efficiency_cosThetaHelicity_KShort(allPlots)
+    # massPlots_Lambda_sideBands(allPlots)
+    # massPlots_Lambda_missingMass(allPlots)
+    # massPlots_Lambda_FINAL_SELECTION(allPlots)
+    # deltaMassPlots_KShort(allPlots)
+    # deltaMassPlots_Lambda(allPlots)
+    # massPlots_lambdaPiBackground(allPlots)
+    # massPlots_KStar_sidebands(allPlots)
+    # missingMassPlots_KStar_sidebands(allPlots)
+    # massPlots_KStar_Signal_DATA_and_MC(allPlots)
+    # massPlots_KStar_FIT_RESULTS(allPlots)
+    # cosThetaGJ_KShort(allPlots)
+    # cosThetaHelicity_KShort_eventSelectionSkim(allPlots)
+    # cosThetaHelicity_KShort_ampToolsSkim(allPlots)
+    # cosTheta_vs_lambdaPi_eventSelection(allPlots)
+    # cosTheta_vs_lambdaPi_ampToolsSkim(allPlots)
+    # cosThetaHelicity_KShort_MC(allPlots)
+    # efficiency_cosThetaHelicity_KShort(allPlots)
 
     dt = time.time() - t0
     print(f"Total execution time: {dt:.1f} s")
