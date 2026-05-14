@@ -489,8 +489,6 @@ def make_voigtian(name, xmin, xmax,
     return f
 
 
-
-
 def make_voigtian_plus_expo2(name, xmin, xmax,
                               amp=None, mean=None, sigma=None, width=None,
                               p0=None, p1=None, p2=None):
@@ -507,6 +505,153 @@ def make_voigtian_plus_expo2(name, xmin, xmax,
 
     keep(f)
     return f
+
+def make_bernstein(name, xmin, xmax, degree=3,
+                   coeffs=None):
+    """
+    Bernstein polynomial background of given degree.
+    Rescales x to [0,1] over [xmin, xmax], matching RooBernstein convention.
+    Parameters [0..degree] are the Bernstein coefficients c_i.
+
+    PDF(x) = sum_{i=0}^{n} c_i * B(n,i) * t^i * (1-t)^(n-i)
+    where t = (x - xmin) / (xmax - xmin)
+    """
+    # Build the formula string term by term
+    t = f"(x - {xmin}) / ({xmax} - {xmin})"   # rescaled variable
+    terms = []
+    for i in range(degree + 1):
+        binom = int(__import__('math').comb(degree, i))
+        term = f"[{i}] * {binom} * pow({t}, {i}) * pow(1 - ({t}), {degree - i})"
+        terms.append(term)
+    formula = " + ".join(terms)
+
+    f = ROOT.TF1(name, formula, xmin, xmax)
+
+    defaults = coeffs if coeffs is not None else [1.0] * (degree + 1)
+    for i, val in enumerate(defaults):
+        f.SetParName(i, f"bern_c{i}")
+        f.SetParameter(i, val)
+
+    keep(f)
+    return f
+
+
+def make_two_voigtians_plus_bernstein(name, xmin, xmax, bern_degree=3,
+                                      amp1=None, mean1=None, sigma1=None, width1=None,
+                                      amp2=None, mean2=None, sigma2=None, width2=None,
+                                      coeffs=None):
+    """
+    Two Voigtians + Bernstein polynomial background.
+
+    Parameter layout:
+        [0]  voigt1_amp
+        [1]  voigt1_mean
+        [2]  voigt1_sigma
+        [3]  voigt1_width
+        [4]  voigt2_amp
+        [5]  voigt2_mean
+        [6]  voigt2_sigma
+        [7]  voigt2_width
+        [8 .. 8+bern_degree]  Bernstein coefficients
+    """
+    import math
+
+    t = f"(x - {xmin}) / ({xmax} - {xmin})"
+    bern_terms = []
+    for i in range(bern_degree + 1):
+        par_idx = 8 + i
+        binom = int(math.comb(bern_degree, i))
+        term = f"[{par_idx}] * {binom} * pow({t}, {i}) * pow(1 - ({t}), {bern_degree - i})"
+        bern_terms.append(term)
+    bern_formula = " + ".join(bern_terms)
+
+    formula = (
+        "[0]*TMath::Voigt(x - [1], [2], [3]) + "
+        "[4]*TMath::Voigt(x - [5], [6], [7]) + "
+        + bern_formula
+    )
+
+    f = ROOT.TF1(name, formula, xmin, xmax)
+
+    # --- Voigtian 1 (K*(892))
+    f.SetParName(0, "voigt1_amp");   f.SetParameter(0, amp1   if amp1   is not None else 1000.0)
+    f.SetParName(1, "voigt1_mean");  f.SetParameter(1, mean1  if mean1  is not None else 0.892)
+    f.SetParName(2, "voigt1_sigma"); f.SetParameter(2, sigma1 if sigma1 is not None else 0.005)
+    f.SetParName(3, "voigt1_width"); f.SetParameter(3, width1 if width1 is not None else 0.050)
+
+    # --- Voigtian 2 (K*(1430) or whatever second peak you're fitting)
+    f.SetParName(4, "voigt2_amp");   f.SetParameter(4, amp2   if amp2   is not None else 500.0)
+    f.SetParName(5, "voigt2_mean");  f.SetParameter(5, mean2  if mean2  is not None else 1.43)
+    f.SetParName(6, "voigt2_sigma"); f.SetParameter(6, sigma2 if sigma2 is not None else 0.005)
+    f.SetParName(7, "voigt2_width"); f.SetParameter(7, width2 if width2 is not None else 0.100)
+
+    # --- Bernstein coefficients
+    defaults = coeffs if coeffs is not None else [1.0] * (bern_degree + 1)
+    for i, val in enumerate(defaults):
+        f.SetParName(8 + i, f"bern_c{i}")
+        f.SetParameter(8 + i, val)
+
+    keep(f)
+    return f
+
+# ------------------------------------------------------------
+# Calculate figures of merit for voigt1, voigt2 and Bernstein polynomial
+# ------------------------------------------------------------
+
+def fit_integral_voigt1(f, xmin, xmax, bin_width=1.0, name=None):
+    """Extract first Voigtian component from two_voigtians_plus_bernstein. Params [0-3]."""
+    if name is None:
+        name = f"f_voigt1_{f.GetName()}"
+    f_v = ROOT.TF1(name, "[0]*TMath::Voigt(x - [1], [2], [3])", xmin, xmax)
+    for i in range(4):
+        f_v.SetParameter(i, f.GetParameter(i))
+    keep(f_v)
+    return f_v.Integral(xmin, xmax, 1e-6) / bin_width
+
+
+def fit_integral_voigt2(f, xmin, xmax, bin_width=1.0, name=None):
+    """Extract second Voigtian component from two_voigtians_plus_bernstein. Params [4-7]."""
+    if name is None:
+        name = f"f_voigt2_{f.GetName()}"
+    f_v = ROOT.TF1(name, "[0]*TMath::Voigt(x - [1], [2], [3])", xmin, xmax)
+    for i in range(4):
+        f_v.SetParameter(i, f.GetParameter(i + 4))
+    keep(f_v)
+    return f_v.Integral(xmin, xmax, 1e-6) / bin_width
+
+
+def fit_integral_bernstein(f, xmin, xmax, bin_width=1.0, bern_degree=3, name=None):
+    """Extract Bernstein component from two_voigtians_plus_bernstein. Params [8..]."""
+    import math
+    if name is None:
+        name = f"f_bern_{f.GetName()}"
+    t = f"(x - {xmin}) / ({xmax} - {xmin})"
+    terms = []
+    for i in range(bern_degree + 1):
+        binom = int(math.comb(bern_degree, i))
+        terms.append(f"[{i}] * {binom} * pow({t}, {i}) * pow(1 - ({t}), {bern_degree - i})")
+    f_b = ROOT.TF1(name, " + ".join(terms), xmin, xmax)
+    for i in range(bern_degree + 1):
+        f_b.SetParameter(i, f.GetParameter(i + 8))
+    keep(f_b)
+    return f_b.Integral(xmin, xmax, 1e-6) / bin_width
+
+
+def compute_figureOfMerit_kstar(f, xmin, xmax, bin_width=1.0, bern_degree=3):
+    """
+    Figure of merit for two_voigtians_plus_bernstein.
+    Signal = voigt1 + voigt2, Background = Bernstein.
+    """
+    S1 = fit_integral_voigt1(f, xmin, xmax, bin_width=bin_width)
+    S2 = fit_integral_voigt2(f, xmin, xmax, bin_width=bin_width)
+    S  = S1 + S2
+    B  = fit_integral_bernstein(f, xmin, xmax, bin_width=bin_width, bern_degree=bern_degree)
+
+    SB           = S / B if B > 0 else 0.0
+    significance = S / (S + B)**0.5 if (S + B) > 0 else 0.0
+    purity       = S / (S + B) if (S + B) > 0 else 0.0
+
+    return S1, S2, S, B, SB, significance, purity
 
 # ------------------------------------------------------------
 # Functions to plot signal and background lines individually
@@ -597,8 +742,9 @@ def compute_figureOfMerit(f, xmin, xmax, bin_width=1.0):
 
     SB = S / B if B > 0 else 0.0
     significance = S / (S + B)**0.5 if (S + B) > 0 else 0.0
+    purity = S / (S + B)
 
-    return S, B, SB, significance
+    return S, B, SB, significance, purity
 
 
 # ------------------------------------------------------------
@@ -1620,9 +1766,6 @@ def massPlots_KShort_cutComparisons(pdf_path):
 # CUT(unusedTracks,unusedE,zProton,chi2,cet0103,e8288,photFiducialA,photFiducialB,photFiducialC,photFiducialD,delta,rejectOmega,protMom)*CUTSBWT(rf,eta,pi0)
 
 
-
-# -------- KSHORT FLIGHTLENGTH STUDY -------------
-
 # -------- KSHORT FLIGHTLENGTH STUDY -------------
 def massPlots_KShort_flightLength(pdf_path):
     c = ROOT.TCanvas("c_mass_ks", "c_mass_ks", 1000, 1300)
@@ -1673,12 +1816,16 @@ def massPlots_KShort_flightLength(pdf_path):
         p1=0.3,
         p2=0.0,
     )
-    fit_FLon.SetParLimits(2, 0.0001, 0.01)   # sigma
-    fit_FLon.SetParLimits(3, 0.0001, 0.01)   # width
-
     hData_FLon.SetFillColor(ROOT.kBlue)
+    hData_FLoff.SetXTitle("M(#pi^{+}#pi^{-}) [GeV/c^{2}]")
+    hData_FLoff.SetYTitle("Counts / 5 MeV")
     hData_FLoff.Draw("pE")
+    hData_FLon.Draw("hist same")
 
+    # Fitting
+    fit_FLoff.SetParLimits(2, 0.0001, 0.01)   # sigma
+    fit_FLoff.SetParLimits(3, 0.0001, 0.01)   # width
+    
     hData_FLoff.Fit(fit_FLoff, "R0")
     hData_FLon.Fit(fit_FLon, "R0")
 
@@ -1689,12 +1836,13 @@ def massPlots_KShort_flightLength(pdf_path):
     fit_FLon.SetLineWidth(2)
 
     fit_FLoff.Draw("same")
+    fit_FLon.Draw("same")
 
-    fit_FLoff_voigt, fit_FLoff_expo2 = make_component_funcs(fit_FLoff, xmin=0.35, xmax=0.65)
-    fit_FLoff_voigt.SetLineColor(ROOT.kBlue)
-    fit_FLoff_expo2.SetLineColor(ROOT.kRed)
-    fit_FLoff_voigt.Draw("same")
-    fit_FLoff_expo2.Draw("same")
+    # fit_FLoff_voigt, fit_FLoff_expo2 = make_component_funcs(fit_FLoff, xmin=0.35, xmax=0.65)
+    # fit_FLoff_voigt.SetLineColor(ROOT.kBlue)
+    # fit_FLoff_expo2.SetLineColor(ROOT.kRed)
+    # fit_FLoff_voigt.Draw("same")
+    # fit_FLoff_expo2.Draw("same")
 
     p["plot"].Modified()
     p["plot"].Update()
@@ -1708,14 +1856,14 @@ def massPlots_KShort_flightLength(pdf_path):
     integral_FLon  = integral_between(hData_FLon,  xmin, xmax)
 
     # integrate under signal and background components separately
-    integral_fit_FLoff_voigt = fit_integral_signal(fit_FLoff,     xmin, xmax, bin_width=bin_width)
+    integral_fit_FLoff_voigt = fit_integral_signal(fit_FLoff, xmin, xmax, bin_width=bin_width)
     integral_fit_FLoff_expo2 = fit_integral_background(fit_FLoff, xmin, xmax, bin_width=bin_width)
 
     # ----- Figures of merit
-    S_off, B_off, SB_off, significance_off = compute_figureOfMerit(
+    S_off, B_off, SB_off, significance_off, purity_off = compute_figureOfMerit(
         fit_FLoff, xmin, xmax, bin_width=bin_width
     )
-    S_on, B_on, SB_on, significance_on = compute_figureOfMerit(
+    S_on, B_on, SB_on, significance_on, purity_on = compute_figureOfMerit(
         fit_FLon, xmin, xmax, bin_width=bin_width
     )
 
@@ -1729,10 +1877,12 @@ def massPlots_KShort_flightLength(pdf_path):
             (fit_FLon,    "Ks FL ON Fit",  "l"),
         ],
         notes=[
-            f"S/B FL_OFF: {SB_off:.2f}",
-            f"S/B FL_ON:  {SB_on:.2f}",
-            f"Significance (S/#sqrt{{S+B}}) FL_OFF: {significance_off:.2f}",
-            f"Significance (S/#sqrt{{S+B}}) FL_ON:  {significance_on:.2f}",
+            f"Signal / Background FL_OFF: {SB_off:.2f}",
+            f"Signal / Background FL_ON:  {SB_on:.2f}",
+            # f"Significance (Sig/#sqrt{{Sig+Bkg}}) FL_OFF: {significance_off:.2f}",
+            # f"Significance (Sig/#sqrt{{Sig+Bkg}}) FL_ON:  {significance_on:.2f}",
+            f"Purity [Sig/(Sig+Bkg)] FL_OFF: {purity_off:.2f}",
+            f"Purity [Sig/(Sig+Bkg)] FL_ON:  {purity_on:.2f}",
         ],
 
         # --- layout tweaks ---
@@ -2146,32 +2296,34 @@ def massPlots_Lambda_flightLength(pdf_path):
     fit_FLoff = make_voigtian_plus_expo2(
     name="fit_lambda_FLoff_voigt_exp",
     xmin=1.08,
-    xmax=1.20,
+    xmax=1.19,
     amp=8.0,
     mean=1.1157,
     sigma=0.003,
     width=0.0029,
     p0=1.0,
-    p1=2.0,
+    p1=1.0,
     p2=0.0,
     )
 
     fit_FLon = make_voigtian_plus_expo2(
     name="fit_lambda_FLon_voigt_exp",
     xmin=1.08,
-    xmax=1.20,
+    xmax=1.19,
     amp=8.0,
     mean=1.1157,
     sigma=0.003,
     width=0.0025,
-    p0=0.0,
-    p1=0.3,
+    p0=1.0,
+    p1=0.01,
     p2=0.0,
     )
 
     hData_FLon.SetFillColor(ROOT.kBlue)
+    hData_FLoff.SetXTitle("M(p #pi^{-}) [GeV/c^{2}]")
+    hData_FLoff.SetYTitle("Counts / 2 MeV")
     hData_FLoff.Draw("pE")
-    # hData_FLon.Draw("hist same")
+    hData_FLon.Draw("hist same")
 
     # Fitting
     fit_FLoff.SetParLimits(2, 0.0001, 0.01)   # sigma
@@ -2187,13 +2339,13 @@ def massPlots_Lambda_flightLength(pdf_path):
     fit_FLon.SetLineWidth(2)
 
     fit_FLoff.Draw("same")
-    # fit_FLon.Draw("same")
+    fit_FLon.Draw("same")
 
-    fit_FLoff_voigt, fit_FLoff_expo2 = make_component_funcs(fit_FLoff, xmin=1.08, xmax=1.20)
-    fit_FLoff_voigt.SetLineColor(ROOT.kBlue)
-    fit_FLoff_expo2.SetLineColor(ROOT.kRed)
-    fit_FLoff_voigt.Draw("same")
-    fit_FLoff_expo2.Draw("same")
+    # fit_FLoff_voigt, fit_FLoff_expo2 = make_component_funcs(fit_FLoff, xmin=1.08, xmax=1.19)
+    # fit_FLoff_voigt.SetLineColor(ROOT.kGreen)
+    # fit_FLoff_expo2.SetLineColor(ROOT.kMagenta)
+    # fit_FLoff_voigt.Draw("same")
+    # fit_FLoff_expo2.Draw("same")
 
     p["plot"].Modified()
     p["plot"].Update()
@@ -2216,11 +2368,11 @@ def massPlots_Lambda_flightLength(pdf_path):
     integral_fit_FLoff_expo2 = fit_integral_background(fit_FLoff, 1.10525, 1.13275, bin_width=bin_width)
 
     # ----- Sig/Bkg ratios flightlength OFF
-    S_off, B_off, SB_off, significance_off = compute_figureOfMerit(
+    S_off, B_off, SB_off, significance_off, purity_off = compute_figureOfMerit(
             fit_FLoff, xmin, xmax, bin_width=bin_width
         )
     # ----- Sig/Bkg ratios flightlength ON
-    S_on, B_on, SB_on, significance_on = compute_figureOfMerit(
+    S_on, B_on, SB_on, significance_on, purity_on = compute_figureOfMerit(
             fit_FLon, xmin, xmax, bin_width=bin_width
         )
 
@@ -2236,8 +2388,10 @@ def massPlots_Lambda_flightLength(pdf_path):
         notes=[
             f"Signal / Background FL_OFF: {SB_off:.2f}",
             f"Signal / Background FL_ON:  {SB_on:.2f}",
-            f"Significance (Sig/#sqrt{{Sig+Bkg}}) FL_OFF: {significance_off:.2f}",
-            f"Significance (Sig/#sqrt{{Sig+Bkg}}) FL_ON:  {significance_on:.2f}",
+            # f"Significance (Sig/#sqrt{{Sig+Bkg}}) FL_OFF: {significance_off:.2f}",
+            # f"Significance (Sig/#sqrt{{Sig+Bkg}}) FL_ON:  {significance_on:.2f}",
+            f"Purity [Sig/(Sig+Bkg)] FL_OFF: {purity_off:.2f}",
+            f"Purity [Sig/(Sig+Bkg)] FL_ON:  {purity_on:.2f}",
         ],
 
         # --- layout tweaks ---
@@ -2273,8 +2427,8 @@ def massPlots_Lambda_flightLength(pdf_path):
         notes_step=0.11,
     )
 
-    # c.Print(pdf_path)
-    c.Print(f"{pdf_path})")
+    c.Print(pdf_path)
+    # c.Print(f"{pdf_path})")
     ROOT.FSHistogram.clearHistogramCache()
 
 
@@ -2822,17 +2976,24 @@ def massPlots_KStar_sidebands(pdf_path):
     p = panels[0]
     p["plot"].cd()
 
-    hData = fs_get_th1(
+    # hData = fs_get_th1(
+    #     FND_eventSelectionSkims,
+    #     f"MASS({DecayingKShort},{PiPlus1})",
+    #     "(50,0.5,2.5)",
+    #     # "CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)"
+    #     "CUT(rejectSigma1385,rf,KShort,Lambda)"
+    # )
+    # hSig = fs_get_th1(
+    #     FND_eventSelectionSkims,
+    #     f"MASS({DecayingKShort},{PiPlus1})",
+    #     "(50,0.5,2.5)",
+    #     f"CUT(unusedE,flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT({sidebandCuts})"
+    # )
+    hSig1 = fs_get_th1(
         FND_eventSelectionSkims,
         f"MASS({DecayingKShort},{PiPlus1})",
         "(50,0.5,2.5)",
-        "CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)"
-    )
-    hSig = fs_get_th1(
-        FND_eventSelectionSkims,
-        f"MASS({DecayingKShort},{PiPlus1})",
-        "(50,0.5,2.5)",
-        f"CUT(unusedE,flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT({sidebandCuts})"
+        f"CUT(rejectSigma1385)*CUTWT({sidebandCuts})"
     )
     hSig2 = fs_get_th1(
         FND_eventSelectionSkims,
@@ -2840,54 +3001,147 @@ def massPlots_KStar_sidebands(pdf_path):
         "(50,0.5,2.5)",
         f"CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT({sidebandCuts})"
     )
-    hBkg = fs_get_th1(
-        FND_eventSelectionSkims,
-        f"MASS({DecayingKShort},{PiPlus1})",
-        "(50,0.5,2.5)",
-        f"CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT({sidebandCuts})"
+    # hBkg = fs_get_th1(
+    #     FND_eventSelectionSkims,
+    #     f"MASS({DecayingKShort},{PiPlus1})",
+    #     "(50,0.5,2.5)",
+    #     f"CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT({sidebandCuts})"
 
-    )
-    hBkgNegative = hBkg.Clone("hBkgNegative")
-    hBkgNegative.Scale(-1.0)
+    # )
+    # hBkgNegative = hBkg.Clone("hBkgNegative")
+    # hBkgNegative.Scale(-1.0)
 
-    hData.SetXTitle("M(K_{S}#pi^{+}) [GeV/c^{2}]")
-    hData.SetYTitle("Counts / 40 MeV")
-    hData.SetMinimum(-1.2 * abs(hBkgNegative.GetMinimum()))
+    hSig1.SetXTitle("M(K_{S}#pi^{+}) [GeV/c^{2}]")
+    hSig1.SetYTitle("Counts / 40 MeV")
+    # hData.SetMinimum(-1.2 * abs(hBkgNegative.GetMinimum()))
 
-    hSig.SetLineColor(ROOT.kBlack)
-    hSig.SetFillColor(ROOT.kBlue)
+    # hSig.SetLineColor(ROOT.kBlack)
+    # hSig.SetFillColor(ROOT.kBlue)
+    hSig1.SetLineColor(ROOT.kBlack)
+    hSig1.SetFillColor(ROOT.kGreen)
     hSig2.SetLineColor(ROOT.kBlack)
     hSig2.SetFillColor(ROOT.kMagenta)
-    hBkgNegative.SetLineColor(ROOT.kBlack)
-    hBkgNegative.SetFillColor(ROOT.kRed)
+    # hBkgNegative.SetLineColor(ROOT.kBlack)
+    # hBkgNegative.SetFillColor(ROOT.kRed)
 
 
-    hData.Draw("pE")
-    hSig2.Draw("hist same")
-    hSig.Draw("hist same")
-    hBkgNegative.Draw("hist same")
+    # hData.Draw("pE")
+    hSig1.Draw("hist")
+    # hSig2.Draw("hist same")
+    # hSig.Draw("hist same")
+    # hBkgNegative.Draw("hist same")
 
-    draw_vertical_lines(hData, [0.8, 1.0], color=ROOT.kRed)
-
-
-    integral_kStar = integral_between(hData, 0.8, 1.0)
-    integral_kStarSig = integral_between(hSig, 0.8, 1.0)
+    # integral_kStar = integral_between(hData, 0.8, 1.0)
+    # integral_kStarSig = integral_between(hSig, 0.8, 1.0)
+    integral_kStarSig1 = integral_between(hSig1, 0.8, 1.0)
     integral_kStarSig2 = integral_between(hSig2, 0.8, 1.0)
-    integral_kStarBkg = integral_between(hBkg, 0.8, 1.0)
+    # integral_kStarBkg = integral_between(hBkg, 0.8, 1.0)
+
+    # ----- Fitting
+    fit_kstar = make_two_voigtians_plus_bernstein(
+        name="fit_kstar_2voigt_bern",
+        xmin=0.6,
+        xmax=2.5,
+        bern_degree=3,
+        # K*(892)
+        amp1=500.0, mean1=0.892, sigma1=0.003, width1=0.050,
+        # K*(1430)
+        amp2=200.0, mean2=1.43,  sigma2=0.003, width2=0.100,
+        coeffs=[100.0, 100.0, 100.0, 100.0],
+    )
+    # Keep sigma physically small, let width carry the Lorentzian broadening
+    fit_kstar.SetParLimits(2, 0.0001, 0.02)   # voigt1 sigma
+    fit_kstar.SetParLimits(3, 0.010,  0.150)  # voigt1 width
+    fit_kstar.SetParLimits(6, 0.0001, 0.02)   # voigt2 sigma
+    fit_kstar.SetParLimits(7, 0.050,  0.300)  # voigt2 width
+    # Bernstein coeffs must stay positive to be well-behaved
+    for i in range(4):
+        fit_kstar.SetParLimits(8 + i, 0.0, 1e6)
+
+    hSig1.Fit(fit_kstar, "R0")
+    fit_kstar.SetLineColor(ROOT.kBlack)
+    fit_kstar.SetLineWidth(2)
+    fit_kstar.Draw("same")
+
+
+    # fit_hist1 = make_voigtian_plus_expo2(
+    # name="fit_kStar_voigt_exp",
+    # xmin=0.6,
+    # xmax=1.2,
+    # amp=4.0,
+    # mean=0.892,
+    # sigma=0.03,
+    # width=0.9,
+    # p0=1.0,
+    # p1=1.0,
+    # p2=1.0,
+    # )
+    # fit_hist1.SetParLimits(2, 0.0001, 0.01)   # sigma
+    # fit_hist1.SetParLimits(3, 0.0001, 0.01)   # width
+    # hSig1.Fit(fit_hist1, "R0")
+    # fit_hist1.SetLineColor(ROOT.kBlack)
+    # fit_hist1.SetLineWidth(2)
+    # fit_hist1.Draw("same")
+
+    # fit_hist2 = make_voigtian_plus_expo2(
+    # name="fit_kStar_voigt_exp",
+    # xmin=0.6,
+    # xmax=1.2,
+    # amp=8.0,
+    # mean=0.892,
+    # sigma=0.003,
+    # width=0.0029,
+    # p0=1.0,
+    # p1=1.0,
+    # p2=0.0,
+    # )
+    # fit_hist2.SetParLimits(2, 0.0001, 0.01)   # sigma
+    # fit_hist2.SetParLimits(3, 0.0001, 0.01)   # width
+    # hSig2.Fit(fit_hist2, "R0")
+    # fit_hist2.SetLineColor(ROOT.kBlue)
+    # fit_hist2.SetLineWidth(2)
+    # fit_hist2.Draw("same")
+
+    p["plot"].Modified()
+    p["plot"].Update()
+
+
+   # ----- Integration limits for signal and background functions
+    # xmin, xmax = 0.80, 1.00
+    # bin_width = hSig1.GetXaxis().GetBinWidth(1)
+
+    #     # ----- Sig/Bkg ratios flightlength OFF
+    # S_off, B_off, SB_off, significance_off, purity_off = compute_figureOfMerit(
+    #         fit_hist1, xmin, xmax, bin_width=bin_width
+    #     )
+    # # ----- Sig/Bkg ratios flightlength ON
+    # S_on, B_on, SB_on, significance_on, purity_on = compute_figureOfMerit(
+    #         fit_hist2, xmin, xmax, bin_width=bin_width
+    #     )
+
+    xmin, xmax = 0.80, 1.00
+    bin_width = hSig1.GetXaxis().GetBinWidth(1)
+
+    S1, S2, S, B, SB, significance, purity = compute_figureOfMerit_kstar(
+        fit_kstar, xmin, xmax, bin_width=bin_width, bern_degree=3
+    )
+
+    # draw_vertical_lines(hSig1, [0.8, 1.0], color=ROOT.kRed)
 
     draw_info_pad(
         p["info_main"],
         file_label(FND_eventSelectionSkims),
         legend_items=[
-            (hData, "K* " "(Integral: " f"{integral_kStar:.0f})", "pE"),
-            (hSig, "K* Sig " "(Integral: " f"{integral_kStarSig:.0f})", "f"),
-            (hSig2, "K* Sig (w/o unusd shwr cut) " "(Int: " f"{integral_kStarSig2:.0f})", "f"),
-            (hBkgNegative, "K* background " "(Integral: " f"{integral_kStarBkg:.0f})", "f"),
+            (hSig1, "M(Ks #pi^{+}) Sig1 (no FL cuts) "  f"(Int: {integral_kStarSig1:.0f})", "f"),
+            (hSig2, "M(Ks #pi^{+}) Sig2 (with FL cuts) " f"(Int: {integral_kStarSig2:.0f})", "f"),
+            (fit_kstar, "2 Voigt + Bernstein fit", "l"),
         ],
         notes=[
-            "kStar sideband subtraction study",
-            "Selecting K*(892) mass region from",
-            "M(Ks #pi^{+}) = (0.8, 1.0) GeV/c^{2}",
+            "Integrals: M(Ks #pi^{+}) = (0.8, 1.0) GeV/c^{2}",
+            f"K*(892) yield:  {S1:.0f},  K*(1430) yield: {S2:.0f}",
+            f"Signal / Background: {SB:.2f}",
+            f"Purity [Sig/(Sig+Bkg)]: {purity:.2f}",
+            f"Significance: {significance:.1f}",
         ],
 
         # middle pad tweaks
@@ -2897,22 +3151,22 @@ def massPlots_KStar_sidebands(pdf_path):
         label_pos=(0.06, 0.90),
         label_size=0.10,
 
-        notes_start_y=0.62,
+        notes_start_y=0.78,
         notes_text_size=0.12,
-        notes_step=0.11,
+        notes_step=0.15,
     )
     draw_notes_pad(
         p["info_notes"],
         title="Cuts used",
         notes=[
             (0.08, "Global cuts: CUT(tRange110,chi2DOF,unusedTracks,coherentPeak,targetZ)"),
-            (0.08, "Data: CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)"),
-            (0.08, "Signal: CUT(unusedE,flightLengthKShort,flightLengthLambda,rejectSigma1385)"),
+            # (0.08, "Data: CUTrejectSigma1385,rf,KShort,Lambda)"),
+            # (0.08, f"Signal: CUT(unusedE,flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT({sidebandCuts})"),
+            (0.08, f"Sig1: CUT(rejectSigma1385)*CUTWT({sidebandCuts})"),
+            (0.08, "Sig2: CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)"),
             (0.10, f"*CUTWT({sidebandCuts})"),
-            (0.08, "Signal w/o unusd shwr: CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)"),
-            (0.10, f"*CUTWT({sidebandCuts})"),
-            (0.08, "Background: CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)"),
-            (0.10, f"*CUTSBWT({sidebandCuts})"),
+            # (0.08, "Background: CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)"),
+            # (0.10, f"*CUTSBWT({sidebandCuts})"),
         ],
 
         # bottom pad tweaks
@@ -2924,8 +3178,8 @@ def massPlots_KStar_sidebands(pdf_path):
         notes_step=0.09,
     )
 
-    # c.Print(pdf_path)
-    c.Print(f"{pdf_path})")
+    c.Print(pdf_path)
+    # c.Print(f"{pdf_path})")
 
 def missingMassPlots_KStar_sidebands(pdf_path):
     c = ROOT.TCanvas("c_mm_kstar_sidebands", "c_mm_kstar_sidebands", 1000, 1300)
@@ -3724,18 +3978,18 @@ def main():
     # deltaTPlots_KShort_vs_PiPlus(allPlots)
     # deltaTPrimePlots_KShort_vs_PiPlus(allPlots)
     # massPlots_KShort_cutComparisons(allPlots)
-    massPlots_KShort_flightLength(allPlots)
+    # massPlots_KShort_flightLength(allPlots)
     # massPlots_KShort_sideBands(allPlots)
     # massPlots_KShort_missingMass(allPlots)
     # massPlots_KShort_FINAL_SELECTION(allPlots)
-    massPlots_Lambda_flightLength(allPlots)
+    # massPlots_Lambda_flightLength(allPlots)
     # massPlots_Lambda_sideBands(allPlots)
     # massPlots_Lambda_missingMass(allPlots)
     # massPlots_Lambda_FINAL_SELECTION(allPlots)
     # deltaMassPlots_KShort(allPlots)
     # deltaMassPlots_Lambda(allPlots)
     # massPlots_lambdaPiBackground(allPlots)
-    # massPlots_KStar_sidebands(allPlots)
+    massPlots_KStar_sidebands(allPlots)
     # missingMassPlots_KStar_sidebands(allPlots)
     # massPlots_KStar_Signal_DATA_and_MC(allPlots)
     # massPlots_KStar_FIT_RESULTS(allPlots)
