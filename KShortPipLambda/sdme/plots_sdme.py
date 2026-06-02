@@ -10,8 +10,11 @@ atiSetup.setup(globals(), use_fsroot=True)
 # -----------------------------
 # Files / globals
 # -----------------------------
-t_bin = "#bf{-t = (0.1 - 1.0) GeV^{2}}" # t_bin label for plots.  MUST match the t_bin used to create the ROOT file.
-FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/032926_t110_fit1/KsPipLamb_ALL.root"
+t_bin = "#bf{-t = (0.3 - 0.8) GeV^{2}}" # t_bin label for plots.  MUST match the t_bin used to create the ROOT file.
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/032926_t110_fit1/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/042826_t110_fit1/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/20260529_t38_fit0_v3/KsPipLamb_ALL.root"
+FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/20260601_t38_fit0_v0/KsPipLamb_ALL.root"
 allPlots = "plots/sdme_plots.pdf"
 
 NT = "ntFSGlueX_MODECODE"
@@ -80,6 +83,13 @@ def get_hist_or_raise(root_file, name):
     h.SetDirectory(0)
     return h
 
+# DON'T USE THIS.  ADD THE HISTOGRAMS IN EACH INDIVIDUAL PLOT.
+# used in 'load_histograms' (below)
+# def _sum_hists(root_file, name1, name2):
+#     h1 = get_hist_or_raise(root_file, name1)
+#     h2 = get_hist_or_raise(root_file, name2)
+#     h1.Add(h2)
+#     return h1
 
 def load_histograms(filename):
     f = ROOT.TFile.Open(filename)
@@ -89,23 +99,27 @@ def load_histograms(filename):
     hist = {
         "cosThetadat":      get_hist_or_raise(f, "cosThetadat"),
         "cosThetaacc_sdme": get_hist_or_raise(f, "cosThetaacc_sdme"),
-        "cosThetabkg_sdme": get_hist_or_raise(f, "cosThetabkg_sdme"),
         "cosThetagen_sdme": get_hist_or_raise(f, "cosThetagen_sdme"),
+        "cosThetabkg_sdme": get_hist_or_raise(f, "cosThetabkg_sdme"),
+        "cosThetaacc_bernBkg": get_hist_or_raise(f, "cosThetaacc_bernBkg"),
 
         "phidat":      get_hist_or_raise(f, "phidat"),
         "phiacc_sdme": get_hist_or_raise(f, "phiacc_sdme"),
-        "phibkg_sdme": get_hist_or_raise(f, "phibkg_sdme"),
         "phigen_sdme": get_hist_or_raise(f, "phigen_sdme"),
+        "phibkg_sdme": get_hist_or_raise(f, "phibkg_sdme"),
+        "phiacc_bernBkg": get_hist_or_raise(f, "phiacc_bernBkg"),
 
         "Phidat":      get_hist_or_raise(f, "Phidat"),
         "Phiacc_sdme": get_hist_or_raise(f, "Phiacc_sdme"),
-        "Phibkg_sdme": get_hist_or_raise(f, "Phibkg_sdme"),
         "Phigen_sdme": get_hist_or_raise(f, "Phigen_sdme"),
+        "Phibkg_sdme": get_hist_or_raise(f, "Phibkg_sdme"),
+        "Phiacc_bernBkg": get_hist_or_raise(f, "Phiacc_bernBkg"),
 
         "psidat":      get_hist_or_raise(f, "psidat"),
         "psiacc_sdme": get_hist_or_raise(f, "psiacc_sdme"),
-        "psibkg_sdme": get_hist_or_raise(f, "psibkg_sdme"),
         "psigen_sdme": get_hist_or_raise(f, "psigen_sdme"),
+        "psibkg_sdme": get_hist_or_raise(f, "psibkg_sdme"),
+        "psiacc_bernBkg": get_hist_or_raise(f, "psiacc_bernBkg"),
     }
 
     f.Close()
@@ -256,61 +270,137 @@ def style_data_mc_overlay(h_data, h_sum, h_bkg):
     h_bkg.SetFillColorAlpha(ROOT.kRed - 4, 0.60)
     h_bkg.SetFillStyle(1001)
 
+def make_efficiency_corrected(h_data, h_acc, h_gen, name):
+    """
+    Divide data by (acc/gen) bin-by-bin.
+    Bins where gen == 0 are set to 0.
+    """
+    h_eff = h_acc.Clone(f"h_eff_{name}")
+    h_eff.Divide(h_gen)  # eff = acc / gen, bin-by-bin
 
-# -----------------------------
-# cosTheta plots
-# -----------------------------
+    h_corr = h_data.Clone(f"h_corr_{name}")
+    for i in range(1, h_corr.GetNbinsX() + 1):
+        eff_val = h_eff.GetBinContent(i)
+        if eff_val > 0:
+            h_corr.SetBinContent(i, h_data.GetBinContent(i) / eff_val)
+            # Error propagation: δ(data/eff) ≈ sqrt(data)/eff  (stat. only)
+            h_corr.SetBinError(i, h_data.GetBinError(i) / eff_val)
+        else:
+            h_corr.SetBinContent(i, 0)
+            h_corr.SetBinError(i, 0)
+    return h_corr
+
+
+
 def cosTheta_plots(hist, pdf_path):
-    cosThetadat      = hist["cosThetadat"]
-    cosThetaacc_sdme = hist["cosThetaacc_sdme"]
-    cosThetabkg_sdme = hist["cosThetabkg_sdme"]
-    cosThetagen_sdme = hist["cosThetagen_sdme"]
+    cosThetadat         = hist["cosThetadat"]
+    cosThetaacc_sdme    = hist["cosThetaacc_sdme"]
+    cosThetabkg_sdme    = hist["cosThetabkg_sdme"]
+    cosThetagen_sdme    = hist["cosThetagen_sdme"]
+    cosThetaacc_bernBkg = hist["cosThetaacc_bernBkg"]
 
     # -----------------------------
     # CosineTheta of Ks in helicity frame
     # -----------------------------
     c1, pad_plot, pad_info = make_canvas_with_bottompad("c1_cosTheta", info_frac=0.22)
-
     pad_plot.cd()
 
-    h_data = cosThetadat.Clone("h_data_cos")
-    h_acc  = cosThetaacc_sdme.Clone("h_acc_cos")
-    h_bkg  = cosThetabkg_sdme.Clone("h_bkg_cos")
-    h_sum  = h_acc.Clone("h_sum_cos")
-    h_sum.Add(h_bkg)
+    h_data       = cosThetadat.Clone("h_data_cos")
+    h_acc        = cosThetaacc_sdme.Clone("h_acc_cos")
+    h_accidental = cosThetabkg_sdme.Clone("h_accidental_cos")
+    h_bern       = cosThetaacc_bernBkg.Clone("h_bern_cos")
 
+    # Layer 1 (bottom): accidental sidebands only
+    h_accidental.SetLineColor(ROOT.kRed - 3)
+    h_accidental.SetFillColorAlpha(ROOT.kRed - 4, 0.60)
+    h_accidental.SetFillStyle(1001)
+
+    # Layer 2 (middle): accidental + bernstein
+    h_bkg_total = h_accidental.Clone("h_bkg_total_cos")
+    h_bkg_total.Add(h_bern)
+    h_bkg_total.SetLineColor(ROOT.kBlue - 3)
+    h_bkg_total.SetFillColorAlpha(ROOT.kBlue, 0.30)
+    h_bkg_total.SetFillStyle(1001)
+
+    # Layer 3 (top): accidental + bernstein + signal MC
+    h_total = h_bkg_total.Clone("h_total_cos")
+    h_total.Add(h_acc)
+    h_total.SetLineColor(ROOT.kGreen - 6)
+    h_total.SetFillColorAlpha(ROOT.kGreen - 2, 0.50)
+    h_total.SetFillStyle(1001)
+
+    h_data.SetLineColor(ROOT.kBlack)
+    h_data.SetLineWidth(2)
+    h_data.SetMinimum(0)
     h_data.SetTitle("")
     h_data.SetXTitle("cos#theta_{K_{S}} (Helicity frame)")
     h_data.SetYTitle("Candidates / 0.01")
+    # h_data.GetYaxis().SetMaxDigits(1)
 
-    style_data_mc_overlay(h_data, h_sum, h_bkg)
-
+    # Draw largest first so smaller layers appear on top
     h_data.Draw()
-    h_sum.Draw("hist same")
-    h_bkg.Draw("hist same")
+    h_total.Draw("hist same")
+    h_bkg_total.Draw("hist same")
+    h_accidental.Draw("hist same")
 
-    # integrals to display in info pad
-    data_int = integral_between(h_data, -1.0, 0.5)
-    acc_int  = integral_between(h_acc, -1.0, 0.5)
-    bkg_int  = integral_between(h_bkg, -1.0, 0.5)
+    data_int = integral_between(h_data, -1.0, 1.0)
+    acc_int  = integral_between(h_acc,  -1.0, 1.0)
+    bkg_int  = integral_between(h_bkg_total, -1.0, 1.0)
 
     draw_bottom_info_pad(
         pad_info,
         label_text="Not acceptance-corrected",
         legend_items=[
-            (h_data, "data", "l"),
-            (h_sum,  "accmc + bkg", "f"),
-            (h_bkg,  "bkgnd", "f"),
+            (h_data,       "data",                   "l"),
+            (h_total,      "accmc + bkg",             "f"),
+            (h_bkg_total,  "accidental + poly",  "f"),
+            (h_accidental, "accidental only",     "f"),
         ],
         notes=[
             f"{t_bin}",
             "Fit all Polarizations (0, 45, 90, 135)",
-            f"Data int: {data_int:.0f} = acc+bkg = {(acc_int + bkg_int):.0f}",
+            f"Data int: {data_int:.0f}  acc+bkg: {(acc_int + bkg_int):.0f}",
             "#bf{DATA:} sp18, fa18, sp20. #bf{MC:} sp18, fa18.",
         ],
     )
 
-    open_pdf(c1, pdf_path)
+    open_pdf(c1, pdf_path)        # ← FIRST: opens the PDF with c1
+
+    # --- Efficiency-corrected data ---
+    c4, pad_plot, pad_info = make_canvas_with_bottompad("c4_cosTheta_corrected", info_frac=0.22)
+    pad_plot.cd()
+
+    # Subtract both background components from data first
+    h_data_bkgsub = h_data.Clone("h_data_bkgsub_cos")
+    h_data_bkgsub.Add(h_accidental, -1)
+    h_data_bkgsub.Add(h_bern, -1)
+
+    h_corr = make_efficiency_corrected(
+        h_data_bkgsub, cosThetaacc_sdme, cosThetagen_sdme, "cosTheta"
+    )
+    h_corr.SetTitle("")
+    h_corr.SetXTitle("cos#theta_{K_{S}} (Helicity frame)")
+    h_corr.SetYTitle("Candidates / 0.01")
+    h_corr.GetYaxis().SetMaxDigits(3)
+    h_corr.SetLineColor(ROOT.kBlack)
+    h_corr.SetLineWidth(2)
+    h_corr.Draw("E")
+
+    draw_bottom_info_pad(
+        pad_info,
+        label_text="Efficiency-corrected data",
+        legend_items=[
+            (h_corr, "data", "l"),
+        ],
+        notes=[
+            f"{t_bin}",
+            "(data - bkg) / (accmc / genmc)",
+            f"Integral: {h_corr.Integral():.0f}",
+            f"Bkg subtracted: {integral_between(h_bkg_total,-1.,1.):.0f}",
+        ],
+    )
+    keep(c4)
+    add_pdf_page(c4, pdf_path)    # ← SECOND: adds corrected plot as next page
 
     # -----------------------------
     # CosTheta EFFICIENCY
@@ -335,7 +425,7 @@ def cosTheta_plots(hist, pdf_path):
         if graph:
             graph.GetXaxis().SetTitle("cos#theta_{K_{S}} (Helicity frame)")
             graph.GetYaxis().SetTitle("Efficiency (accmc / genmc)")
-            graph.GetYaxis().SetRangeUser(0.0, 0.1)
+            graph.GetYaxis().SetRangeUser(0.04, 0.06)
             graph.GetYaxis().SetTitleSize(0.055)
             graph.GetYaxis().SetTitleOffset(1.15)
             graph.GetXaxis().SetTitleSize(0.055)
@@ -354,7 +444,7 @@ def cosTheta_plots(hist, pdf_path):
 
     draw_bottom_info_pad(
         pad_info,
-        label_text="Efficiency (fitted trees)",
+        label_text="Efficiency",
         legend_items=legend_items,
         notes=notes,
     )
@@ -364,101 +454,156 @@ def cosTheta_plots(hist, pdf_path):
     # -----------------------------
     # DIAGNOSTIC PLOT: accmc / efficiency = genmc
     # -----------------------------
-    c3, pad_plot, pad_info = make_canvas_with_bottompad("c3_cosTheta_diag", info_frac=0.22)
-    pad_plot.cd()
+    # c3, pad_plot, pad_info = make_canvas_with_bottompad("c3_cosTheta_diag", info_frac=0.22)
+    # pad_plot.cd()
 
-    h_eff = cosThetaacc_sdme.Clone("h_eff_cos")
-    h_eff.Divide(cosThetagen_sdme)
+    # h_eff = cosThetaacc_sdme.Clone("h_eff_cos")
+    # h_eff.Divide(cosThetagen_sdme)
 
-    h_diag = cosThetaacc_sdme.Clone("h_diag_cos")
-    h_diag.Divide(h_eff)
-    h_diag.SetTitle("")
-    h_diag.SetXTitle("cos#theta_{K_{S}} (Helicity frame)")
-    h_diag.SetYTitle("Count")
-    h_diag.SetLineColor(ROOT.kBlue + 1)
-    h_diag.SetLineWidth(2)
-    h_diag.GetXaxis().SetNdivisions(4, 0, 0, True)
-    h_diag.GetYaxis().SetRangeUser(1100, 2000)
-    h_diag.GetYaxis().SetTitleOffset(1.21)
-    h_diag.GetYaxis().SetMaxDigits(3)
-    h_diag.Draw()
+    # h_diag = cosThetaacc_sdme.Clone("h_diag_cos")
+    # h_diag.Divide(h_eff)
+    # h_diag.SetTitle("")
+    # h_diag.SetXTitle("cos#theta_{K_{S}} (Helicity frame)")
+    # h_diag.SetYTitle("Count")
+    # h_diag.SetLineColor(ROOT.kBlue + 1)
+    # h_diag.SetLineWidth(2)
+    # h_diag.GetXaxis().SetNdivisions(4, 0, 0, True)
+    # h_diag.GetYaxis().SetRangeUser(1100, 2000)
+    # h_diag.GetYaxis().SetTitleOffset(1.21)
+    # h_diag.GetYaxis().SetMaxDigits(3)
+    # h_diag.Draw()
 
-    h_gen = cosThetagen_sdme.Clone("h_gen_cos")
-    h_gen.SetTitle("")
-    h_gen.SetXTitle("cos#theta_{K_{S}} (Helicity frame)")
-    # h_gen.SetYTitle("Generated MC")
-    h_gen.SetLineColor(ROOT.kGreen - 6)
-    h_gen.SetFillColorAlpha(ROOT.kGreen - 2, 0.60)
-    h_gen.SetFillStyle(1001)
-    h_gen.SetLineWidth(2)
-    h_gen.GetYaxis().SetRangeUser(1100, 2000)
-    h_gen.GetYaxis().SetTitleOffset(1.21)
-    h_gen.GetYaxis().SetMaxDigits(3)
-    h_gen.Draw("hist same")
+    # h_gen = cosThetagen_sdme.Clone("h_gen_cos")
+    # h_gen.SetTitle("")
+    # h_gen.SetXTitle("cos#theta_{K_{S}} (Helicity frame)")
+    # # h_gen.SetYTitle("Generated MC")
+    # h_gen.SetLineColor(ROOT.kGreen - 6)
+    # h_gen.SetFillColorAlpha(ROOT.kGreen - 2, 0.60)
+    # h_gen.SetFillStyle(1001)
+    # h_gen.SetLineWidth(2)
+    # h_gen.GetYaxis().SetRangeUser(1100, 2000)
+    # h_gen.GetYaxis().SetTitleOffset(1.21)
+    # h_gen.GetYaxis().SetMaxDigits(3)
+    # h_gen.Draw("hist same")
 
-    draw_bottom_info_pad(
-        pad_info,
-        label_text="Diagnostic plot (fitted trees)",
-        legend_items=[
-            (h_diag, "accmc / efficiency", "l"),
-            (h_gen, "genmc", "f"),
-        ],
-        notes=[
-            "",
-            f"Integral acc / eff: {integral_between(h_diag, -1.0, 0.5):.0f}",
-            f"Integral genmc: {integral_between(h_gen, -1.0, 0.5):.0f}",
-            "#theta = (-1, 0.5)",
-        ],
-    )
+    # draw_bottom_info_pad(
+    #     pad_info,
+    #     label_text="Diagnostic plot (fitted trees)",
+    #     legend_items=[
+    #         (h_diag, "accmc / efficiency", "l"),
+    #         (h_gen, "genmc", "f"),
+    #     ],
+    #     notes=[
+    #         "",
+    #         f"Integral acc / eff: {integral_between(h_diag, -1.0, 0.5):.0f}",
+    #         f"Integral genmc: {integral_between(h_gen, -1.0, 0.5):.0f}",
+    #         "#theta = (-1, 0.5)",
+    #     ],
+    # )
 
-    add_pdf_page(c3, pdf_path)
+    # add_pdf_page(c3, pdf_path)
 
-# -----------------------------
-# Azimuthal angle of Ks in helicity frame
-# -----------------------------
 def phi_plots(hist, pdf_path):
-    phidat      = hist["phidat"]
-    phiacc_sdme = hist["phiacc_sdme"]
-    phibkg_sdme = hist["phibkg_sdme"]
-    phigen_sdme = hist["phigen_sdme"]
+    phidat          = hist["phidat"]
+    phiacc_sdme     = hist["phiacc_sdme"]
+    phibkg_sdme     = hist["phibkg_sdme"]
+    phigen_sdme     = hist["phigen_sdme"]
+    phiacc_bernBkg  = hist["phiacc_bernBkg"]
 
     c1, pad_plot, pad_info = make_canvas_with_bottompad("c_phi", info_frac=0.22)
-
     pad_plot.cd()
 
-    h_data = phidat.Clone("h_phi_data")
-    h_acc  = phiacc_sdme.Clone("h_phi_acc")
-    h_bkg  = phibkg_sdme.Clone("h_phi_bkg")
-    h_sum  = h_acc.Clone("h_phi_sum")
-    h_sum.Add(h_bkg)
+    h_data       = phidat.Clone("h_phi_data")
+    h_acc        = phiacc_sdme.Clone("h_phi_acc")
+    h_accidental = phibkg_sdme.Clone("h_phi_accidental")
+    h_bern       = phiacc_bernBkg.Clone("h_phi_bern")
 
+    # Layer 1 (bottom): accidental sidebands only
+    h_accidental.SetLineColor(ROOT.kRed - 3)
+    h_accidental.SetFillColorAlpha(ROOT.kRed - 4, 0.60)
+    h_accidental.SetFillStyle(1001)
+
+    # Layer 2 (middle): accidental + bernstein
+    h_bkg_total = h_accidental.Clone("h_phi_bkg_total")
+    h_bkg_total.Add(h_bern)
+    h_bkg_total.SetLineColor(ROOT.kBlue - 3)
+    h_bkg_total.SetFillColorAlpha(ROOT.kBlue, 0.30)
+    h_bkg_total.SetFillStyle(1001)
+
+    # Layer 3 (top): accidental + bernstein + signal MC
+    h_total = h_bkg_total.Clone("h_phi_total")
+    h_total.Add(h_acc)
+    h_total.SetLineColor(ROOT.kGreen - 6)
+    h_total.SetFillColorAlpha(ROOT.kGreen - 2, 0.50)
+    h_total.SetFillStyle(1001)
+
+    h_data.SetLineColor(ROOT.kBlack)
+    h_data.SetLineWidth(2)
+    h_data.SetMinimum(0)
     h_data.SetTitle("")
-    h_data.SetXTitle("#phi (rad) (Helicity frame)")
+    h_data.SetXTitle("#phi_{K_{s}} (rad) (Helicity frame)")
     h_data.SetYTitle("Candidates / 0.035")
-
-    style_data_mc_overlay(h_data, h_sum, h_bkg)
+    # h_data.GetYaxis().SetMaxDigits(1)
 
     h_data.Draw()
-    h_sum.Draw("hist same")
-    h_bkg.Draw("hist same")
+    h_total.Draw("hist same")
+    h_bkg_total.Draw("hist same")
+    h_accidental.Draw("hist same")
 
     draw_bottom_info_pad(
         pad_info,
-        label_text="Azmuthal angle of Ks",
+        label_text="Azimuthal angle of Ks",
         legend_items=[
-            (h_data, "data", "l"),
-            (h_sum,  "accmc + bkg", "f"),
-            (h_bkg,  "bkgnd", "f"),
+            (h_data,       "data",                  "l"),
+            (h_total,      "accmc + bkg",            "f"),
+            (h_bkg_total,  "accidental + bernstein", "f"),
+            (h_accidental, "accidental sideband",    "f"),
         ],
         notes=[
+            f"{t_bin}",
             f"Data int: {h_data.Integral():.0f}",
             f"Acc int: {h_acc.Integral():.0f}",
-            f"Bkg int: {h_bkg.Integral():.0f}",
+            f"Bkg int: {h_bkg_total.Integral():.0f}",
         ],
     )
 
     open_pdf(c1, pdf_path)
 
+    # -----------------------------
+    # Efficiency-corrected phi (background subtracted)
+    # -----------------------------
+    c_phi_corr, pad_plot, pad_info = make_canvas_with_bottompad("c_phi_corrected", info_frac=0.22)
+    pad_plot.cd()
+
+    h_data_bkgsub = h_data.Clone("h_phi_data_bkgsub")
+    h_data_bkgsub.Add(h_accidental, -1)
+    h_data_bkgsub.Add(h_bern, -1)
+
+    h_corr = make_efficiency_corrected(h_data_bkgsub, phiacc_sdme, phigen_sdme, "phi")
+
+    h_corr.SetTitle("")
+    h_corr.SetXTitle("#phi_{K_{s}} (rad) (Helicity frame)")
+    h_corr.SetYTitle("Candidates / 0.035")
+    h_corr.GetYaxis().SetMaxDigits(3)
+    h_corr.SetLineColor(ROOT.kBlack)
+    h_corr.SetLineWidth(2)
+    h_corr.Draw("E")
+
+    draw_bottom_info_pad(
+        pad_info,
+        label_text="Efficiency-corrected",
+        legend_items=[
+            (h_corr, "data", "l"),
+        ],
+        notes=[
+            f"{t_bin}",
+            "(data - bkg) / (accmc / genmc)",
+            f"Integral: {h_corr.Integral():.0f}",
+            f"Bkg subtracted: {h_bkg_total.Integral():.0f}",
+        ],
+    )
+    keep(c_phi_corr)
+    add_pdf_page(c_phi_corr, pdf_path)
 
     # -----------------------------
     # Azimuthal EFFICIENCY
@@ -469,9 +614,8 @@ def phi_plots(hist, pdf_path):
     legend_items = []
     notes = []
 
-    # integrals to display in info pad
     acc_int = integral_between(phiacc_sdme, -1.0, 0.5)
-    gen_int  = integral_between(phigen_sdme, -1.0, 0.5)
+    gen_int = integral_between(phigen_sdme, -1.0, 0.5)
 
     if ROOT.TEfficiency.CheckConsistency(phiacc_sdme, phigen_sdme):
         eff = ROOT.TEfficiency(phiacc_sdme, phigen_sdme)
@@ -483,7 +627,7 @@ def phi_plots(hist, pdf_path):
         if graph:
             graph.GetXaxis().SetTitle("#phi_{K_{S}} (Helicity frame)")
             graph.GetYaxis().SetTitle("Efficiency (accmc / genmc)")
-            graph.GetYaxis().SetRangeUser(0.0, 0.1)
+            # graph.GetYaxis().SetRangeUser(0.1, 0.9)
             graph.GetYaxis().SetTitleSize(0.055)
             graph.GetYaxis().SetTitleOffset(1.15)
             graph.GetXaxis().SetTitleSize(0.055)
@@ -502,58 +646,153 @@ def phi_plots(hist, pdf_path):
 
     draw_bottom_info_pad(
         pad_info,
-        label_text="Efficiency (fitted trees)",
+        label_text="Efficiency",
         legend_items=legend_items,
         notes=notes,
     )
 
     add_pdf_page(c2, pdf_path)
 
-# -----------------------------
-# Polarization angle of Ks in helicity frame
-# -----------------------------
+    # # -----------------------------
+    # # Efficiency-corrected phi overlay
+    # # -----------------------------
+    # c_phi_corr, pad_plot, pad_info = make_canvas_with_bottompad("c_phi_corrected", info_frac=0.22)
+    # pad_plot.cd()
+
+    # # Efficiency-correct each bin
+    # h_corr_data = make_efficiency_corrected(phidat,      phiacc_sdme, phigen_sdme, "phi_data")
+    # h_corr_acc  = make_efficiency_corrected(phiacc_sdme, phiacc_sdme, phigen_sdme, "phi_acc")
+    # h_corr_bkg  = make_efficiency_corrected(phibkg_sdme, phiacc_sdme, phigen_sdme, "phi_bkg")
+    # h_corr_sum  = h_corr_acc.Clone("h_phi_corr_sum")
+    # h_corr_sum.Add(h_corr_bkg)
+
+    # h_corr_data.SetTitle("")
+    # h_corr_data.SetXTitle("#phi (rad) (Helicity frame)")
+    # h_corr_data.SetYTitle("Candidates / 0.035")
+    # h_corr_data.GetYaxis().SetMaxDigits(1)
+
+    # style_data_mc_overlay(h_corr_data, h_corr_sum, h_corr_bkg)
+
+    # h_corr_data.Draw("E")
+    # # h_corr_sum.Draw("hist same")
+    # # h_corr_bkg.Draw("hist same")
+
+    # draw_bottom_info_pad(
+    #     pad_info,
+    #     label_text="Efficiency-corrected azimuthal angle",
+    #     legend_items=[
+    #         (h_corr_data, "data", "l"),
+    #         (h_corr_sum,  "accmc + bkg", "f"),
+    #         (h_corr_bkg,  "bkgnd", "f"),
+    #     ],
+    #     notes=[
+    #         f"{t_bin}",
+    #         "Each bin divided by (accmc / genmc)",
+    #         f"Data int: {h_corr_data.Integral():.0f}",
+    #         f"Acc int: {h_corr_acc.Integral():.0f}  Bkg int: {h_corr_bkg.Integral():.0f}",
+    #     ],
+    # )
+    # keep(c_phi_corr)
+    # add_pdf_page(c_phi_corr, pdf_path)
+
 def bigPhi_plots(hist, pdf_path):
-    Phidat      = hist["Phidat"]
-    Phiacc_sdme = hist["Phiacc_sdme"]
-    Phibkg_sdme = hist["Phibkg_sdme"]
-    Phigen_sdme = hist["Phigen_sdme"]
+    Phidat          = hist["Phidat"]
+    Phiacc_sdme     = hist["Phiacc_sdme"]
+    Phibkg_sdme     = hist["Phibkg_sdme"]
+    Phigen_sdme     = hist["Phigen_sdme"]
+    Phiacc_bernBkg  = hist["Phiacc_bernBkg"]
 
     c1, pad_plot, pad_info = make_canvas_with_bottompad("c_bigPhi", info_frac=0.22)
-
     pad_plot.cd()
 
-    h_data = Phidat.Clone("h_bigPhi_data")
-    h_acc  = Phiacc_sdme.Clone("h_bigPhi_acc")
-    h_bkg  = Phibkg_sdme.Clone("h_bigPhi_bkg")
-    h_sum  = h_acc.Clone("h_bigPhi_sum")
-    h_sum.Add(h_bkg)
+    h_data       = Phidat.Clone("h_bigPhi_data")
+    h_acc        = Phiacc_sdme.Clone("h_bigPhi_acc")
+    h_accidental = Phibkg_sdme.Clone("h_bigPhi_accidental")
+    h_bern       = Phiacc_bernBkg.Clone("h_bigPhi_bern")
 
+    h_accidental.SetLineColor(ROOT.kRed - 3)
+    h_accidental.SetFillColorAlpha(ROOT.kRed - 4, 0.60)
+    h_accidental.SetFillStyle(1001)
+
+    h_bkg_total = h_accidental.Clone("h_bigPhi_bkg_total")
+    h_bkg_total.Add(h_bern)
+    h_bkg_total.SetLineColor(ROOT.kBlue - 3)
+    h_bkg_total.SetFillColorAlpha(ROOT.kBlue, 0.30)
+    h_bkg_total.SetFillStyle(1001)
+
+    h_total = h_bkg_total.Clone("h_bigPhi_total")
+    h_total.Add(h_acc)
+    h_total.SetLineColor(ROOT.kGreen - 6)
+    h_total.SetFillColorAlpha(ROOT.kGreen - 2, 0.50)
+    h_total.SetFillStyle(1001)
+
+    h_data.SetLineColor(ROOT.kBlack)
+    h_data.SetLineWidth(2)
+    h_data.SetMinimum(0)
     h_data.SetTitle("")
-    h_data.SetXTitle("#Phi (rad) (Helicity frame)")
+    h_data.SetXTitle("#Phi_{K_{s}} (rad) (Helicity frame)")
     h_data.SetYTitle("Candidates / 0.035")
-
-    style_data_mc_overlay(h_data, h_sum, h_bkg)
+    # h_data.GetYaxis().SetMaxDigits(1)
 
     h_data.Draw()
-    h_sum.Draw("hist same")
-    h_bkg.Draw("hist same")
+    h_total.Draw("hist same")
+    h_bkg_total.Draw("hist same")
+    h_accidental.Draw("hist same")
 
     draw_bottom_info_pad(
         pad_info,
         label_text="Polarization angle of Ks",
         legend_items=[
-            (h_data, "data", "l"),
-            (h_sum,  "accmc + bkg", "f"),
-            (h_bkg,  "bkgnd", "f"),
+            (h_data,       "data",                  "l"),
+            (h_total,      "accmc + bkg",            "f"),
+            (h_bkg_total,  "accidental + bernstein", "f"),
+            (h_accidental, "accidental sideband",    "f"),
         ],
         notes=[
+            f"{t_bin}",
             f"Data int: {h_data.Integral():.0f}",
             f"Acc int: {h_acc.Integral():.0f}",
-            f"Bkg int: {h_bkg.Integral():.0f}",
+            f"Bkg int: {h_bkg_total.Integral():.0f}",
         ],
     )
 
     open_pdf(c1, pdf_path)
+
+    # -----------------------------
+    # Efficiency-corrected Phi (background subtracted)
+    # -----------------------------
+    c_Phi_corr, pad_plot, pad_info = make_canvas_with_bottompad("c_bigPhi_corrected", info_frac=0.22)
+    pad_plot.cd()
+
+    h_data_bkgsub = h_data.Clone("h_bigPhi_data_bkgsub")
+    h_data_bkgsub.Add(h_accidental, -1)
+    h_data_bkgsub.Add(h_bern, -1)
+
+    h_corr = make_efficiency_corrected(h_data_bkgsub, Phiacc_sdme, Phigen_sdme, "Phi")
+
+    h_corr.SetTitle("")
+    h_corr.SetXTitle("#Phi_{K_{s}} (rad) (Helicity frame)")
+    h_corr.SetYTitle("Candidates / 0.035")
+    h_corr.GetYaxis().SetMaxDigits(3)
+    h_corr.SetLineColor(ROOT.kBlack)
+    h_corr.SetLineWidth(2)
+    h_corr.Draw("E")
+
+    draw_bottom_info_pad(
+        pad_info,
+        label_text="Efficiency-corrected",
+        legend_items=[
+            (h_corr, "data", "l"),
+        ],
+        notes=[
+            f"{t_bin}",
+            "(data - bkg) / (accmc / genmc)",
+            f"Integral: {h_corr.Integral():.0f}",
+            f"Bkg subtracted: {h_bkg_total.Integral():.0f}",
+        ],
+    )
+    keep(c_Phi_corr)
+    add_pdf_page(c_Phi_corr, pdf_path)
 
     # -----------------------------
     # Polarization angle EFFICIENCY
@@ -564,9 +803,8 @@ def bigPhi_plots(hist, pdf_path):
     legend_items = []
     notes = []
 
-    # integrals to display in info pad
     acc_int = integral_between(Phiacc_sdme, -3.0, 3.0)
-    gen_int  = integral_between(Phigen_sdme, -3.0, 3.0)
+    gen_int = integral_between(Phigen_sdme, -3.0, 3.0)
 
     if ROOT.TEfficiency.CheckConsistency(Phiacc_sdme, Phigen_sdme):
         eff = ROOT.TEfficiency(Phiacc_sdme, Phigen_sdme)
@@ -590,7 +828,7 @@ def bigPhi_plots(hist, pdf_path):
             "Polarization angle.",
             f"Accepted MC integral: {acc_int:.0f}",
             f"Generated MC integral: {gen_int:.0f}",
-            "#phi = (-1, 0.5)",
+            "#Phi = (-3, 3)",
         ]
     else:
         notes = ["TEfficiency consistency check failed"]
@@ -604,50 +842,106 @@ def bigPhi_plots(hist, pdf_path):
 
     add_pdf_page(c2, pdf_path)
 
-# -----------------------------
-# psi = phi - Phi (azimuthal angle minus Polarization angle)
-# -----------------------------
 def phi_minus_bigPhi_plots(hist, pdf_path):
-    psidat      = hist["psidat"]
-    psiacc_sdme = hist["psiacc_sdme"]
-    psibkg_sdme = hist["psibkg_sdme"]
+    psidat          = hist["psidat"]
+    psiacc_sdme     = hist["psiacc_sdme"]
+    psibkg_sdme     = hist["psibkg_sdme"]
+    psigen_sdme     = hist["psigen_sdme"]
+    psiacc_bernBkg  = hist["psiacc_bernBkg"]
 
     c, pad_plot, pad_info = make_canvas_with_bottompad("c_psi", info_frac=0.22)
-
     pad_plot.cd()
 
-    h_data = psidat.Clone("h_psi_data")
-    h_acc  = psiacc_sdme.Clone("h_psi_acc")
-    h_bkg  = psibkg_sdme.Clone("h_psi_bkg")
-    h_sum  = h_acc.Clone("h_psi_sum")
-    h_sum.Add(h_bkg)
+    h_data       = psidat.Clone("h_psi_data")
+    h_acc        = psiacc_sdme.Clone("h_psi_acc")
+    h_accidental = psibkg_sdme.Clone("h_psi_accidental")
+    h_bern       = psiacc_bernBkg.Clone("h_psi_bern")
 
+    h_accidental.SetLineColor(ROOT.kRed - 3)
+    h_accidental.SetFillColorAlpha(ROOT.kRed - 4, 0.60)
+    h_accidental.SetFillStyle(1001)
+
+    h_bkg_total = h_accidental.Clone("h_psi_bkg_total")
+    h_bkg_total.Add(h_bern)
+    h_bkg_total.SetLineColor(ROOT.kBlue - 3)
+    h_bkg_total.SetFillColorAlpha(ROOT.kBlue, 0.30)
+    h_bkg_total.SetFillStyle(1001)
+
+    h_total = h_bkg_total.Clone("h_psi_total")
+    h_total.Add(h_acc)
+    h_total.SetLineColor(ROOT.kGreen - 6)
+    h_total.SetFillColorAlpha(ROOT.kGreen - 2, 0.50)
+    h_total.SetFillStyle(1001)
+
+    h_data.SetLineColor(ROOT.kBlack)
+    h_data.SetLineWidth(2)
+    h_data.SetMinimum(0)
     h_data.SetTitle("")
-    h_data.SetXTitle("#phi_{Ks}(rad) - #Phi_{Ks}(rad) (Helicity frame)")
+    h_data.SetXTitle("(#phi - #Phi)_{Ks} (rad) (Helicity frame)")
     h_data.SetYTitle("Candidates / 0.035")
-
-    style_data_mc_overlay(h_data, h_sum, h_bkg)
+    # h_data.GetYaxis().SetMaxDigits(1)
 
     h_data.Draw()
-    h_sum.Draw("hist same")
-    h_bkg.Draw("hist same")
+    h_total.Draw("hist same")
+    h_bkg_total.Draw("hist same")
+    h_accidental.Draw("hist same")
 
     draw_bottom_info_pad(
         pad_info,
         label_text="azimuthal - pol. angle",
         legend_items=[
-            (h_data, "data", "l"),
-            (h_sum,  "accmc + bkg", "f"),
-            (h_bkg,  "bkgnd", "f"),
+            (h_data,       "data",                  "l"),
+            (h_total,      "accmc + bkg",            "f"),
+            (h_bkg_total,  "accidental + bernstein", "f"),
+            (h_accidental, "accidental sideband",    "f"),
         ],
         notes=[
+            f"{t_bin}",
             f"Data int: {h_data.Integral():.0f}",
             f"Acc int: {h_acc.Integral():.0f}",
-            f"Bkg int: {h_bkg.Integral():.0f}",
+            f"Bkg int: {h_bkg_total.Integral():.0f}",
         ],
     )
 
-    close_pdf(c, pdf_path)
+    open_pdf(c, pdf_path)
+
+    # -----------------------------
+    # Efficiency-corrected psi (background subtracted)
+    # -----------------------------
+    c_psi_corr, pad_plot, pad_info = make_canvas_with_bottompad("c_psi_corrected", info_frac=0.22)
+    pad_plot.cd()
+
+    h_data_bkgsub = h_data.Clone("h_psi_data_bkgsub")
+    h_data_bkgsub.Add(h_accidental, -1)
+    h_data_bkgsub.Add(h_bern, -1)
+
+    h_corr = make_efficiency_corrected(h_data_bkgsub, psiacc_sdme, psigen_sdme, "psi")
+
+    h_corr.SetTitle("")
+    h_corr.SetXTitle("(#phi - #Phi)_{Ks} (rad) (Helicity frame)")
+    h_corr.SetYTitle("Candidates / 0.035")
+    h_corr.GetYaxis().SetMaxDigits(3)
+    h_corr.SetLineColor(ROOT.kBlack)
+    h_corr.SetLineWidth(2)
+    h_corr.Draw("E")
+
+    draw_bottom_info_pad(
+        pad_info,
+        label_text="Efficiency-corrected",
+        legend_items=[
+            (h_corr, "data", "l"),
+        ],
+        notes=[
+            f"{t_bin}",
+            "(data - bkg) / (accmc / genmc)",
+            f"Integral: {h_corr.Integral():.0f}",
+            f"Bkg subtracted: {h_bkg_total.Integral():.0f}",
+        ],
+    )
+    keep(c_psi_corr)
+    add_pdf_page(c_psi_corr, pdf_path)
+
+    close_pdf(c_psi_corr,pdf_path)  # ← fixed: was close_pdf(pdf_path)
 
 
 # -----------------------------
