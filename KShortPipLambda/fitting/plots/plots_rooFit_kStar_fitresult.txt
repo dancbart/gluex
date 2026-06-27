@@ -1,0 +1,52 @@
+======================================================
+  Interfering 2 Relativistic Breit-Wigner + Bernstein
+  M(Ks pi+) Fit Results
+======================================================
+
+--- Initial Parameters (starting values) ---
+  massBW_1   = 0.8920  [0.6000, 1.0000]
+  widthBW_1  = 0.0880  [0.0400, 0.1500]
+  massBW_2   = 1.4000  [1.0000, 2.0000]
+  widthBW_2  = 0.1670  [0.0500, 0.3500]
+  scale      = 0.5900  [0.0000, 1.0000]
+  phase      = 1.7900  [-3.1416, 3.1416]
+  rInt       = 1.0000  [0.0000, 1.2000]
+  sig2bkg    = 0.6000  [0.0000, 1.0000]
+  coef0      = 1.0000  [0.0000, 10.0000]
+  coef1      = 0.0000  [0.0000, 10.0000]
+  coef2      = 0.0000  [0.0000, 10.0000]
+  coef3      = 0.0000  [0.0000, 10.0000]
+
+--- Figures of Merit (0.8, 1.0) GeV ---
+  Signal yield : 3274.0
+  Background   : 662.9
+  S/B          : 4.939
+  Purity S/(S+B): 0.832
+--- Fit Convergence ---
+  Status     : 3  (NOT CONVERGED)
+  Edm        : 3978958.063897
+  NLL value  : 3443.160031
+  Chi2/NDF   : 16.3308
+  Num invalid NLL : 0
+
+--- Fitted Parameters ---
+  massBW_1   = 0.893956 +/- 0.003391 GeV
+  widthBW_1  = 0.087713 +/- 2.876836 GeV
+  massBW_2   = 1.416141 +/- 5.502800 GeV
+  widthBW_2  = 0.147026 +/- 14.416409 GeV
+  scale      = 0.386464 +/- 26.974247
+  phase      = 0.874087 +/- 1027.150557 rad
+  rInt       = 0.217282 +/- 136.588256
+  sig2bkg    = 0.494610 +/- 36.001709
+  coef0      = 0.018703 +/- 119.816602
+  coef1      = 0.512127 +/- 84.639884
+  coef2      = 0.496433 +/- 298.616513
+  coef3      = 0.001710 +/- 1.814464
+
+--- PDG Reference Values ---
+  K*(892):  mass = 0.89166 GeV,  width = 0.0508 GeV
+  K*(1410): mass = 1.421   GeV,  width = 0.236  GeV
+
+--- Fit Range ---
+  M(Ks pi+) in [0.61, 2.3] GeV
+======================================================

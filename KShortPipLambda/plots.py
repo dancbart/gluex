@@ -8,6 +8,9 @@ from pyamptools import atiSetup
 atiSetup.setup(globals(), use_fsroot=True)
 
 ROOT.TGaxis.SetMaxDigits(3)
+# for loading histograms and fits into KStar RooFit function(s)
+# ROOT.gSystem.Load("libRooFit")
+# ROOT.gSystem.Load("libRooFitCore")
 
 #used in helper function that dumps fit results to log file
 logFile = "plots/plotEventSelection.txt"
@@ -16,14 +19,18 @@ logFile = "plots/plotEventSelection.txt"
 # Files / globals
 # ------------------------------------------------------------
 
+# ------ Fit results histogram(s) for K Pi system
+
+FND_fits = "/work/halld/home/dbarton/gluex/KShortPipLambda/fitting/plots/plots_rooFit_kStar.root"
+
 # ------ Use to plot variables used as 'global' cuts (beam energy, unused shower, etc).  These are unskimmed files. ---------------------
-# FND_unSkimmed = "/volatile/halld/home/dbarton/pipkslamb/data/fall2018/flatten/tree_pipkslamb__B4_M16_M18_FSFlat_sum_ALLpols_AMO.root"
 FND_unSkimmed = "/volatile/halld/home/dbarton/pipkslamb/data/sp18fa18sp20/tree_pipkslamb__B4_M16_M18_FSFlat_sp18fa18sp20_40856_73266_allPols.root"
 FND_unSkimmed_MC = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/MCWjob4434/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSFlat_sp18-fa18_ALL.root"
 # Not used:
 # FND_unSkimmed_MC_THROWN.  For plotting, use 'FND_signalSkims_MC_THROWN' (created below).
 
 # ------ Use to plot Ks and Lambda, K*, etc. pre-fit distributions -------------------------------------------
+
 FND_eventSelectionSkims = "/volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_ALLpols.root"
 FND_eventSelectionSkims_MC = "/volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_MC.root"
 # Not used:
@@ -822,6 +829,23 @@ def log_fit_results(f, hist_name, cut_string, xmin, xmax, notes=None):
     with open(logFile, "a") as fout:
         fout.write("\n".join(lines) + "\n")
 
+# ------------------------------------------------------------
+# Calculate Figures of Merit for RooFit K* plot 
+# (which imports histogram and fit values from outside function)
+# ------------------------------------------------------------
+def vecs_to_tgraph(f, xname, yname, name):
+    vx = f.Get(xname)
+    vy = f.Get(yname)
+    if not vx or not vy:
+        return None
+    n = vx.GetNoElements()
+    import array
+    xs = array.array('d', [vx[i] for i in range(n)])
+    ys = array.array('d', [vy[i] for i in range(n)])
+    g = ROOT.TGraph(n, xs, ys)
+    g.SetName(name)
+    keep(g)
+    return g
 
 
 # ------------------------------------------------------------
@@ -3730,6 +3754,103 @@ def massPlots_KStar_FINAL_SELECTION(pdf_path):
     # c.Print(f"{pdf_path})")
 
 
+def massPlots_KStar_FINAL_SELECTION_ROOFIT(pdf_path):
+    c = ROOT.TCanvas("c_kstar_roofit", "c_kstar_roofit", 1000, 1300)
+    keep(c)
+
+    panels = make_panel_grid(c, ncols=1, nrows=1, info_frac=0.36)
+    p = panels[0]
+    p["plot"].cd()
+
+    roofit_file = ROOT.TFile.Open(FND_fits, "READ")
+    h_Pwave = roofit_file.Get("h_Pwave")
+    h_Pwave.SetDirectory(0)
+
+    curve_total = vecs_to_tgraph(roofit_file, "curve_total_x", "curve_total_y", "curve_total")
+    curve_sig   = vecs_to_tgraph(roofit_file, "curve_sig_x",   "curve_sig_y",   "curve_sig")
+    curve_bkg   = vecs_to_tgraph(roofit_file, "curve_bkg_x",   "curve_bkg_y",   "curve_bkg")
+
+    # Import figures of merit (calculated in C++ RooFit script)
+    fom = roofit_file.Get("figures_of_merit")
+    if fom:
+        S, B, SoverB, purity = fom[0], fom[1], fom[2], fom[3]
+    else:
+        print("WARNING: figures_of_merit not found in ROOT file - run C++ script first")
+        S, B, SoverB, purity = 0., 0., 0., 0.
+
+    roofit_file.Close()
+    keep(h_Pwave)
+
+    h_Pwave.SetXTitle("M(K_{S}#pi^{+}) [GeV/c^{2}]")
+    h_Pwave.SetYTitle("Combinations / 40 MeV")
+    h_Pwave.SetLineColor(ROOT.kBlack)
+    h_Pwave.SetMinimum(-1.2 * abs(h_Pwave.GetMinimum()))
+    h_Pwave.Draw("pE")
+
+    if curve_total:
+        curve_total.SetLineColor(ROOT.kMagenta + 2)
+        curve_total.SetLineWidth(3)
+        curve_total.Draw("same")
+    if curve_sig:
+        curve_sig.SetLineColor(ROOT.kOrange)
+        curve_sig.SetLineStyle(ROOT.kDotted)
+        curve_sig.SetLineWidth(2)
+        curve_sig.Draw("same")
+    if curve_bkg:
+        curve_bkg.SetLineColor(ROOT.kOrange + 7)
+        curve_bkg.SetLineStyle(ROOT.kDotted)
+        curve_bkg.SetLineWidth(2)
+        curve_bkg.Draw("same")
+
+    integral_kStarSig = integral_between(h_Pwave, 0.8, 1.0)
+
+    p["plot"].Modified()
+    p["plot"].Update()
+
+    legend_items = [
+        (h_Pwave,     f"M(Ks #pi^{{+}}) RooFit sideband-subtracted Int: {integral_kStarSig:.0f}", "pE"),
+        (curve_total, "Total Fit: interfering 2 RBW + Bernstein", "l") if curve_total else None,
+        (curve_sig,   "Fit: signal (2 Relativistic BW)",                "l") if curve_sig   else None,
+        (curve_bkg,   "Fit: background (Bernstein)",        "l") if curve_bkg   else None,
+    ]
+    legend_items = [item for item in legend_items if item is not None]
+
+    draw_info_pad(
+        p["info_main"],
+        file_label(FND_fits),
+        legend_items=legend_items,
+        notes=[
+            (0.08, "Integrals: M(Ks #pi^{+}) = (0.8, 1.0) GeV/c^{2}"),
+            (0.08, "K*(892) yield, Sig/Bkg, Purity S/(S+B):"),
+            (0.08, f"Sig. yield: {S:.0f}  S/B: {SoverB:.2f}  Purity: {purity:.2f}"),
+        ],
+        legend_box=(0.48, 0.18, 0.96, 0.84),
+        legend_text_size=0.10,
+        label_pos=(0.06, 0.90),
+        label_size=0.10,
+        notes_start_y=0.78,
+        notes_text_size=0.12,
+        notes_step=0.15,
+    )
+    draw_notes_pad(
+        p["info_notes"],
+        title="Cuts used",
+        notes=[
+            (0.08, "Global cuts: CUT(tRange110,chi2DOF,unusedTracks,coherentPeak,targetZ)"),
+            (0.08, f"CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT({sidebandCuts})"),
+            (0.08, f"K*(892) region: (0.80, 1.00) GeV. Sig: {S:.0f}, Bkg: {B:.0f}"),
+            (0.08, "Full fit: RooFit C++ script (interfering 2 RBW + Bernstein)"),
+        ],
+        title_pos=(0.06, 0.88),
+        title_size=0.11,
+        notes_start_y=0.72,
+        notes_text_size=0.060,
+        notes_step=0.09,
+    )
+
+    c.Print(pdf_path)
+    # c.Print(f"{pdf_path})")
+
 # ------------------------------------------------------------
 # KSTAR MASS PLOTS -- DATA and MONTE CARLO
 # ------------------------------------------------------------
@@ -4450,7 +4571,8 @@ def main():
     # massPlots_lambdaPiBackground(allPlots)
     # massPlots_KStar_flightLength(allPlots)
     # massPlots_KStar_unusedEnergyStudy(allPlots)
-    massPlots_KStar_FINAL_SELECTION(allPlots)
+    # massPlots_KStar_FINAL_SELECTION(allPlots)
+    massPlots_KStar_FINAL_SELECTION_ROOFIT(allPlots)
     # missingMassPlots_KStar_sidebands(allPlots)
     # massPlots_KStar_Signal_DATA_and_MC(allPlots)
     # massPlots_KStar_FIT_RESULTS(allPlots)

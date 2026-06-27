@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+LOGFILE="/work/halld/home/dbarton/gluex/KShortPipLambda/fitting/runROOFIT_OUT.txt"
+
+echo "Starting plots_roofit.cc ..."
+
+root -l -b <<EOF > ${LOGFILE} 2>&1 &
+.L /work/halld/home/dbarton/gluex/KShortPipLambda/fitting/Roo2BW.cxx+
+.L /work/halld/home/dbarton/gluex/KShortPipLambda/fitting/RooTestBW.cxx+
+.x /work/halld/home/dbarton/gluex/KShortPipLambda/fitting/plots_roofit.cc
+EOF
+
+echo "Job running in background. Output written to: ${LOGFILE}"
