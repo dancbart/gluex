@@ -13,32 +13,35 @@ using namespace RooFit;
 
 void plots_roofit(){
 
-  TFile* mProjFile = TFile::Open("/volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_ALLpols.root","READ");
+  TFile* mProjFile = TFile::Open("/volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_ALLpols_KPiSystem.root","READ");
   TTree * tree = (TTree*)mProjFile->Get("ntFSGlueX_100000000_1100");
   Long64_t nEntries = tree->GetEntries();
 
+  // Lambda
   double PxP1, PyP1, PzP1, EnP1;
   tree->SetBranchAddress("PxP1", &PxP1);
   tree->SetBranchAddress("PyP1", &PyP1);
   tree->SetBranchAddress("PzP1", &PzP1);
   tree->SetBranchAddress("EnP1", &EnP1);
 
+  // KShort
   double PxP2, PyP2, PzP2, EnP2;
   tree->SetBranchAddress("PxP2", &PxP2);
   tree->SetBranchAddress("PyP2", &PyP2);
   tree->SetBranchAddress("PzP2", &PzP2);
   tree->SetBranchAddress("EnP2", &EnP2);
 
+  // Bachelor pi+
   double PxP3, PyP3, PzP3, EnP3;
   tree->SetBranchAddress("PxP3", &PxP3);
   tree->SetBranchAddress("PyP3", &PyP3);
   tree->SetBranchAddress("PzP3", &PzP3);
   tree->SetBranchAddress("EnP3", &EnP3);
 
-  double flightLengthKShort, flightLengthLambda, rf;
-  tree->SetBranchAddress("VeeLP1", &flightLengthKShort);
-  tree->SetBranchAddress("VeeLP2", &flightLengthLambda);
-  tree->SetBranchAddress("RFDeltaT", &rf);
+  // double flightLengthKShort, flightLengthLambda, rf;
+  // tree->SetBranchAddress("VeeLP1", &flightLengthKShort);
+  // tree->SetBranchAddress("VeeLP2", &flightLengthLambda);
+  // tree->SetBranchAddress("RFDeltaT", &rf);
 
   TH1 *h_Pwave = new TH1D("h_Pwave", "h_Pwave", 80, 0.5, 2.5);
   for (Long64_t i = 0; i < nEntries; ++i)
@@ -46,25 +49,26 @@ void plots_roofit(){
     tree->GetEntry(i);
 
     double massKpi  = sqrt(pow(EnP2+EnP3,2) - pow(PxP2+PxP3,2) - pow(PyP2+PyP3,2) - pow(PzP2+PzP3,2));
-    double massLam  = sqrt(pow(EnP1,2)       - pow(PxP1,2)      - pow(PyP1,2)      - pow(PzP1,2));
-    double massKs   = sqrt(pow(EnP2,2)       - pow(PxP2,2)      - pow(PyP2,2)      - pow(PzP2,2));
-    double massLamPi= sqrt(pow(EnP1+EnP3,2) - pow(PxP1+PxP3,2) - pow(PyP1+PyP3,2) - pow(PzP1+PzP3,2));
+    // double massLam  = sqrt(pow(EnP1,2)       - pow(PxP1,2)      - pow(PyP1,2)      - pow(PzP1,2));
+    // double massKs   = sqrt(pow(EnP2,2)       - pow(PxP2,2)      - pow(PyP2,2)      - pow(PzP2,2));
+    // double massLamPi= sqrt(pow(EnP1+EnP3,2) - pow(PxP1+PxP3,2) - pow(PyP1+PyP3,2) - pow(PzP1+PzP3,2));
 
-    bool KsCut   = abs(massKs  - 0.4976) < 0.03;
-    bool LamCut  = abs(massLam - 1.119)  < 0.01375;
-    bool rfCut   = abs(rf) > 2.0;
-    bool rfWeight= abs(rf) > 6.0;
+    // bool KsCut   = abs(massKs  - 0.4976) < 0.03;
+    // bool LamCut  = abs(massLam - 1.119)  < 0.01375;
+    // bool rfCut   = abs(rf) > 2.0;
+    // bool rfWeight= abs(rf) > 6.0;
 
-    bool lowerKs  = (abs(massKs  - 0.4976 + 0.0974)   < 0.015);
-    bool upperKs  = (abs(massKs  - 0.4976 - 0.1226)   < 0.015);
-    bool lowerLam = (abs(massLam - 1.119  + 0.032875)  < 0.006875);
-    bool upperLam = (abs(massLam - 1.119  - 0.032125)  < 0.006875);
+    // bool lowerKs  = (abs(massKs  - 0.4976 + 0.0974)   < 0.015);
+    // bool upperKs  = (abs(massKs  - 0.4976 - 0.1226)   < 0.015);
+    // bool lowerLam = (abs(massLam - 1.119  + 0.032875)  < 0.006875);
+    // bool upperLam = (abs(massLam - 1.119  - 0.032125)  < 0.006875);
 
-    double ksweight  = (lowerKs  || upperKs)  ? -1.0 : (KsCut  ? 1.0 : 0.0);
-    double lamweight = (lowerLam || upperLam)  ? -1.0 : (LamCut ? 1.0 : 0.0);
-    double rfweight  = rfWeight                ? -0.1667 : (rfCut ? 1.0 : 0.0);
+    // double ksweight  = (lowerKs  || upperKs)  ? -1.0 : (KsCut  ? 1.0 : 0.0);
+    // double lamweight = (lowerLam || upperLam)  ? -1.0 : (LamCut ? 1.0 : 0.0);
+    // double rfweight  = rfWeight                ? -0.1667 : (rfCut ? 1.0 : 0.0);
 
-    double totalWeight = ksweight * lamweight * rfweight;
+    double totalWeight = 1;
+    // double totalWeight = ksweight * lamweight * rfweight;
     if(totalWeight != 0)
       h_Pwave->Fill(massKpi, totalWeight);
   }
@@ -84,7 +88,7 @@ void plots_roofit(){
   //// Scale/Phase
   RooRealVar scale("scale",  "scale",  0.59,  0.0, 1.0);
   RooRealVar phase("phase",  "phase",  1.79, -TMath::Pi(), TMath::Pi());
-  RooRealVar rInt("rInt",    "rInt",   1.0,   0.0, 1.2);
+  RooRealVar rInt("rInt",    "rInt",   1.0);
   RooRealVar massd1("massd1_2","massd1", 0.497);
   RooRealVar massd2("massd2_2","massd2", 0.139);
   Roo2BW rel_intBW("rel_intBW","Int. Rel. BW", mass,
@@ -93,10 +97,10 @@ void plots_roofit(){
                    scale, phase, rInt, massd1, massd2);
 
   //// Bernstein background
-  RooRealVar coef0("coef0","coef0", 1.0, 0., 10.);
-  RooRealVar coef1("coef1","coef1", 0.0, 0., 10.);
-  RooRealVar coef2("coef2","coef2", 0.0, 0., 10.);
-  RooRealVar coef3("coef3","coef3", 0.0, 0., 10.);
+  RooRealVar coef0("coef0","coef0", 1.0, 0., 1.);
+  RooRealVar coef1("coef1","coef1", 0.0, 0., 1.);
+  RooRealVar coef2("coef2","coef2", 0.0, 0., 1.);
+  RooRealVar coef3("coef3","coef3", 0.0, 0., 1.);
   RooBernstein bkg("bkg","Background", mass, RooArgList(coef0,coef1,coef2,coef3));
 
   RooRealVar sig2bkg("sig2bkg","signal fraction", 0.6, 0., 1.);
