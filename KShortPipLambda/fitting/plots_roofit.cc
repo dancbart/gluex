@@ -14,16 +14,26 @@ using namespace RooFit;
 
 void plots_roofit(){
 
-  // contains all cuts including weighting (but might not weight correctly)
-  // TFile* mProjFile = TFile::Open("/volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_ALLpols_KPiSystem.root","READ");
-  // Contains only "event selection" cuts, no weighting.  Apply weights manually in this script.
-  TFile* mProjFile = TFile::Open("/volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_ALLpols.root","READ");
+  TFile* eventSelectionCuts_KpiSystem = TFile::Open("/volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_ALLpols_KPiSystem.root","READ");
+  if(!eventSelectionCuts_KpiSystem || eventSelectionCuts_KpiSystem->IsZombie()){
+    cout << "ERROR: could not open main file" << endl; return;
+  }
 
+  TFile* eventSelectionCuts_KpiSystem_friendTree = TFile::Open("/volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_ALLpols_KPiSystem.root.weight","READ");
+  if(!eventSelectionCuts_KpiSystem_friendTree || eventSelectionCuts_KpiSystem_friendTree->IsZombie()){
+    cout << "ERROR: could not open friend tree file" << endl; return;
+  }
 
-
-
-  TTree * tree = (TTree*)mProjFile->Get("ntFSGlueX_100000000_1100");
+  TTree* tree = (TTree*)eventSelectionCuts_KpiSystem->Get("ntFSGlueX_100000000_1100");
+  if(!tree){ cout << "ERROR: could not get main tree" << endl; return; }
   Long64_t nEntries = tree->GetEntries();
+
+  TTree* friendtree = (TTree*)eventSelectionCuts_KpiSystem_friendTree->Get("ntFSGlueX_100000000_1100_weight");
+  if(!friendtree){ cout << "ERROR: could not get friend tree" << endl; return; }
+  Long64_t nEntries_friend = friendtree->GetEntries();
+
+  cout << "Main tree entries:   " << nEntries << endl;
+  cout << "Friend tree entries: " << nEntries_friend << endl;
 
   // Lambda
   double PxP1, PyP1, PzP1, EnP1;
@@ -46,16 +56,25 @@ void plots_roofit(){
   tree->SetBranchAddress("PzP3", &PzP3);
   tree->SetBranchAddress("EnP3", &EnP3);
 
-  TH1 *h_Pwave = new TH1D("h_Pwave", "h_Pwave", 63, 0.628, 2.203);
+  double flightLengthKShort, flightLengthLambda, rf;
+  tree->SetBranchAddress("VeeLP1", &flightLengthKShort);
+  tree->SetBranchAddress("VeeLP2", &flightLengthLambda);
+  tree->SetBranchAddress("RFDeltaT", &rf);
+
+  double weight;
+  friendtree->SetBranchAddress("weight", &weight);
+
+  TH1 *h_Pwave = new TH1D("h_Pwave", "h_Pwave", 63,0.628,2.203);
+
   for (Long64_t i = 0; i < nEntries; ++i)
   {
     tree->GetEntry(i);
+    friendtree->GetEntry(i);
 
-    double massKpi  = sqrt(pow(EnP2+EnP3,2) - pow(PxP2+PxP3,2) - pow(PyP2+PyP3,2) - pow(PzP2+PzP3,2));
+    double massKpi = sqrt(pow(EnP2+EnP3,2) - pow(PxP2+PxP3,2) - pow(PyP2+PyP3,2) - pow(PzP2+PzP3,2));
 
-    double totalWeight = 1;
-    if(totalWeight != 0)
-      h_Pwave->Fill(massKpi, totalWeight);
+    if(weight != 0)
+      h_Pwave->Fill(massKpi, weight);
   }
 
   // ---- RooFit setup ----

@@ -3581,7 +3581,6 @@ def missingMassPlots_KStar_sidebands(pdf_path):
     c.Print(pdf_path)
     # c.Print(f"{pdf_path})")
 
-
 # ------------------------------------------------------------
 # KSTAR MASS PLOTS -- FINAL SELECTION
 # ------------------------------------------------------------
@@ -3593,44 +3592,112 @@ def massPlots_KStar_FINAL_SELECTION(pdf_path):
     p = panels[0]
     p["plot"].cd()
 
-    # hData = fs_get_th1(
-    #     FND_eventSelectionSkims,
-    #     f"MASS({DecayingKShort},{PiPlus1})",
-    #     "(50,0.5,2.5)",
-    #     "CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)"
-    # )
+    hData = fs_get_th1(
+        FND_eventSelectionSkims,
+        f"MASS({DecayingKShort},{PiPlus1})",
+        "(63,0.628,2.203)",
+        "CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)"
+    )
     hSig = fs_get_th1(
         FND_eventSelectionSkims,
         f"MASS({DecayingKShort},{PiPlus1})",
-        "(80,0.5,2.5)",
+        "(63,0.628,2.203)",
         f"CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT({sidebandCuts})"
     )
-    # hBkg = fs_get_th1(
-    #     FND_eventSelectionSkims,
-    #     f"MASS({DecayingKShort},{PiPlus1})",
-    #     "(50,0.5,2.5)",
-    #     f"CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT({sidebandCuts})"
-    # )
-    # hBkgNegative = hBkg.Clone("hBkgNegative")
-    # hBkgNegative.Scale(-1.0)
+    hBkg = fs_get_th1(
+        FND_eventSelectionSkims,
+        f"MASS({DecayingKShort},{PiPlus1})",
+        "(63,0.628,2.203)",
+        f"CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT({sidebandCuts})"
+    )
+    hBkgNegative = hBkg.Clone("hBkgNegative")
+    hBkgNegative.Scale(-1.0)
+
+    hData.SetXTitle("M(K_{S}#pi^{+}) [GeV/c^{2}]")
+    hData.SetYTitle("Combinations / 25 MeV")
+    hData.SetMinimum(-1.2 * abs(hBkgNegative.GetMinimum()))
+
+    hData.SetLineColor(ROOT.kBlue)
+    hData.SetFillColor(ROOT.kBlue - 5)
+    hSig.SetLineColor(ROOT.kBlack)
+    hBkgNegative.SetLineColor(ROOT.kRed)
+    hBkgNegative.SetFillColor(ROOT.kRed - 3)
+
+    hData.Draw("hist")
+    hSig.Draw("pE same")
+    hBkgNegative.Draw("hist same")
+
+    integral_kStarSig  = integral_between(hSig,  0.628,2.203)
+    
+    p["plot"].Modified()
+    p["plot"].Update()
+
+
+    draw_info_pad(
+        p["info_main"],
+        file_label(FND_eventSelectionSkims),
+        legend_items=[
+            (hData, "M(Ks #pi^{{+}}) Data", "f"),
+            (hSig, f"M(Ks #pi^{{+}}) Signal {integral_kStarSig:.0f} M(0.628,2.203)", "pE"),
+            (hBkgNegative, "M(Ks #pi^{+}) SB Background", "f"),
+        ],
+        notes=[
+            (0.08, "SB Background = 3D sideband background = "),
+            (0.10, "accidental beam photons x"),
+            (0.12, "x Ks sidebands x Lambda sidebands"),
+        ],
+        legend_box=(0.48, 0.18, 0.96, 0.84),
+        legend_text_size=0.10,
+        label_pos=(0.06, 0.90),
+        label_size=0.10,
+        notes_start_y=0.78,
+        notes_text_size=0.12,
+        notes_step=0.15,
+    )
+    draw_notes_pad(
+        p["info_notes"],
+        title="Cuts used",
+        notes=[
+            (0.08, "Global skim cuts: CUT(tRange110,chi2DOF,unusedTracks,coherentPeak,targetZ)"),
+            (0.08, f"Data: CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda). Sig:"),
+            (0.08, f"Histogram cuts Sig:  CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)"),
+            (0.10, f"*CUTWT({sidebandCuts})."),
+            (0.08, f"Bkg:  CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT({sidebandCuts})"),
+        ],
+        title_pos=(0.06, 0.88),
+        title_size=0.11,
+        notes_start_y=0.72,
+        notes_text_size=0.060,
+        notes_step=0.09,
+    )
+
+    # c.Print(pdf_path)
+    c.Print(f"{pdf_path}(")
+
+# ------------------------------------------------------------
+# KSTAR MASS PLOTS -- non-relativistic fit
+# ------------------------------------------------------------
+def massPlots_KStar_nonRelFIT(pdf_path):
+    c = ROOT.TCanvas("c_kstar_sidebands", "c_kstar_sidebands", 1000, 1300)
+    keep(c)
+
+    panels = make_panel_grid(c, ncols=1, nrows=1, info_frac=0.36)
+    p = panels[0]
+    p["plot"].cd()
+
+    hSig = fs_get_th1(
+        FND_eventSelectionSkims,
+        f"MASS({DecayingKShort},{PiPlus1})",
+        "(63,0.628,2.203)",
+        f"CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT({sidebandCuts})"
+    )
 
     hSig.SetXTitle("M(K_{S}#pi^{+}) [GeV/c^{2}]")
-    hSig.SetYTitle("Combinations / 40 MeV")
-    # hSig.SetMinimum(-1.2 * abs(hBkgNegative.GetMinimum()))
-
-    # hData.SetLineColor(ROOT.kBlack)
+    hSig.SetYTitle("Combinations / 25 MeV")
     hSig.SetLineColor(ROOT.kBlack)
-    # hSig.SetFillColor(ROOT.kBlue - 3)
-    # hBkgNegative.SetLineColor(ROOT.kBlack)
-    # hBkgNegative.SetFillColor(ROOT.kRed)
+    hSig.Draw("pE")
 
-    # hData.Draw("pE")
-    # hSig.Draw("pE")
-    # hBkgNegative.Draw("hist same")
-
-    # integral_kStarData = integral_between(hData, 0.8, 1.0)
-    integral_kStarSig  = integral_between(hSig,  0.8, 1.0)
-    # integral_kStarBkg  = integral_between(hBkg,  0.8, 1.0)
+    integral_kStarSig  = integral_between(hSig,  0.628,2.203)
 
     # ----- Fit setup (shared limits)
     def _apply_kstar_limits(f):
@@ -3649,43 +3716,19 @@ def massPlots_KStar_FINAL_SELECTION(pdf_path):
             coeffs=[100.0, 100.0, 100.0, 100.0],
         )
 
-    # fitData_kstar = _make_kstar_fit("fitData_kstar_2voigt_bern", amp2=200.0)
-    # _apply_kstar_limits(fitData_kstar)
-    # hData.Fit(fitData_kstar, "R0")
-    # log_fit_results(fitData_kstar,
-    #                 hist_name="hData",
-    #                 cut_string="CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)",
-    #                 xmin=0.6, xmax=2.5,
-    #                 notes=["FOM integration range: (0.80, 1.00)"])
-    # fitData_kstar.SetLineColor(ROOT.kBlack)
-    # fitData_kstar.SetLineWidth(2)
-
     fitSig_kstar = _make_kstar_fit("fitSig_kstar_2voigt_bern", amp2=400.0)
     _apply_kstar_limits(fitSig_kstar)
     hSig.Fit(fitSig_kstar, "R0")
     log_fit_results(fitSig_kstar,
                     hist_name="hSig",
                     cut_string=f"CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT({sidebandCuts})",
-                    xmin=0.6, xmax=2.5,
+                    xmin=0.61, xmax=2.3,
                     notes=["FOM integration range: (0.80, 1.00)"])
     fitSig_kstar.SetLineColor(ROOT.kMagenta + 2)
     fitSig_kstar.SetLineWidth(3)
-    fitSig_kstar.Draw("")
-    hSig.Draw("same pE")
+    fitSig_kstar.Draw("same")
 
-
-    # fitBkg_kstar = _make_kstar_fit("fitBkg_kstar_2voigt_bern", amp2=400.0)
-    # _apply_kstar_limits(fitBkg_kstar)
-    # hBkg.Fit(fitBkg_kstar, "R0")
-    # log_fit_results(fitBkg_kstar,
-    #                 hist_name="hBkg",
-    #                 cut_string=f"CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT({sidebandCuts})",
-    #                 xmin=0.6, xmax=2.5,
-    #                 notes=["FOM integration range: (0.80, 1.00)"])
-    # fitBkg_kstar.SetLineColor(ROOT.kBlue)
-    # fitBkg_kstar.SetLineWidth(2)
-
-    fit_voigt1, fit_voigt2, fit_bern = make_component_funcs_kstar(fitSig_kstar, xmin=0.6, xmax=2.5, bern_degree=3)
+    fit_voigt1, fit_voigt2, fit_bern = make_component_funcs_kstar(fitSig_kstar, xmin=0.61, xmax=2.3, bern_degree=3)
     fit_voigt1.SetLineColor(ROOT.kOrange)
     fit_voigt1.SetLineStyle(ROOT.kDotted)
     fit_voigt1.SetLineWidth(3)
@@ -3705,26 +3748,19 @@ def massPlots_KStar_FINAL_SELECTION(pdf_path):
     xmin, xmax = 0.80, 1.00
     bin_width = hSig.GetXaxis().GetBinWidth(1)
 
-    # S1_h1, S2_h1, S_h1, B_h1, SB_h1, significance_h1, purity_h1 = compute_figureOfMerit_kstar(
-    #     fitData_kstar, xmin, xmax, bin_width=bin_width, bern_degree=3
-    # )
     S1_h2, S2_h2, S_h2, B_h2, SB_h2, significance_h2, purity_h2 = compute_figureOfMerit_kstar(
         fitSig_kstar, xmin, xmax, bin_width=bin_width, bern_degree=3
     )
-    # S1_h3, S2_h3, S_h3, B_h3, SB_h3, significance_h3, purity_h3 = compute_figureOfMerit_kstar(
-    #     fitBkg_kstar, xmin, xmax, bin_width=bin_width, bern_degree=3
-    # )
+
 
     draw_info_pad(
         p["info_main"],
         file_label(FND_eventSelectionSkims),
         legend_items=[
-            # (hData,        f"M(Ks #pi^{{+}}) Data Int: {integral_kStarData:.0f}",       "pE"),
-            (hSig,         f"M(Ks #pi^{{+}}) Signal Int: {integral_kStarSig:.0f}",       "pE"),
-            # (hBkgNegative, f"M(Ks #pi^{{+}}) Background Int: {integral_kStarBkg:.0f}",   "f"),
-            (fitSig_kstar, "Fit signal: 2 Voigtians + Bernstein",                         "l"),
-            (fit_voigt1,   "Fit signal: Voigtian [K*(892)]",                              "l"),
-            (fit_bern,     "Fit signal: Bernstein",                                       "l"),
+            (hSig,         f"M(Ks #pi^{{+}}) total int {integral_kStarSig:.0f} M(0.628,2.203)", "pE"),
+            (fitSig_kstar, "Fit: 2 Voigtians + Bernstein", "l"),
+            (fit_voigt1,   "Fit: Voigtian", "l"),
+            (fit_bern,     "Fit: Bernstein", "l"),
         ],
         notes=[
             (0.08, "Integrals: M(Ks #pi^{+}) = (0.8, 1.0) GeV/c^{2}"),
@@ -3743,10 +3779,9 @@ def massPlots_KStar_FINAL_SELECTION(pdf_path):
         p["info_notes"],
         title="Cuts used",
         notes=[
-            (0.08, "Global cuts: CUT(tRange110,chi2DOF,unusedTracks,coherentPeak,targetZ)"),
-            # (0.08, f"Data: CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda). Sig: {S1_h1:.0f}, Bkg: {B_h1:.0f}"),
-            (0.08, f"Sig:  CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT({sidebandCuts}). Sig: {S1_h2:.0f}, Bkg: {B_h2:.0f}"),
-            # (0.08, f"Bkg:  CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT({sidebandCuts}). Sig: {S1_h3:.0f}, Bkg: {B_h3:.0f}"),
+            (0.08, "Global skim cuts: CUT(tRange110,chi2DOF,unusedTracks,coherentPeak,targetZ)"),
+            (0.08, f"Histogram cuts Sig:  CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)"),
+            (0.10, f"*CUTWT({sidebandCuts}). Sig: {S1_h2:.0f}, Bkg: {B_h2:.0f}"),
         ],
         title_pos=(0.06, 0.88),
         title_size=0.11,
@@ -3755,11 +3790,14 @@ def massPlots_KStar_FINAL_SELECTION(pdf_path):
         notes_step=0.09,
     )
 
-    # c.Print(pdf_path)
-    c.Print(f"{pdf_path}(")
+    c.Print(pdf_path)
+    # c.Print(f"{pdf_path}(")
 
 
-def massPlots_KStar_FINAL_SELECTION_ROOFIT(pdf_path):
+# ------------------------------------------------------------
+# ROOFIT KSTAR MASS PLOTS -- RELATIVISTIC FITTING - ROOFIT
+# ------------------------------------------------------------
+def massPlots_KStar_relROOFIT(pdf_path):
     c = ROOT.TCanvas("c_kstar_roofit", "c_kstar_roofit", 1000, 1300)
     keep(c)
 
@@ -3787,7 +3825,7 @@ def massPlots_KStar_FINAL_SELECTION_ROOFIT(pdf_path):
     keep(h_Pwave)
 
     h_Pwave.SetXTitle("M(K_{S}#pi^{+}) [GeV/c^{2}]")
-    h_Pwave.SetYTitle("Combinations / 40 MeV")
+    h_Pwave.SetYTitle("Combinations / 25 MeV")
     h_Pwave.SetLineColor(ROOT.kBlack)
     h_Pwave.SetMinimum(-1.2 * abs(h_Pwave.GetMinimum()))
     h_Pwave.Draw("pE")
@@ -3807,13 +3845,13 @@ def massPlots_KStar_FINAL_SELECTION_ROOFIT(pdf_path):
         curve_bkg.SetLineWidth(2)
         curve_bkg.Draw("same")
 
-    integral_kStarSig = integral_between(h_Pwave, 0.8, 1.0)
+    integral_kStarSig = integral_between(h_Pwave, 0.628,2.203)
 
     p["plot"].Modified()
     p["plot"].Update()
 
     legend_items = [
-        (h_Pwave,     f"M(Ks #pi^{{+}}) Signal Int: {integral_kStarSig:.0f}", "pE"),
+        (h_Pwave,     f"M(Ks #pi^{{+}}) total int {integral_kStarSig:.0f} M(0.628,2.203)", "pE"),
         (curve_total, "Total Fit: interfering 2 RBW + Bernstein", "l") if curve_total else None,
         (curve_sig,   "Fit: signal (2 Relativistic BW)",                "l") if curve_sig   else None,
         (curve_bkg,   "Fit: background (Bernstein)",        "l") if curve_bkg   else None,
@@ -3842,8 +3880,9 @@ def massPlots_KStar_FINAL_SELECTION_ROOFIT(pdf_path):
         p["info_notes"],
         title="Cuts used",
         notes=[
-            (0.08, "Global cuts: CUT(tRange110,chi2DOF,unusedTracks,coherentPeak,targetZ)"),
-            (0.08, f"Sig: CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda). Sig: {S:.0f}, Bkg: {B:.0f}"),
+            (0.08, "Global skim cuts: CUT(tRange110,chi2DOF,unusedTracks,coherentPeak,targetZ)"),
+            (0.08, f"Sig skim: CUT(tRange110,chi2DOF,unusedTracks,coherentPeak,targetZ,flightLengthKShort,flightLengthLambda,rejectSigma1385)"),
+            (0.08, f"Friend tree skim: CUTWT(rf,KShort,Lambda). Sig: {S:.0f}, Bkg: {B:.0f}"),
             (0.08, "Histogram cuts: none"),
         ],
         title_pos=(0.06, 0.88),
@@ -4577,7 +4616,8 @@ def main():
     # massPlots_KStar_flightLength(allPlots)
     # massPlots_KStar_unusedEnergyStudy(allPlots)
     massPlots_KStar_FINAL_SELECTION(allPlots)
-    massPlots_KStar_FINAL_SELECTION_ROOFIT(allPlots)
+    massPlots_KStar_nonRelFIT(allPlots)
+    massPlots_KStar_relROOFIT(allPlots)
     # missingMassPlots_KStar_sidebands(allPlots)
     # massPlots_KStar_Signal_DATA_and_MC(allPlots)
     # massPlots_KStar_FIT_RESULTS(allPlots)
