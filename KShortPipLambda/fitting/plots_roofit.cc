@@ -8,12 +8,20 @@
 #include "RooPlot.h"
 #include "/work/halld/home/dbarton/gluex/KShortPipLambda/fitting/Roo2BW.h"
 #include <fstream>
+#include "/work/halld/home/dbarton/gluex/KShortPipLambda/fitting/RooBernsteinQ.h"
 
 using namespace RooFit;
 
 void plots_roofit(){
 
-  TFile* mProjFile = TFile::Open("/volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_ALLpols_KPiSystem.root","READ");
+  // contains all cuts including weighting (but might not weight correctly)
+  // TFile* mProjFile = TFile::Open("/volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_ALLpols_KPiSystem.root","READ");
+  // Contains only "event selection" cuts, no weighting.  Apply weights manually in this script.
+  TFile* mProjFile = TFile::Open("/volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_ALLpols.root","READ");
+
+
+
+
   TTree * tree = (TTree*)mProjFile->Get("ntFSGlueX_100000000_1100");
   Long64_t nEntries = tree->GetEntries();
 
@@ -38,37 +46,14 @@ void plots_roofit(){
   tree->SetBranchAddress("PzP3", &PzP3);
   tree->SetBranchAddress("EnP3", &EnP3);
 
-  // double flightLengthKShort, flightLengthLambda, rf;
-  // tree->SetBranchAddress("VeeLP1", &flightLengthKShort);
-  // tree->SetBranchAddress("VeeLP2", &flightLengthLambda);
-  // tree->SetBranchAddress("RFDeltaT", &rf);
-
-  TH1 *h_Pwave = new TH1D("h_Pwave", "h_Pwave", 80, 0.5, 2.5);
+  TH1 *h_Pwave = new TH1D("h_Pwave", "h_Pwave", 63, 0.628, 2.203);
   for (Long64_t i = 0; i < nEntries; ++i)
   {
     tree->GetEntry(i);
 
     double massKpi  = sqrt(pow(EnP2+EnP3,2) - pow(PxP2+PxP3,2) - pow(PyP2+PyP3,2) - pow(PzP2+PzP3,2));
-    // double massLam  = sqrt(pow(EnP1,2)       - pow(PxP1,2)      - pow(PyP1,2)      - pow(PzP1,2));
-    // double massKs   = sqrt(pow(EnP2,2)       - pow(PxP2,2)      - pow(PyP2,2)      - pow(PzP2,2));
-    // double massLamPi= sqrt(pow(EnP1+EnP3,2) - pow(PxP1+PxP3,2) - pow(PyP1+PyP3,2) - pow(PzP1+PzP3,2));
-
-    // bool KsCut   = abs(massKs  - 0.4976) < 0.03;
-    // bool LamCut  = abs(massLam - 1.119)  < 0.01375;
-    // bool rfCut   = abs(rf) > 2.0;
-    // bool rfWeight= abs(rf) > 6.0;
-
-    // bool lowerKs  = (abs(massKs  - 0.4976 + 0.0974)   < 0.015);
-    // bool upperKs  = (abs(massKs  - 0.4976 - 0.1226)   < 0.015);
-    // bool lowerLam = (abs(massLam - 1.119  + 0.032875)  < 0.006875);
-    // bool upperLam = (abs(massLam - 1.119  - 0.032125)  < 0.006875);
-
-    // double ksweight  = (lowerKs  || upperKs)  ? -1.0 : (KsCut  ? 1.0 : 0.0);
-    // double lamweight = (lowerLam || upperLam)  ? -1.0 : (LamCut ? 1.0 : 0.0);
-    // double rfweight  = rfWeight                ? -0.1667 : (rfCut ? 1.0 : 0.0);
 
     double totalWeight = 1;
-    // double totalWeight = ksweight * lamweight * rfweight;
     if(totalWeight != 0)
       h_Pwave->Fill(massKpi, totalWeight);
   }
@@ -88,7 +73,7 @@ void plots_roofit(){
   //// Scale/Phase
   RooRealVar scale("scale",  "scale",  0.59,  0.0, 1.0);
   RooRealVar phase("phase",  "phase",  1.79, -TMath::Pi(), TMath::Pi());
-  RooRealVar rInt("rInt",    "rInt",   1.0);
+  RooRealVar rInt("rInt",    "rInt",   0.98, 0.0, 1.0);
   RooRealVar massd1("massd1_2","massd1", 0.497);
   RooRealVar massd2("massd2_2","massd2", 0.139);
   Roo2BW rel_intBW("rel_intBW","Int. Rel. BW", mass,
@@ -97,11 +82,19 @@ void plots_roofit(){
                    scale, phase, rInt, massd1, massd2);
 
   //// Bernstein background
-  RooRealVar coef0("coef0","coef0", 1.0, 0., 1.);
-  RooRealVar coef1("coef1","coef1", 0.0, 0., 1.);
-  RooRealVar coef2("coef2","coef2", 0.0, 0., 1.);
-  RooRealVar coef3("coef3","coef3", 0.0, 0., 1.);
-  RooBernstein bkg("bkg","Background", mass, RooArgList(coef0,coef1,coef2,coef3));
+  RooRealVar coef0("coef0","coef0", 0.0);
+  RooRealVar coef1("coef1","coef1", 0.905, 0., 1.);
+  RooRealVar coef2("coef2","coef2", 0.030, 0., 1.);
+  RooRealVar coef3("coef3","coef3", 0.0);
+
+  // Breakup momentum range over fit range (0.61 to 2.3 GeV in mass)
+  // You'll need to compute q at mass=0.61 and mass=2.3 once to get qmin/qmax,
+  // or just pick a wide enough range and let the data normalize within it.
+  RooRealVar qmin("qmin","qmin", 0.0);
+  RooRealVar qmax("qmax","qmax", 1.2);  // adjust to match your kinematic range
+
+  RooBernsteinQ bkg("bkg","Background (Bernstein in q)", mass, massd1, massd2, qmin, qmax,
+                    RooArgList(coef0, coef1, coef2, coef3));
 
   RooRealVar sig2bkg("sig2bkg","signal fraction", 0.6, 0., 1.);
   RooAddPdf bern2BW("bern2BW","bern2BW", RooArgList(rel_intBW, bkg), sig2bkg);
@@ -160,7 +153,7 @@ void plots_roofit(){
   mass.setRange("PWA Plot", 0.5, 2.5);
   RooPlot* frame_intBW_P = mass.frame();
   frame_intBW_P->GetXaxis()->SetTitle("M[K_{s}#pi^{+}] (GeV)");
-  frame_intBW_P->GetYaxis()->SetTitle("Combinations / 40 MeV");
+  frame_intBW_P->GetYaxis()->SetTitle("Combinations / 25 MeV");
   frame_intBW_P->GetYaxis()->SetTitleOffset(1.1);
   frame_intBW_P->GetYaxis()->SetMaxDigits(3);
   dataHist_P.plotOn(frame_intBW_P);
