@@ -80,8 +80,12 @@ ClassImp(Roo2BW);
   Double_t F0_2 = barrierFactor(q0_2, spin2);
   Double_t F_2  = barrierFactor(q,  spin2);
 
-  Double_t calc_width_1 = width1*(mass1/x)*(q/q0_1)*((F_1*F_1)/(F0_1*F0_1));
-  Double_t calc_width_2 = width2*(mass2/x)*(q/q0_2)*((F_2*F_2)/(F0_2*F0_2));
+  // DON'T USE: this double-counts the barrier factor in the width calculation.
+  // Double_t calc_width_1 = width1 * (mass1/x) * pow(q/q0_1, 2*spin1+1) * ((F_1*F_1)/(F0_1*F0_1));
+  // Double_t calc_width_2 = width2 * (mass2/x) * pow(q/q0_2, 2*spin2+1) * ((F_2*F_2)/(F0_2*F0_2));
+  // USE THIS INSTEAD: it does not double-count the barrier factor in the width calculation.
+  Double_t calc_width_1 = width1*(mass1/x)*pow(q/q0_1, 1)*((F_1*F_1)/(F0_1*F0_1));
+  Double_t calc_width_2 = width2*(mass2/x)*pow(q/q0_2, 1)*((F_2*F_2)/(F0_2*F0_2));
   
   // this first factor just gets normalization right for BW's that have
   // no additional s-dependence from orbital L
