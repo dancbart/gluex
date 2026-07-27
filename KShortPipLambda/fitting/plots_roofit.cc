@@ -6,7 +6,7 @@
 #include "TCanvas.h"
 #include "TAxis.h"
 #include "RooPlot.h"
-#include "/work/halld/home/dbarton/gluex/KShortPipLambda/fitting/Roo2BW.h"
+#include "/work/halld/home/dbarton/gluex/KShortPipLambda/fitting/Roo2BW1S.h"
 #include <fstream>
 #include "/work/halld/home/dbarton/gluex/KShortPipLambda/fitting/RooBernsteinQ.h"
 
@@ -106,16 +106,26 @@ void plots_roofit(){
   RooRealVar rInt("rInt",    "rInt",   1.0);
   RooRealVar massd1("massd1_2","massd1", 0.497);
   RooRealVar massd2("massd2_2","massd2", 0.139);
-  Roo2BW rel_intBW("rel_intBW","Int. Rel. BW", mass,
-                   massBW_1, widthBW_1, spin_1,
-                   massBW_2, widthBW_2, spin_2,
-                   scale, phase, rInt, massd1, massd2);
+
+    // non-resonant S-wave parameters (LASS effective-range term)
+  RooRealVar aScat ("aScat", "scattering length", 2.07);           // fixed at LASS value
+  RooRealVar rEff  ("rEff",  "effective range",   3.32);           // fixed at LASS value
+  RooRealVar scaleS("scaleS","S-wave magnitude",  0.3, 0.0, 2.0);  // float
+  RooRealVar phaseS("phaseS","S-wave phase",      0.0, -6.0, 6.0); // float
+
+
+  Roo2BW1S rel_intBW("rel_intBW","Int. Rel. BW + Swave", mass,
+                     massBW_1, widthBW_1, spin_1,
+                     massBW_2, widthBW_2, spin_2,
+                     scale, phase,
+                     aScat, rEff, scaleS, phaseS,
+                     massd1, massd2);
 
   //// Bernstein background
   RooRealVar coef0("coef0","coef0", 0.1, 0.0, 5.0);
   RooRealVar coef1("coef1","coef1", 1.0);
   RooRealVar coef2("coef2","coef2", 0.5, 0.0, 5.0);
-  RooRealVar coef3("coef3","coef3", 0.1, 0.0, 5.0);
+  RooRealVar coef3("coef3","coef3", 0.0);
 
   // Breakup momentum range over fit range: calculate qmin and qmax.
     auto qOf = [](double m, double m1, double m2){
@@ -199,6 +209,39 @@ void plots_roofit(){
   bern2BW.plotOn(frame_intBW_P, Name("curveBkg"), Components(bkg),
                  LineStyle(kDotted), LineColor(kOrange+7));
 
+
+  // ---- Overlay the isolated S-wave intensity THIS IS NOT SCALED RIGOROUSLY,
+  // it ust gives rough idea of S-Wave contribution and shape. ----
+  // |A_S|^2 with A_S = (m/q) sin(deltaB) exp(i deltaB); intensity = (m/q)^2 sin^2(deltaB)
+  const double mK = 0.497, mPi = 0.139;
+  const double aVal = aScat.getVal(), rVal = rEff.getVal();
+  const double sVal = scaleS.getVal();          // S-wave magnitude
+  const int    nPts = 400;
+
+  TGraph* g_swave = new TGraph(nPts);
+  for(int i=0; i<nPts; ++i){
+    double m  = mass.getMin() + (mass.getMax()-mass.getMin())*i/(nPts-1);
+    double s  = m*m, a = (mK+mPi)*(mK+mPi), b = (mK-mPi)*(mK-mPi);
+    double arg = (s-a)*(s-b);
+    double qh  = arg>0 ? sqrt(arg)/(2*m) : 0.0;
+    double intensity = 0.0;
+    if(qh > 0){
+      double cotD = 1.0/(aVal*qh) + 0.5*rVal*qh;
+      double dB   = atan2(1.0, cotD);
+      double AS   = (m/qh)*sin(dB);            // |A_S| (magnitude; phase drops out of |.|^2)
+      intensity   = (sVal*sVal)*(AS*AS);       // scaleS^2 |A_S|^2
+    }
+    g_swave->SetPoint(i, m, intensity);
+  }
+
+  // rough visual normalization: scale so the curve is visible against the data
+  double gmax = 0; for(int i=0;i<nPts;++i) gmax = std::max(gmax, g_swave->GetY()[i]);
+  double target = 0.5 * h_Pwave->GetMaximum() * sig2bkg.getVal() * scaleS.getVal();
+  if(gmax>0) for(int i=0;i<nPts;++i) g_swave->SetPoint(i, g_swave->GetX()[i], g_swave->GetY()[i]*target/gmax);
+
+  g_swave->SetLineColor(kGreen+2);
+  g_swave->SetLineStyle(2);
+  g_swave->SetLineWidth(2);
 
   double chi2ndf = frame_intBW_P->chiSquare("curveTot", "dataP",
                                           fitResult->floatParsFinal().getSize());
@@ -334,6 +377,9 @@ void plots_roofit(){
   frame_intBW_P->GetXaxis()->SetLabelSize(0);
   frame_intBW_P->GetXaxis()->SetTitleSize(0);
   frame_intBW_P->Draw();
+
+  fit_c->cd(1);
+  g_swave->Draw("L same");
 
   fit_c->cd(2); gPad->SetPad(0.0, 0.0, 1.0, 0.30); gPad->SetTopMargin(0.02); gPad->SetBottomMargin(0.30);
   framePull->SetTitle("");
