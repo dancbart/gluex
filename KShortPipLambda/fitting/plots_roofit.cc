@@ -6,7 +6,7 @@
 #include "TCanvas.h"
 #include "TAxis.h"
 #include "RooPlot.h"
-#include "/work/halld/home/dbarton/gluex/KShortPipLambda/fitting/Roo2BW1S.h"
+#include "/work/halld/home/dbarton/gluex/KShortPipLambda/fitting/Roo2BW.h"
 #include <fstream>
 #include "/work/halld/home/dbarton/gluex/KShortPipLambda/fitting/RooBernsteinQ.h"
 
@@ -64,7 +64,7 @@ void plots_roofit(){
   double weight;
   friendtree->SetBranchAddress("weight", &weight);
 
-  TH1 *h_Pwave = new TH1D("h_Pwave", "h_Pwave", 62,0.653,2.203);
+  TH1 *h_Pwave = new TH1D("h_Pwave", "h_Pwave", 62,0.634,2.203);
   h_Pwave->Sumw2();
 
   for (Long64_t i = 0; i < nEntries; ++i)
@@ -89,11 +89,11 @@ void plots_roofit(){
        << " (raw = " << nEntries << ")" << endl;
 
   // ---- RooFit setup ----
-  RooRealVar mass("mass", "mass", 0.653,2.203);
+  RooRealVar mass("mass", "mass", 0.634,2.203);
   RooDataHist dataHist_P("dataHist_P", "dataHist_P", mass, Import(*h_Pwave));
 
   //// RelBW1
-  RooRealVar massBW_1("massBW_1", "mass_1",  0.892, 0.653,  1.2);
+  RooRealVar massBW_1("massBW_1", "mass_1",  0.892, 0.634,  1.2);
   RooRealVar widthBW_1("widthBW_1","width_1", 0.0485, 0.02, 0.15);
   RooRealVar spin_1("spin1","spin_1", 1);
   //// RelBW2
@@ -106,26 +106,16 @@ void plots_roofit(){
   RooRealVar rInt("rInt",    "rInt",   1.0);
   RooRealVar massd1("massd1_2","massd1", 0.497);
   RooRealVar massd2("massd2_2","massd2", 0.139);
-
-    // non-resonant S-wave parameters (LASS effective-range term)
-  RooRealVar aScat ("aScat", "scattering length", 2.07);           // fixed at LASS value
-  RooRealVar rEff  ("rEff",  "effective range",   3.32);           // fixed at LASS value
-  RooRealVar scaleS("scaleS","S-wave magnitude",  0.3, 0.0, 2.0);  // float
-  RooRealVar phaseS("phaseS","S-wave phase",      0.0, -6.0, 6.0); // float
-
-
-  Roo2BW1S rel_intBW("rel_intBW","Int. Rel. BW + Swave", mass,
-                     massBW_1, widthBW_1, spin_1,
-                     massBW_2, widthBW_2, spin_2,
-                     scale, phase,
-                     aScat, rEff, scaleS, phaseS,
-                     massd1, massd2);
+  Roo2BW rel_intBW("rel_intBW","Int. Rel. BW", mass,
+                   massBW_1, widthBW_1, spin_1,
+                   massBW_2, widthBW_2, spin_2,
+                   scale, phase, rInt, massd1, massd2);
 
   //// Bernstein background
   RooRealVar coef0("coef0","coef0", 0.1, 0.0, 5.0);
   RooRealVar coef1("coef1","coef1", 1.0);
   RooRealVar coef2("coef2","coef2", 0.5, 0.0, 5.0);
-  RooRealVar coef3("coef3","coef3", 0.0);
+  RooRealVar coef3("coef3","coef3", 0.1, 0.0, 5.0);
 
   // Breakup momentum range over fit range: calculate qmin and qmax.
     auto qOf = [](double m, double m1, double m2){
@@ -133,7 +123,7 @@ void plots_roofit(){
     double arg = (s-a)*(s-b);
     return arg > 0 ? std::sqrt(arg)/(2*m) : 0.0;
   };
-  const double mLo = 0.653, mHi = 2.203;
+  const double mLo = 0.634, mHi = 2.203;
   RooRealVar qmin("qmin","qmin", qOf(mLo, 0.497, 0.139));   // ~0.062
   RooRealVar qmax("qmax","qmax", qOf(mHi, 0.497, 0.139));   // ~1.041
 
@@ -166,7 +156,7 @@ void plots_roofit(){
   fitLog << endl;
 
   // ---- Fit ----
-  // mass.setRange("PWA Fit", 0.653,2.203);
+  // mass.setRange("PWA Fit", 0.634,2.203);
   RooFitResult* fitResult = bern2BW.fitTo(dataHist_P, SumW2Error(true), Save(), PrintLevel(1));
   fitResult->Print("v");
   std::cout << "status=" << fitResult->status() << " covQual=" << fitResult->covQual() << std::endl;
@@ -196,7 +186,7 @@ void plots_roofit(){
   fom[3] = purity;
 
   // ---- Plotting ----
-  // mass.setRange("PWA Plot", 0.653,2.203);
+  // mass.setRange("PWA Plot", 0.634,2.203);
   RooPlot* frame_intBW_P = mass.frame();
   frame_intBW_P->GetXaxis()->SetTitle("M[K_{s}#pi^{+}] (GeV)");
   frame_intBW_P->GetYaxis()->SetTitle(Form("Events / %.0f MeV", 1000*h_Pwave->GetBinWidth(1)));
@@ -209,39 +199,6 @@ void plots_roofit(){
   bern2BW.plotOn(frame_intBW_P, Name("curveBkg"), Components(bkg),
                  LineStyle(kDotted), LineColor(kOrange+7));
 
-
-  // ---- Overlay the isolated S-wave intensity THIS IS NOT SCALED RIGOROUSLY,
-  // it ust gives rough idea of S-Wave contribution and shape. ----
-  // |A_S|^2 with A_S = (m/q) sin(deltaB) exp(i deltaB); intensity = (m/q)^2 sin^2(deltaB)
-  const double mK = 0.497, mPi = 0.139;
-  const double aVal = aScat.getVal(), rVal = rEff.getVal();
-  const double sVal = scaleS.getVal();          // S-wave magnitude
-  const int    nPts = 400;
-
-  TGraph* g_swave = new TGraph(nPts);
-  for(int i=0; i<nPts; ++i){
-    double m  = mass.getMin() + (mass.getMax()-mass.getMin())*i/(nPts-1);
-    double s  = m*m, a = (mK+mPi)*(mK+mPi), b = (mK-mPi)*(mK-mPi);
-    double arg = (s-a)*(s-b);
-    double qh  = arg>0 ? sqrt(arg)/(2*m) : 0.0;
-    double intensity = 0.0;
-    if(qh > 0){
-      double cotD = 1.0/(aVal*qh) + 0.5*rVal*qh;
-      double dB   = atan2(1.0, cotD);
-      double AS   = (m/qh)*sin(dB);            // |A_S| (magnitude; phase drops out of |.|^2)
-      intensity   = (sVal*sVal)*(AS*AS);       // scaleS^2 |A_S|^2
-    }
-    g_swave->SetPoint(i, m, intensity);
-  }
-
-  // rough visual normalization: scale so the curve is visible against the data
-  double gmax = 0; for(int i=0;i<nPts;++i) gmax = std::max(gmax, g_swave->GetY()[i]);
-  double target = 0.5 * h_Pwave->GetMaximum() * sig2bkg.getVal() * scaleS.getVal();
-  if(gmax>0) for(int i=0;i<nPts;++i) g_swave->SetPoint(i, g_swave->GetX()[i], g_swave->GetY()[i]*target/gmax);
-
-  g_swave->SetLineColor(kGreen+2);
-  g_swave->SetLineStyle(2);
-  g_swave->SetLineWidth(2);
 
   double chi2ndf = frame_intBW_P->chiSquare("curveTot", "dataP",
                                           fitResult->floatParsFinal().getSize());
@@ -371,58 +328,7 @@ void plots_roofit(){
   // ---- Print to PDF ----
   cout << "Chi2/NDF: " << chi2ndf << endl;
   TCanvas* fit_c = new TCanvas("fit","", 1200, 1400);
-  fit_c->Divide(1,2);
-
-  fit_c->cd(1); gPad->SetPad(0.0, 0.30, 1.0, 1.0); gPad->SetBottomMargin(0.02);
-  frame_intBW_P->GetXaxis()->SetLabelSize(0);
-  frame_intBW_P->GetXaxis()->SetTitleSize(0);
+  fit_c->Draw();
   frame_intBW_P->Draw();
-
-  fit_c->cd(1);
-  g_swave->Draw("L same");
-
-  fit_c->cd(2); gPad->SetPad(0.0, 0.0, 1.0, 0.30); gPad->SetTopMargin(0.02); gPad->SetBottomMargin(0.30);
-  framePull->SetTitle("");
-  framePull->GetXaxis()->SetTitle("M[K_{s}#pi^{+}] (GeV)");
-  framePull->GetYaxis()->SetTitle("Pull = #frac{N_{data} - N_{fit}}{#sigma}");
-  framePull->GetYaxis()->SetNdivisions(505);
-  framePull->GetXaxis()->SetLabelSize(0.10); framePull->GetXaxis()->SetTitleSize(0.11);
-  framePull->GetYaxis()->SetLabelSize(0.08); framePull->GetYaxis()->SetTitleSize(0.11);
-  framePull->GetYaxis()->SetTitleSize(0.08);
-  framePull->GetYaxis()->SetTitleOffset(0.54);
-  framePull->Draw();
-
-  TLine* l0 = new TLine(mass.getMin(), 0, mass.getMax(), 0);
-  l0->SetLineStyle(kDashed); l0->Draw();
-
   fit_c->Print("/work/halld/home/dbarton/gluex/KShortPipLambda/fitting/plots/plots_rooFit_kStar.pdf");
-
-  // --- Profile likelihood for phase parameter of bern2BW ---
-  // comment out when "phase" is fixed (not floating) in the fit
-  RooAbsReal* nll = bern2BW.createNLL(dataHist_P);
-  RooAbsReal* pll = nll->createProfile(phase);
-  RooPlot* fphase = phase.frame(Range(-2.2, -1.95), Title("Profile likelihood"));
-  pll->plotOn(fphase, LineColor(kRed));
-  fphase->SetMinimum(0); fphase->SetMaximum(4);
-
-  TCanvas* phase_c = new TCanvas("phase_c","", 800, 600);
-  fphase->GetXaxis()->SetTitle("phase (deg)");
-  fphase->GetYaxis()->SetTitle("#Delta(-ln L)");
-  fphase->Draw();
-
-  // relabel the radian axis in degrees
-  gPad->Update();
-  fphase->GetXaxis()->SetLabelOffset(999);              // hide radian labels
-  fphase->GetXaxis()->SetTickLength(0);
-  double r2d = 180.0/TMath::Pi();
-  TGaxis* axDeg = new TGaxis(-2.2, 0, -1.95, 0,
-                             -2.2*r2d, -1.95*r2d, 510, "");
-  axDeg->SetLabelFont(fphase->GetXaxis()->GetLabelFont());
-  axDeg->SetLabelSize(fphase->GetXaxis()->GetLabelSize());
-  axDeg->Draw();
-
-  TLine* l05 = new TLine(-2.2, 0.5, -1.95, 0.5);
-  l05->SetLineStyle(kDashed); l05->SetLineColor(kGray+1); l05->Draw();
-
-  phase_c->Print("/work/halld/home/dbarton/gluex/KShortPipLambda/fitting/plots/plots_rooFit_phaseProfile.pdf");
 }
