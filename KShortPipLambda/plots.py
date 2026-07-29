@@ -24,7 +24,7 @@ logFile = "plots/plotEventSelection.txt"
 FND_fits = "/work/halld/home/dbarton/gluex/KShortPipLambda/fitting/plots/plots_rooFit_kStar.root"
 
 # ------ Use to plot variables used as 'global' cuts (beam energy, unused shower, etc).  These are unskimmed files. ---------------------
-FND_unSkimmed = "/volatile/halld/home/dbarton/pipkslamb/data/sp18fa18sp20/tree_pipkslamb__B4_M16_M18_FSFlat_sp18fa18sp20_40856_73266_allPols.root"
+FND_unSkimmed = "/volatile/halld/home/dbarton/pipkslamb/data/sp18fa18sp20/tree_pipkslamb__B4_M16_M18_FSFlat_sum_*_sp18fa18sp20_40856_73266.root"
 FND_unSkimmed_MC = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/MCWjob4434/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSFlat_sp18-fa18_ALL.root"
 # Not used:
 # FND_unSkimmed_MC_THROWN.  For plotting, use 'FND_signalSkims_MC_THROWN' (created below).
@@ -39,7 +39,7 @@ FND_eventSelectionSkims_MC = "/volatile/halld/home/dbarton/pipkslamb/skims/tree_
 # ------ Use to plot final signal distributions that would be used for AmpTools fits (K*892 mass, angular distributions, etc.).  These are the ACTUAL trees fed into AmpTools.  ----
 FND_signalSkims = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/sourceFiles/tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_ALLpols.root"
 FND_signalSkims_MC = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/sourceFiles/tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_MC.root"
-FND_signalSkims_MC_THROWN = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/sourceFiles/tree_pipkslamb_SIGNAL_SKIM_K892_THROWN.root"
+FND_signalSkims_MC_THROWN = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/sourceFiles/tree_pipkslamb_SIGNAL_SKIM_K892_THROWN_sp18fa18sp20.root"
 
 allPlots = "plots/plots.pdf"
 NT = "ntFSGlueX_MODECODE"
@@ -1917,7 +1917,9 @@ def massPlots_KShort_flightLength(pdf_path):
         p1=0.3,
         p2=0.0,
     )
-    hData_FLon.SetFillColor(ROOT.kBlue)
+    hData_FLon.SetLineColor(ROOT.kBlue)
+    hData_FLon.SetFillColor(ROOT.kBlue -5)
+    hData_FLoff.SetLineColor(ROOT.kBlack)
     hData_FLoff.SetXTitle("M(#pi^{+}#pi^{-}) [GeV/c^{2}]")
     hData_FLoff.SetYTitle("Counts / 5 MeV")
     hData_FLoff.Draw("pE")
@@ -2138,26 +2140,28 @@ def massPlots_KShort_sideBands(pdf_path):
     hData.SetYTitle("Counts / 5 MeV")
     hData.SetMinimum(-1.2 * abs(hBkgNegative.GetMinimum()))
 
+    hData.SetLineColor(ROOT.kBlue)
+    hData.SetFillColor(ROOT.kBlue - 5)
     hSig.SetLineColor(ROOT.kBlack)
-    hSig.SetFillColor(ROOT.kBlue)
-    hBkgNegative.SetLineColor(ROOT.kBlack)
-    hBkgNegative.SetFillColor(ROOT.kRed)
+    hBkgNegative.SetLineColor(ROOT.kRed)
+    hBkgNegative.SetFillColor(ROOT.kRed - 3)
 
 
-    hData.Draw("pE")
-    hSig.Draw("hist same")
+    hData.Draw("hist")
+    hSig.Draw("pE same")
     hBkgNegative.Draw("hist same")
 
-    integral_ks = integral_between(hData, 0.35, 0.65)
-    integral_ksSig = integral_between(hSig, 0.35, 0.65)
-    integral_ksBkg = integral_between(hBkg, 0.35, 0.65)
+    xmin, xmax = 0.4676, 0.5276   # K_S mass 0.4976 +/- 0.03
+    integral_ks = integral_between(hData, xmin, xmax)
+    integral_ksSig = integral_between(hSig, xmin, xmax)
+    integral_ksBkg = integral_between(hBkg, xmin, xmax)
 
     draw_info_pad(
         p["info_main"],
         file_label(FND_eventSelectionSkims),
         legend_items=[
-            (hData, "M(#pi^{+} #pi^{-}) " "(Integral: " f"{integral_ks:.0f})", "pE"),
-            (hSig, "K_{s} Signal " "(Integral: " f"{integral_ksSig:.0f})", "f"),
+            (hData, "M(#pi^{+} #pi^{-}) " "(Integral: " f"{integral_ks:.0f})", "f"),
+            (hSig, "K_{s} Signal " "(Integral: " f"{integral_ksSig:.0f})", "pE"),
             (hBkgNegative, "K_{s} Background " "(Integral: " f"{integral_ksBkg:.0f})", "f"),
         ],
         notes=["K_{S} Sideband study"],
@@ -2239,25 +2243,27 @@ def massPlots_KShort_missingMass(pdf_path):
     hData.SetYTitle("Counts / 5 MeV")
     hData.SetMinimum(-1.2 * abs(hBkgNegative.GetMinimum()))
 
+    hData.SetLineColor(ROOT.kBlue)
+    hData.SetFillColor(ROOT.kBlue - 5)
     hSig.SetLineColor(ROOT.kBlack)
-    hSig.SetFillColor(ROOT.kBlue)
-    hBkgNegative.SetLineColor(ROOT.kBlack)
-    hBkgNegative.SetFillColor(ROOT.kRed)
+    hBkgNegative.SetLineColor(ROOT.kRed)
+    hBkgNegative.SetFillColor(ROOT.kRed - 3)
 
-    hData.Draw("pE")
-    hSig.Draw("hist same")
+    hData.Draw("hist")
+    hSig.Draw("pE same")
     hBkgNegative.Draw("hist same")
 
-    integral_data = integral_between(hData, 0.35, 0.65)
-    integral_sig  = integral_between(hSig, 0.35, 0.65)
-    integral_bkg  = integral_between(hBkg, 0.35, 0.65)
+    xmin, xmax = 0.4676, 0.5276   # K_S mass 0.4976 +/- 0.03
+    integral_data = integral_between(hData, xmin, xmax)
+    integral_sig  = integral_between(hSig, xmin, xmax)
+    integral_bkg  = integral_between(hBkg, xmin, xmax)
 
     draw_info_pad(
         p["info_main"],
         file_label(FND_eventSelectionSkims),
         legend_items=[
-            (hData, f"K_{{S}} MM (Integral: {integral_data:.0f})", "pE"),
-            (hSig,  f"K_{{S}} MM Signal (Integral: {integral_sig:.0f})", "f"),
+            (hData, f"K_{{S}} MM (Integral: {integral_data:.0f})", "f"),
+            (hSig,  f"K_{{S}} MM Signal (Integral: {integral_sig:.0f})", "pE"),
             (hBkgNegative, f"K_{{S}} MM Background (Integral: {integral_bkg:.0f})", "f"),
         ],
         notes=["Missing mass K_{S}"],
@@ -2266,7 +2272,7 @@ def massPlots_KShort_missingMass(pdf_path):
         label_pos=(0.06, 0.90),
         label_size=0.10,
         notes_start_y=0.68,
-        notes_text_size=0.075,
+        notes_text_size=0.14,
         notes_step=0.12,
     )
 
@@ -2283,7 +2289,7 @@ def massPlots_KShort_missingMass(pdf_path):
         title_size=0.11,
         notes_start_y=0.70,
         notes_text_size=0.075,
-        notes_step=0.16,
+        notes_step=0.08,
     )
 
     c.Print(pdf_path)
@@ -2315,22 +2321,27 @@ def massPlots_KShort_FINAL_SELECTION(pdf_path):
     hData.SetXTitle("M(#pi^{+}#pi^{-}) [GeV/c^{2}]")
     hData.SetYTitle("Counts / 5 MeV")
 
+    hData.SetLineColor(ROOT.kBlue)
+    hData.SetFillColor(ROOT.kBlue - 5)
     hSig.SetLineColor(ROOT.kBlack)
-    hSig.SetFillColor(ROOT.kBlue)
 
 
-    hData.Draw("pE")
-    hSig.Draw("hist same")
+    hData.Draw("hist")
+    hSig.Draw("pE same")
 
-    integral_ks = integral_between(hData, 0.35, 0.65)
-    integral_ksSig = integral_between(hSig, 0.35,0.65)
+
+    xmin, xmax = 0.4676, 0.5276   # K_S mass 0.4976 +/- 0.03
+    integral_ks = integral_between(hData, xmin, xmax)
+    integral_ksSig = integral_between(hSig,xmin, xmax)
+
+    draw_vertical_lines(hData, [xmin, xmax])
 
     draw_info_pad(
         p["info_main"],
         file_label(FND_eventSelectionSkims),
         legend_items=[
-            (hData, "M(#pi^{+} #pi^{-}) " "(Integral: " f"{integral_ks:.0f})", "pE"),
-            (hSig, "K_{s} Signal " "(Integral: " f"{integral_ksSig:.0f})", "f"),
+            (hData, "M(#pi^{+} #pi^{-}) " "(Integral: " f"{integral_ks:.0f})", "f"),
+            (hSig, "K_{s} Signal " "(Integral: " f"{integral_ksSig:.0f})", "pE"),
         ],
         notes=["K_{S} final selection"],
 
@@ -2420,7 +2431,9 @@ def massPlots_Lambda_flightLength(pdf_path):
     p2=0.0,
     )
 
-    hData_FLon.SetFillColor(ROOT.kBlue)
+    hData_FLon.SetLineColor(ROOT.kBlue)
+    hData_FLon.SetFillColor(ROOT.kBlue -5)
+    hData_FLoff.SetLineColor(ROOT.kBlack)
     hData_FLoff.SetXTitle("M(p #pi^{-}) [GeV/c^{2}]")
     hData_FLoff.SetYTitle("Counts / 2 MeV")
     hData_FLoff.Draw("pE")
@@ -2457,16 +2470,14 @@ def massPlots_Lambda_flightLength(pdf_path):
     # ----- Integration limits for signal and background functions
     xmin, xmax = 1.10525, 1.13275
     bin_width = hData_FLoff.GetXaxis().GetBinWidth(1)
-
-    # integrate under total fit(s)
-    integral_FLoff = integral_between(hData_FLoff, 1.10525, 1.13275)
-    integral_FLon  = integral_between(hData_FLon,  1.10525, 1.13275)
+    integral_FLoff = integral_between(hData_FLoff, xmin, xmax)
+    integral_FLon  = integral_between(hData_FLon,  xmin, xmax)
 
     # integrate under signal and background components separately.
     # NOTE: The integrals below are already calculated by 'compute_figureOfMerit' function;
     # They are created here only as a double-check.
-    integral_fit_FLoff_voigt = fit_integral_signal(fit_FLoff,     1.10525, 1.13275, bin_width=bin_width)
-    integral_fit_FLoff_expo2 = fit_integral_background(fit_FLoff, 1.10525, 1.13275, bin_width=bin_width)
+    integral_fit_FLoff_voigt = fit_integral_signal(fit_FLoff,     xmin, xmax, bin_width=bin_width)
+    integral_fit_FLoff_expo2 = fit_integral_background(fit_FLoff, xmin, xmax, bin_width=bin_width)
 
     # ----- Sig/Bkg ratios flightlength OFF
     S_off, B_off, SB_off, significance_off, purity_off = compute_figureOfMerit(
@@ -2567,26 +2578,28 @@ def massPlots_Lambda_sideBands(pdf_path):
     hData.SetYTitle("Counts / 2 MeV")
     hData.SetMinimum(-1.2 * abs(hBkgNegative.GetMinimum()))
 
+    hData.SetLineColor(ROOT.kBlue)
+    hData.SetFillColor(ROOT.kBlue - 5)
     hSig.SetLineColor(ROOT.kBlack)
-    hSig.SetFillColor(ROOT.kBlue)
-    hBkgNegative.SetLineColor(ROOT.kBlack)
-    hBkgNegative.SetFillColor(ROOT.kRed)
+    hBkgNegative.SetLineColor(ROOT.kRed)
+    hBkgNegative.SetFillColor(ROOT.kRed - 3)
 
-    hData.Draw("pE")
-    hSig.Draw("hist same")
+    hData.Draw("hist")
+    hSig.Draw("pE same")
     hBkgNegative.Draw("hist same")
 
-    integral_Lamb = integral_between(hData, 1.08, 1.20)
-    integral_LambSig = integral_between(hSig, 1.08, 1.20)
-    integral_LambBkg = integral_between(hBkg, 1.08, 1.20)
+    xmin, xmax = 1.10525, 1.13275
+    integral_Lamb = integral_between(hData, xmin, xmax)
+    integral_LambSig = integral_between(hSig, xmin, xmax)
+    integral_LambBkg = integral_between(hBkg, xmin, xmax)
 
 
     draw_info_pad(
         p["info_main"],
         file_label(FND_eventSelectionSkims),
         legend_items=[
-            (hData, "M(p #pi^{+}) " "(Integral: " f"{integral_Lamb:.0f})", "pE"),
-            (hSig, "Lambda Signal " "(Integral: " f"{integral_LambSig:.0f})", "f"),
+            (hData, "M(p #pi^{+}) " "(Integral: " f"{integral_Lamb:.0f})", "f"),
+            (hSig, "Lambda Signal " "(Integral: " f"{integral_LambSig:.0f})", "pE"),
             (hBkgNegative, "Lamb Backgnd " "(Integral: " f"{integral_LambBkg:.0f})", "f"),
         ],
         notes=["Lambda Sideband study"],
@@ -2665,13 +2678,14 @@ def massPlots_Lambda_missingMass(pdf_path):
     hData.SetYTitle("Counts / 2 MeV")
     hData.SetMinimum(-1.2 * abs(hBkgNegative.GetMinimum()))
 
+    hData.SetLineColor(ROOT.kBlue)
+    hData.SetFillColor(ROOT.kBlue - 5)
     hSig.SetLineColor(ROOT.kBlack)
-    hSig.SetFillColor(ROOT.kBlue)
-    hBkgNegative.SetLineColor(ROOT.kBlack)
-    hBkgNegative.SetFillColor(ROOT.kRed)
+    hBkgNegative.SetLineColor(ROOT.kRed)
+    hBkgNegative.SetFillColor(ROOT.kRed - 3)
 
-    hData.Draw("pE")
-    hSig.Draw("hist same")
+    hData.Draw("hist")
+    hSig.Draw("pE same")
     hBkgNegative.Draw("hist same")
 
     integral_data = integral_between(hData, 1.08, 1.20)
@@ -2682,8 +2696,8 @@ def massPlots_Lambda_missingMass(pdf_path):
         p["info_main"],
         file_label(FND_eventSelectionSkims),
         legend_items=[
-            (hData, f"#Lambda MM (Integral: {integral_data:.0f})", "pE"),
-            (hSig,  f"#Lambda MM Signal (Integral: {integral_sig:.0f})", "f"),
+            (hData, f"#Lambda MM (Integral: {integral_data:.0f})", "f"),
+            (hSig,  f"#Lambda MM Signal (Integral: {integral_sig:.0f})", "pE"),
             (hBkgNegative, f"#Lambda MM Background (Integral: {integral_bkg:.0f})", "f"),
         ],
         notes=["Missing mass #Lambda"],
@@ -2692,7 +2706,7 @@ def massPlots_Lambda_missingMass(pdf_path):
         label_pos=(0.06, 0.90),
         label_size=0.10,
         notes_start_y=0.68,
-        notes_text_size=0.075,
+        notes_text_size=0.16,
         notes_step=0.12,
     )
 
@@ -2709,7 +2723,7 @@ def massPlots_Lambda_missingMass(pdf_path):
         title_size=0.11,
         notes_start_y=0.70,
         notes_text_size=0.075,
-        notes_step=0.16,
+        notes_step=0.12,
     )
 
     # c.Print(f"{pdf_path})")
@@ -2742,15 +2756,19 @@ def massPlots_Lambda_FINAL_SELECTION(pdf_path):
     hData.SetXTitle("M(p #pi^{+}) [GeV/c^{2}]")
     hData.SetYTitle("Counts / 2 MeV")
 
-    hSig.SetLineColor(ROOT.kBlack)
-    hSig.SetFillColor(ROOT.kBlue)
+    hData.SetLineColor(ROOT.kBlack)
+    hSig.SetLineColor(ROOT.kBlue)
+    hSig.SetFillColor(ROOT.kBlue -5)
 
 
     hData.Draw("pE")
     hSig.Draw("hist same")
 
-    integral_ks = integral_between(hData, 1.08,1.20)
-    integral_ksSig = integral_between(hSig, 1.08,1.20)
+    xmin, xmax = 1.10525, 1.13275
+    integral_ks = integral_between(hData, xmin, xmax)
+    integral_ksSig = integral_between(hSig, xmin, xmax)
+
+    draw_vertical_lines(hData, [xmin, xmax])
 
     draw_info_pad(
         p["info_main"],
@@ -2797,7 +2815,7 @@ def massPlots_Lambda_FINAL_SELECTION(pdf_path):
     # c.Print(f"{pdf_path})")
     ROOT.FSHistogram.clearHistogramCache()
 
-
+# -------- DELTA MISSING-MASS KSHORT -------------
 def deltaMassPlots_KShort(pdf_path):
     c = ROOT.TCanvas("c_delta_mass_ks", "c_delta_mass_ks", 1000, 1300)
     keep(c)
@@ -2834,14 +2852,16 @@ def deltaMassPlots_KShort(pdf_path):
     hData.SetXTitle("M(K_{S}) - MM(#Lambda#pi^{+}) [GeV/c^{2}]")
     hData.SetYTitle("Counts / 2.5 MeV")
     hData.SetMinimum(-1.2 * abs(hBkgNegative.GetMinimum()))
+    hData.GetXaxis().SetNdivisions(5, 5, 0, ROOT.kTRUE)
 
+    hData.SetLineColor(ROOT.kBlue)
+    hData.SetFillColor(ROOT.kBlue - 5)
     hSig.SetLineColor(ROOT.kBlack)
-    hSig.SetFillColor(ROOT.kBlue)
-    hBkgNegative.SetLineColor(ROOT.kBlack)
-    hBkgNegative.SetFillColor(ROOT.kRed)
+    hBkgNegative.SetLineColor(ROOT.kRed)
+    hBkgNegative.SetFillColor(ROOT.kRed - 3)
 
-    hData.Draw("pE")
-    hSig.Draw("hist same")
+    hData.Draw("hist")
+    hSig.Draw("pE same")
     hBkgNegative.Draw("hist same")
 
     zeroLine = ROOT.TLine(0.0, hData.GetMinimum(), 0.0, hData.GetMaximum())
@@ -2858,17 +2878,17 @@ def deltaMassPlots_KShort(pdf_path):
         p["info_main"],
         file_label(FND_eventSelectionSkims),
         legend_items=[
-            (hData, f"K_{{S}} #DeltaM (Integral: {integral_data:.0f})", "pE"),
-            (hSig, f"K_{{S}} Signal #DeltaM (Integral: {integral_sig:.0f})", "f"),
+            (hData, f"K_{{S}} #DeltaM (Integral: {integral_data:.0f})", "f"),
+            (hSig, f"K_{{S}} Signal #DeltaM (Integral: {integral_sig:.0f})", "pE"),
             (hBkgNegative, f"K_{{S}} Background #DeltaM (Integral: {integral_bkg:.0f})", "f"),
         ],
         notes=["#DeltaM(K_{S}) = M(K_{S}) - MM(#Lambda#pi^{+})"],
         legend_box=(0.48, 0.22, 0.96, 0.84),
         legend_text_size=0.10,
         label_pos=(0.06, 0.90),
-        label_size=0.10,
+        label_size=0.12,
         notes_start_y=0.68,
-        notes_text_size=0.075,
+        notes_text_size=0.12,
         notes_step=0.12,
     )
 
@@ -2885,7 +2905,7 @@ def deltaMassPlots_KShort(pdf_path):
         title_size=0.11,
         notes_start_y=0.70,
         notes_text_size=0.075,
-        notes_step=0.16,
+        notes_step=0.12,
     )
 
     c.Print(pdf_path)
@@ -2893,7 +2913,7 @@ def deltaMassPlots_KShort(pdf_path):
 
 
 
-
+# ----------- DELTA MISSING-MASS LAMBDA -------------
 def deltaMassPlots_Lambda(pdf_path):
     c = ROOT.TCanvas("c_delta_mass_lambda", "c_delta_mass_lambda", 1000, 1300)
     keep(c)
@@ -2930,14 +2950,16 @@ def deltaMassPlots_Lambda(pdf_path):
     hData.SetXTitle("M(#Lambda) - MM(K_{S}#pi^{+}) [GeV/c^{2}]")
     hData.SetYTitle("Counts / 2.5 MeV")
     hData.SetMinimum(-1.2 * abs(hBkgNegative.GetMinimum()))
+    hData.GetXaxis().SetNdivisions(5, 5, 0, ROOT.kTRUE)
 
+    hData.SetLineColor(ROOT.kBlue)
+    hData.SetFillColor(ROOT.kBlue - 5)
     hSig.SetLineColor(ROOT.kBlack)
-    hSig.SetFillColor(ROOT.kBlue)
-    hBkgNegative.SetLineColor(ROOT.kBlack)
-    hBkgNegative.SetFillColor(ROOT.kRed)
+    hBkgNegative.SetLineColor(ROOT.kRed)
+    hBkgNegative.SetFillColor(ROOT.kRed - 3)
 
-    hData.Draw("pE")
-    hSig.Draw("hist same")
+    hData.Draw("hist")
+    hSig.Draw("pE same")
     hBkgNegative.Draw("hist same")
 
     zeroLine = ROOT.TLine(0.0, hData.GetMinimum(), 0.0, hData.GetMaximum())
@@ -2954,17 +2976,17 @@ def deltaMassPlots_Lambda(pdf_path):
         p["info_main"],
         file_label(FND_eventSelectionSkims),
         legend_items=[
-            (hData, f"#Lambda #DeltaM (Integral: {integral_data:.0f})", "pE"),
-            (hSig, f"#Lambda Signal #DeltaM (Integral: {integral_sig:.0f})", "f"),
+            (hData, f"#Lambda #DeltaM (Integral: {integral_data:.0f})", "f"),
+            (hSig, f"#Lambda Signal #DeltaM (Integral: {integral_sig:.0f})", "pE"),
             (hBkgNegative, f"#Lambda Background #DeltaM (Integral: {integral_bkg:.0f})", "f"),
         ],
         notes=["#DeltaM(#Lambda) = M(#Lambda) - MM(K_{S}#pi^{+})"],
         legend_box=(0.48, 0.22, 0.96, 0.84),
         legend_text_size=0.10,
         label_pos=(0.06, 0.90),
-        label_size=0.10,
+        label_size=0.12,
         notes_start_y=0.68,
-        notes_text_size=0.075,
+        notes_text_size=0.12,
         notes_step=0.12,
     )
 
@@ -2981,7 +3003,7 @@ def deltaMassPlots_Lambda(pdf_path):
         title_size=0.11,
         notes_start_y=0.70,
         notes_text_size=0.075,
-        notes_step=0.16,
+        notes_step=0.12,
     )
 
     c.Print(pdf_path)
@@ -2989,15 +3011,13 @@ def deltaMassPlots_Lambda(pdf_path):
     ROOT.FSHistogram.clearHistogramCache()
 
 # ------------------------------------------------------------
-# BACKGROUND PLOTS: LAMBDA-PI+
+# BACKGROUND PLOT: LAMBDA-PI+  (2D map)
 # ------------------------------------------------------------
-def massPlots_lambdaPiBackground(pdf_path):
-    c = ROOT.TCanvas("c_baryon_bkg", "c_baryon_bkg", 2000, 1300)
+def massPlots_lambdaPiBackground2D(pdf_path):
+    c = ROOT.TCanvas("c_baryon_bkg_2d", "c_baryon_bkg_2d", 1000, 1300)
     keep(c)
 
-    panels = make_panel_grid(c, ncols=2, nrows=1, info_frac=0.23)
-
-    # 2D
+    panels = make_panel_grid(c, ncols=1, nrows=1, info_frac=0.30)
     p = panels[0]
     p["plot"].cd()
     ROOT.gPad.SetRightMargin(0.16)
@@ -3012,27 +3032,54 @@ def massPlots_lambdaPiBackground(pdf_path):
     h2.SetYTitle("M(K_{S}#pi^{+}) [GeV/c^{2}]")
     h2.Draw("colz")
 
-    draw_vertical_lines(h2, [2.0, 2.0])
-
+    # Draw a vertical line at x = 2.0 to indicate the cut for baryon background
+    ylo = h2.GetYaxis().GetXmin()
+    yhi = h2.GetYaxis().GetXmax()
+    xcut = 2.0
+    cutLine = ROOT.TLine(xcut, ylo, xcut, yhi)
+    cutLine.SetLineColor(ROOT.kBlue)
+    cutLine.SetLineWidth(2)
+    cutLine.Draw("same")
+    keep(cutLine)
 
     draw_info_pad(
         p["info_main"],
         file_label(FND_eventSelectionSkims),
-        legend_items=[(h2, "Counts", "f")],
-        notes=["Baryon background map"]
+        legend_items=[],
+        notes=["Baryon background study (correlation plot)"],
+        legend_box=(0.48, 0.22, 0.96, 0.84),
+        legend_text_size=0.10,
+        label_pos=(0.06, 0.90),
+        label_size=0.12,
+        notes_start_y=0.68,
+        notes_text_size=0.12,
+        notes_step=0.12,
     )
     draw_notes_pad(
         p["info_notes"],
         title="Cuts used",
         notes=[
-            "2D histogram:",
             f"CUT(tRange110,flightLengthKShort,flightLengthLambda)*CUTWT({sidebandCuts})",
-            f"Expr: MASS({DecayingKShort},{PiPlus1}):MASS({DecayingLambda},{PiPlus1})",
-        ]
+        ],
+        title_pos=(0.06, 0.88),
+        title_size=0.11,
+        notes_start_y=0.70,
+        notes_text_size=0.075,
+        notes_step=0.12,
     )
 
-    # 1D
-    p = panels[1]
+    c.Print(pdf_path)
+
+
+# ------------------------------------------------------------
+# BACKGROUND PLOT: LAMBDA-PI+  (1D projection)
+# ------------------------------------------------------------
+def massPlots_lambdaPiBackground1D(pdf_path):
+    c = ROOT.TCanvas("c_baryon_bkg_1d", "c_baryon_bkg_1d", 1000, 1300)
+    keep(c)
+
+    panels = make_panel_grid(c, ncols=1, nrows=1, info_frac=0.30)
+    p = panels[0]
     p["plot"].cd()
 
     h1 = fs_get_th1(
@@ -3042,29 +3089,41 @@ def massPlots_lambdaPiBackground(pdf_path):
         f"CUT(tRange110,flightLengthKShort,flightLengthLambda)*CUTWT({sidebandCuts})"
     )
     h1.SetXTitle("M(#Lambda#pi^{+}) [GeV/c^{2}]")
-    h1.SetYTitle("Events")
+    h1.SetYTitle("Counts")
     h1.SetMinimum(0.0)
-    h1.Draw("hist")
+    h1.SetLineColor(ROOT.kBlack)
+    h1.Draw("pE")
 
     draw_vertical_lines(h1, [2.0, 2.0])
 
     draw_info_pad(
         p["info_main"],
         file_label(FND_eventSelectionSkims),
-        legend_items=[(h1, "Data", "l")],
-        notes=["Reject #Sigma(1385)", "2.0 < M(#Lambda#pi^{+}) < 4.0"]
+        legend_items=[(h1, "Data", "pE")],
+        notes=["Select events between 2.0 < M(#Lambda#pi^{+}) < 4.0", "Which rejects #Sigma(1385)"],
+        legend_box=(0.48, 0.22, 0.96, 0.84),
+        legend_text_size=0.10,
+        label_pos=(0.06, 0.90),
+        label_size=0.12,
+        notes_start_y=0.68,
+        notes_text_size=0.16,
+        notes_step=0.12,
     )
     draw_notes_pad(
         p["info_notes"],
         title="Cuts used",
         notes=[
-            "1D histogram:",
             f"CUT(tRange110,flightLengthKShort,flightLengthLambda)*CUTWT({sidebandCuts})",
-            f"Expr: MASS({DecayingLambda},{PiPlus1})",
-        ]
+        ],
+        title_pos=(0.06, 0.88),
+        title_size=0.11,
+        notes_start_y=0.70,
+        notes_text_size=0.075,
+        notes_step=0.12,
     )
 
     c.Print(pdf_path)
+
 
 # ------------------------------------------------------------
 # KSTAR MASS PLOTS -- DATA FLIGHT LENGTH STUDY
@@ -3109,16 +3168,16 @@ def massPlots_KStar_flightLength(pdf_path):
 
 
     hSig1.SetXTitle("M(K_{S}#pi^{+}) [GeV/c^{2}]")
-    hSig1.SetYTitle("Combinations / 40 MeV")
+    hSig1.SetYTitle("Counts / 40 MeV")
 
-    hSig1.SetLineColor(ROOT.kBlack)
-    hSig1.SetFillColor(ROOT.kBlack)
-    hSig2.SetLineColor(ROOT.kBlack)
-    hSig2.SetFillColor(ROOT.kMagenta)
-    hSig3.SetLineColor(ROOT.kBlack)
-    hSig3.SetFillColor(ROOT.kGreen)
-    hSig4.SetLineColor(ROOT.kBlack)
-    hSig4.SetFillColor(ROOT.kBlue)
+    hSig1.SetLineColor(ROOT.kGrey + 3)
+    hSig1.SetFillColor(ROOT.kGrey + 2)
+    hSig2.SetLineColor(ROOT.kMagenta)
+    hSig2.SetFillColor(ROOT.kMagenta - 3)
+    hSig3.SetLineColor(ROOT.kGreen)
+    hSig3.SetFillColor(ROOT.kGreen - 3)
+    hSig4.SetLineColor(ROOT.kBlue)
+    hSig4.SetFillColor(ROOT.kBlue - 5)
 
     hSig1.Draw("hist")
     hSig2.Draw("hist same")
@@ -3325,7 +3384,7 @@ def massPlots_KStar_flightLength(pdf_path):
     # c.Print(f"{pdf_path})")
 
 # ------------------------------------------------------------
-# KSTAR MASS PLOTS -- DATA UNUSED ENERGY STUDY STUDY
+# KSTAR MASS PLOTS -- UNUSED ENERGY STUDY STUDY
 # ------------------------------------------------------------
 def massPlots_KStar_unusedEnergyStudy(pdf_path):
     c = ROOT.TCanvas("c_kstar_sidebands", "c_kstar_sidebands", 1000, 1300)
@@ -3350,10 +3409,10 @@ def massPlots_KStar_unusedEnergyStudy(pdf_path):
     
 
     hSig1.SetXTitle("M(K_{S}#pi^{+}) [GeV/c^{2}]")
-    hSig1.SetYTitle("Combinations / 40 MeV")
+    hSig1.SetYTitle("Counts / 40 MeV")
 
-    hSig1.SetLineColor(ROOT.kBlack)
-    hSig1.SetFillColor(ROOT.kBlue)
+    hSig1.SetLineColor(ROOT.kBlue)
+    hSig1.SetFillColor(ROOT.kBlue -5)
     hSig2.SetLineColor(ROOT.kBlack)
     # hSig2.SetFillColor(ROOT.kBlue)
 
@@ -3455,6 +3514,7 @@ def massPlots_KStar_unusedEnergyStudy(pdf_path):
             # (fit2_kstar, "Sig2: 2 Voigt + Bernstein fit", "l"),
         ],
         notes=[
+            (0.08, "Unused Shower Energy Study"),
             (0.08, "K*(892) yield, Sig/Bkg, purity [S/(S+B)]"),
             (0.08, f"Sig1 yld: {S1_h1:.0f} S/B: {SB_h1:.2f} Purty: {purity_h1:.2f}"),
             (0.08, f"Sig2 yld: {S1_h2:.0f} S/B: {SB_h2:.2f} Purty: {purity_h2:.2f}"),
@@ -3492,6 +3552,10 @@ def massPlots_KStar_unusedEnergyStudy(pdf_path):
     c.Print(pdf_path)
     # c.Print(f"{pdf_path})")
 
+
+# ------------------------------------------------------------
+# MISSING MASS KSTAR PLOTS -- SIDEBAND STUDY
+# ------------------------------------------------------------
 def missingMassPlots_KStar_sidebands(pdf_path):
     c = ROOT.TCanvas("c_mm_kstar_sidebands", "c_mm_kstar_sidebands", 1000, 1300)
     keep(c)
@@ -3522,37 +3586,37 @@ def missingMassPlots_KStar_sidebands(pdf_path):
     keep(hBkgNegative)
     hBkgNegative.Scale(-1.0)
 
-    hData.SetXTitle("MM(K*) [GeV/c^{2}]")
+    hData.SetXTitle("MM(#Lambda) [GeV/c^{2}]")
     hData.SetYTitle("Counts / 40 MeV")
     hData.SetMinimum(-1.2 * abs(hBkgNegative.GetMinimum()))
 
+    hData.SetLineColor(ROOT.kBlue)
+    hData.SetFillColor(ROOT.kBlue - 5)
     hSig.SetLineColor(ROOT.kBlack)
-    hSig.SetFillColor(ROOT.kBlue)
-    hBkgNegative.SetLineColor(ROOT.kBlack)
-    hBkgNegative.SetFillColor(ROOT.kRed)
+    hBkgNegative.SetLineColor(ROOT.kRed)
+    hBkgNegative.SetFillColor(ROOT.kRed - 3)
 
-    hData.Draw("pE")
-    hSig.Draw("hist same")
+    hData.Draw("hist")
+    hSig.Draw("pE same")
     hBkgNegative.Draw("hist same")
 
     draw_vertical_lines(hData, [0.8, 1.0], color=ROOT.kRed)
 
-    integral_kStar = integral_between(hData, 0.8, 1.0)
-    integral_kStarSig = integral_between(hSig, 0.8, 1.0)
-    integral_kStarBkg = integral_between(hBkg, 0.8, 1.0)
+    xmin, xmax = 0.634, 2.203
+    # integral_kStar = integral_between(hData, xmin, xmax)
+    integral_kStarSig  = integral_between(hSig,  xmin, xmax)
+    # integral_kStarBkg = integral_between(hBkg, xmin, xmax)
 
     draw_info_pad(
         p["info_main"],
         file_label(FND_eventSelectionSkims),
         legend_items=[
-            (hData, "MM(K*): Data " "(Integral: " f"{integral_kStar:.0f})", "pE"),
-            (hSig, "MM(K*): Signal " "(Integral: " f"{integral_kStarSig:.0f})", "f"),
-            (hBkgNegative, "MM(K*): Background " "(Integral: " f"{integral_kStarBkg:.0f})", "f"),
+            (hData, "MM(#Lambda): Data", "f"),
+            (hSig, "MM(#Lambda): Signal " "(Integral: " f"{integral_kStarSig:.0f})", "pE"),
+            (hBkgNegative, "MM(#Lambda): Background", "f"),
         ],
         notes=[
-            "K* missing-mass sideband subtraction study",
-            "Selecting K*(892) mass region from",
-            "MM(#Lambda) = (0.8, 1.0) GeV/c^{2}",
+            "Missing-mass sideband subtraction study",
         ],
         legend_box=(0.48, 0.18, 0.96, 0.84),
         legend_text_size=0.10,
@@ -3560,7 +3624,7 @@ def missingMassPlots_KStar_sidebands(pdf_path):
         label_size=0.10,
         notes_start_y=0.62,
         notes_text_size=0.12,
-        notes_step=0.11,
+        notes_step=0.8,
     )
 
     draw_notes_pad(
@@ -3614,7 +3678,7 @@ def massPlots_KStar_FINAL_SELECTION(pdf_path):
     hBkgNegative.Scale(-1.0)
 
     hData.SetXTitle("M(K_{S}#pi^{+}) [GeV/c^{2}]")
-    hData.SetYTitle("Combinations / 25 MeV")
+    hData.SetYTitle("Counts / 25 MeV")
     hData.SetMinimum(-1.2 * abs(hBkgNegative.GetMinimum()))
 
     hData.SetLineColor(ROOT.kBlue)
@@ -3637,12 +3701,13 @@ def massPlots_KStar_FINAL_SELECTION(pdf_path):
         p["info_main"],
         file_label(FND_eventSelectionSkims),
         legend_items=[
-            (hData, "M(Ks #pi^{{+}}) Data", "f"),
+            (hData, "M(Ks #pi^{+}) Data", "f"),
             (hSig, f"M(Ks #pi^{{+}}) Signal {integral_kStarSig:.0f} M(0.634,2.203)", "pE"),
             (hBkgNegative, "M(Ks #pi^{+}) SB Background", "f"),
         ],
         notes=[
-            (0.08, "SB Background = 3D sideband background = "),
+            (0.08, "Final K* Selection"),
+            (0.08, "3D sideband background = "),
             (0.10, "accidental beam photons x"),
             (0.12, "x Ks sidebands x Lambda sidebands"),
         ],
@@ -3659,9 +3724,9 @@ def massPlots_KStar_FINAL_SELECTION(pdf_path):
         title="Cuts used",
         notes=[
             (0.08, "Global skim cuts: CUT(tRange110,chi2DOF,unusedTracks,coherentPeak,targetZ)"),
-            (0.08, f"Data: CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda). Sig:"),
-            (0.08, f"Histogram cuts Sig:  CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)"),
-            (0.10, f"*CUTWT({sidebandCuts})."),
+            (0.08, "Data: CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)"),
+            (0.08, "Histogram cuts Sig:  CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)"),
+            (0.10, f"*CUTWT({sidebandCuts})"),
             (0.08, f"Bkg:  CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT({sidebandCuts})"),
         ],
         title_pos=(0.06, 0.88),
@@ -3671,8 +3736,8 @@ def massPlots_KStar_FINAL_SELECTION(pdf_path):
         notes_step=0.09,
     )
 
-    # c.Print(pdf_path) 
-    c.Print(f"{pdf_path}(") 
+    c.Print(pdf_path) 
+    # c.Print(f"{pdf_path}(") 
 
 # ------------------------------------------------------------
 # KSTAR MASS PLOTS -- non-relativistic fit
@@ -3693,7 +3758,7 @@ def massPlots_KStar_nonRelFIT(pdf_path):
     )
 
     hSig.SetXTitle("M(K_{S}#pi^{+}) [GeV/c^{2}]")
-    hSig.SetYTitle("Combinations / 25 MeV")
+    hSig.SetYTitle("Counts / 25 MeV")
     hSig.SetLineColor(ROOT.kBlack)
     hSig.Draw("pE")
 
@@ -3763,6 +3828,7 @@ def massPlots_KStar_nonRelFIT(pdf_path):
             (fit_bern,     "Fit: Bernstein", "l"),
         ],
         notes=[
+            (0.08, "Non-relativistic fit"),
             (0.08, "Integrals: M(Ks #pi^{+}) = (0.8, 1.0) GeV/c^{2}"),
             (0.08, "K*(892) yield, Sig/Bkg, Purity S/(S+B):"),
             (0.08, f"Sig. yield: {S1_h2:.0f}  S/B: {SB_h2:.2f}  Purity: {purity_h2:.2f}"),
@@ -3780,7 +3846,7 @@ def massPlots_KStar_nonRelFIT(pdf_path):
         title="Cuts used",
         notes=[
             (0.08, "Global skim cuts: CUT(tRange110,chi2DOF,unusedTracks,coherentPeak,targetZ)"),
-            (0.08, f"Histogram cuts Sig:  CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)"),
+            (0.08, "Histogram cuts Sig:  CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)"),
             (0.10, f"*CUTWT({sidebandCuts}). Sig: {S1_h2:.0f}, Bkg: {B_h2:.0f}"),
         ],
         title_pos=(0.06, 0.88),
@@ -3825,7 +3891,7 @@ def massPlots_KStar_relROOFIT(pdf_path):
     keep(h_Pwave)
 
     h_Pwave.SetXTitle("M(K_{S}#pi^{+}) [GeV/c^{2}]")
-    h_Pwave.SetYTitle("Combinations / 25 MeV")
+    h_Pwave.SetYTitle("Counts / 25 MeV")
     h_Pwave.SetLineColor(ROOT.kBlack)
     h_Pwave.SetMinimum(-1.2 * abs(h_Pwave.GetMinimum()))
     h_Pwave.Draw("pE")
@@ -3873,15 +3939,15 @@ def massPlots_KStar_relROOFIT(pdf_path):
         label_pos=(0.06, 0.90),
         label_size=0.10,
         notes_start_y=0.78,
-        notes_text_size=0.12,
-        notes_step=0.15,
+        notes_text_size=0.060,
+        notes_step=0.09,
     )
     draw_notes_pad(
         p["info_notes"],
         title="Cuts used",
         notes=[
             (0.08, "Global skim cuts: CUT(tRange110,chi2DOF,unusedTracks,coherentPeak,targetZ)"),
-            (0.08, f"Sig skim: CUT(tRange110,chi2DOF,unusedTracks,coherentPeak,targetZ,flightLengthKShort,flightLengthLambda,rejectSigma1385)"),
+            (0.08, "Sig skim: CUT(tRange110,chi2DOF,unusedTracks,coherentPeak,targetZ,flightLengthKShort,flightLengthLambda,rejectSigma1385)"),
             (0.08, f"Friend tree skim: CUTWT(rf,KShort,Lambda). Sig: {S:.0f}, Bkg: {B:.0f}"),
             (0.08, "Histogram cuts: none"),
         ],
@@ -3892,8 +3958,8 @@ def massPlots_KStar_relROOFIT(pdf_path):
         notes_step=0.09,
     )
 
-    # c.Print(pdf_path)
-    c.Print(f"{pdf_path})")
+    c.Print(pdf_path)
+    # c.Print(f"{pdf_path})")
 
 # ------------------------------------------------------------
 # KSTAR MASS PLOTS -- DATA and MONTE CARLO
@@ -3911,7 +3977,6 @@ def massPlots_KStar_Signal_DATA_and_MC(pdf_path):
         f"MASS({DecayingKShort},{PiPlus1})",
         "(100,0.5,2.5)",
         f"CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT({sidebandCuts})"
-
     )
     hMC = fs_get_th1(
         FND_eventSelectionSkims_MC,
@@ -3920,23 +3985,22 @@ def massPlots_KStar_Signal_DATA_and_MC(pdf_path):
         f"CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT({sidebandCuts})"
     )
 
-    integral = integral_between(hData,0.8,1.0)
+    integral = integral_between(hData, 0.8, 1.0)
 
     hData.SetXTitle("M(K_{S}#pi^{+}) [GeV/c^{2}]")
-    hData.SetYTitle("Events")
-    hData.SetLineColor(ROOT.kBlack)
+    hData.SetYTitle("Counts")
+    hData.SetLineColor(ROOT.kBlue)
     hData.SetLineWidth(2)
     hData.SetMarkerStyle(20)
     hData.SetMarkerSize(0.8)
     hData.SetMinimum(0.0)
-
 
     hMC.SetLineColor(ROOT.kRed)
     hMC.SetLineWidth(2)
     hMC.SetMarkerStyle(24)
     hMC.SetMarkerColor(ROOT.kRed)
     hMC.SetMarkerSize(0.8)
-    hMC.Scale(0.1)
+    # hMC.Scale(0.1)
     hMC.SetMinimum(0.0)
 
     hData.Draw("pE")
@@ -3953,7 +4017,14 @@ def massPlots_KStar_Signal_DATA_and_MC(pdf_path):
         ],
         notes=["Select signal between 0.80 and 1.00 GeV",
                "Integral M(K_{S}#pi^{+}) = [0.8, 1.0][GeV/c^{2}]: " f"{integral:.0f}",
-        ]
+        ],
+        legend_box=(0.48, 0.22, 0.96, 0.84),
+        legend_text_size=0.10,
+        label_pos=(0.06, 0.90),
+        label_size=0.12,
+        notes_start_y=0.68,
+        notes_text_size=0.12,
+        notes_step=0.12,
     )
     draw_notes_pad(
         p["info_notes"],
@@ -3961,7 +4032,12 @@ def massPlots_KStar_Signal_DATA_and_MC(pdf_path):
         notes=[
             f"Data cuts: CUT({baseCuts})*CUTWT({sidebandCuts})",
             f"MC cuts:   CUT({baseCuts})*CUTWT({sidebandCuts})",
-        ]
+        ],
+        title_pos=(0.06, 0.88),
+        title_size=0.11,
+        notes_start_y=0.70,
+        notes_text_size=0.075,
+        notes_step=0.12,
     )
 
     c.Print(pdf_path)
@@ -3995,7 +4071,7 @@ def massPlots_KStar_FIT_RESULTS(pdf_path):
     integral_MC = integral_between(hMC, 0.8, 1.0)
 
     hData.SetXTitle("M(K_{S}#pi^{+}) [GeV/c^{2}]")
-    hData.SetYTitle("Events")
+    hData.SetYTitle("Counts")
     hData.SetLineColor(ROOT.kBlack)
     hData.SetLineWidth(2)
     hData.SetMarkerStyle(20)
@@ -4006,7 +4082,7 @@ def massPlots_KStar_FIT_RESULTS(pdf_path):
     hMC.SetMarkerStyle(24)
     hMC.SetMarkerColor(ROOT.kRed)
     hMC.SetMarkerSize(0.8)
-    hMC.Scale(0.6)
+    # hMC.Scale(0.6)
 
     hData.Draw("pE")
     hMC.Draw("pE same")
@@ -4017,8 +4093,8 @@ def massPlots_KStar_FIT_RESULTS(pdf_path):
         p["info_main"],
         f"{file_label(FND_signalSkims)} / {file_label(FND_signalSkims_MC)}",
         legend_items=[
-            (hData, "Data - fit results " "(Integral: " f"{integral_data:.0f})", "pE"),
-            (hMC,   "MC - fit results "   "(Integral: " f"{integral_MC:.0f})",   "pE"),
+            (hData, "Data (input to fit) " "(Int: " f"{integral_data:.0f})", "pE"),
+            (hMC,   "MC (input to fit) "   "(Int: " f"{integral_MC:.0f})",   "pE"),
         ],
         notes=[
             "Select signal between",
@@ -4602,32 +4678,33 @@ def main():
     # deltaTPlots_KShort_vs_PiPlus(allPlots)
     # deltaTPrimePlots_KShort_vs_PiPlus(allPlots)
     # massPlots_KShort_cutComparisons(allPlots)
-    # massPlots_KShort_flightLength(allPlots)
-    # massPlots_KShort_sideBands(allPlots)
-    # massPlots_KShort_missingMass(allPlots)
-    # massPlots_KShort_FINAL_SELECTION(allPlots)
-    # massPlots_Lambda_flightLength(allPlots)
-    # massPlots_Lambda_sideBands(allPlots)
-    # massPlots_Lambda_missingMass(allPlots)
-    # massPlots_Lambda_FINAL_SELECTION(allPlots)
-    # deltaMassPlots_KShort(allPlots)
-    # deltaMassPlots_Lambda(allPlots)
-    # massPlots_lambdaPiBackground(allPlots)
-    # massPlots_KStar_flightLength(allPlots)
-    # massPlots_KStar_unusedEnergyStudy(allPlots)
+    massPlots_KShort_flightLength(allPlots)
+    massPlots_KShort_sideBands(allPlots)
+    massPlots_KShort_missingMass(allPlots)
+    massPlots_KShort_FINAL_SELECTION(allPlots)
+    massPlots_Lambda_flightLength(allPlots)
+    massPlots_Lambda_sideBands(allPlots)
+    massPlots_Lambda_missingMass(allPlots)
+    massPlots_Lambda_FINAL_SELECTION(allPlots)
+    deltaMassPlots_KShort(allPlots)
+    deltaMassPlots_Lambda(allPlots)
+    massPlots_lambdaPiBackground2D(allPlots)
+    massPlots_lambdaPiBackground1D(allPlots)
+    massPlots_KStar_flightLength(allPlots)
+    massPlots_KStar_unusedEnergyStudy(allPlots)
+    missingMassPlots_KStar_sidebands(allPlots)
     massPlots_KStar_FINAL_SELECTION(allPlots)
     massPlots_KStar_nonRelFIT(allPlots)
     massPlots_KStar_relROOFIT(allPlots)
-    # missingMassPlots_KStar_sidebands(allPlots)
-    # massPlots_KStar_Signal_DATA_and_MC(allPlots)
-    # massPlots_KStar_FIT_RESULTS(allPlots)
-    # cosThetaGJ_KShort(allPlots)
-    # cosThetaHelicity_KShort_eventSelectionSkim(allPlots)
-    # cosThetaHelicity_KShort_ampToolsSkim(allPlots)
-    # cosTheta_vs_lambdaPi_eventSelection(allPlots)
-    # cosTheta_vs_lambdaPi_ampToolsSkim(allPlots)
-    # cosThetaHelicity_KShort_MC(allPlots)
-    # efficiency_cosThetaHelicity_KShort(allPlots)
+    massPlots_KStar_Signal_DATA_and_MC(allPlots)
+    massPlots_KStar_FIT_RESULTS(allPlots)
+    cosThetaGJ_KShort(allPlots)
+    cosThetaHelicity_KShort_eventSelectionSkim(allPlots)
+    cosThetaHelicity_KShort_ampToolsSkim(allPlots)
+    cosTheta_vs_lambdaPi_eventSelection(allPlots)
+    cosTheta_vs_lambdaPi_ampToolsSkim(allPlots)
+    cosThetaHelicity_KShort_MC(allPlots)
+    efficiency_cosThetaHelicity_KShort(allPlots)
 
     dt = time.time() - t0
     print(f"Total execution time: {dt:.1f} s")
