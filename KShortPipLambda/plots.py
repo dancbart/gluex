@@ -917,7 +917,7 @@ def global_eventSelection_Cuts(pdf_path):
     p["plot"].cd()
 
     h1 = fs_get_th1(
-        FND_eventSelectionSkims,
+        FND_unSkimmed,
         "EnUnusedSh",
         "(100,0.06,1.0)",
         "CUT()"
@@ -927,15 +927,15 @@ def global_eventSelection_Cuts(pdf_path):
     h1.SetLineColor(ROOT.kBlack)
 
     h1b = fs_get_th1(
-        FND_eventSelectionSkims_MC,
+        FND_unSkimmed_MC,
         "EnUnusedSh",
         "(100,0.06,1.0)",
         "CUT()"
     )
     h1b.SetXTitle("Unused shower energy [GeV]")
     h1b.SetYTitle("Combos")
-    h1b.SetLineColor(ROOT.kBlack)
-    h1b.SetFillColor(ROOT.kBlue)
+    h1b.SetLineColor(ROOT.kBlue)
+    h1b.SetFillColor(ROOT.kBlue - 5)
 
     integral_data = integral_between(h1, 0.1, 1.0)
     integral_MC_raw   = integral_between(h1b, 0.1, 1.0)
@@ -1032,7 +1032,7 @@ def global_eventSelection_Cuts(pdf_path):
     # )
     # h2.SetXTitle("Production vertex z-position [cm]")
     # h2.SetYTitle("Events")
-    # h2.Draw("hist")
+    # h2.Draw("pE")
 
     # if bggen:
     #     draw_mc_same(
@@ -1044,7 +1044,7 @@ def global_eventSelection_Cuts(pdf_path):
     # draw_info_pad(
     #     p["info_main"],
     #     file_label(FND_unSkimmed),
-    #     legend_items=[(h2, "Data", "l")],
+    #     legend_items=[(h2, "Data", "pE")],
     #     notes=["Cut: 52 < V_{z} < 78 cm"],
 
     #     # --- layout tweaks ---
@@ -1100,7 +1100,7 @@ def global_eventSelection_Cuts(pdf_path):
     # )
     # h3.SetXTitle("|-t| [GeV^{2}]")
     # h3.SetYTitle("Events")
-    # h3.Draw("hist")
+    # h3.Draw("pE")
 
     # if bggen:
     #     draw_mc_same(
@@ -1114,7 +1114,7 @@ def global_eventSelection_Cuts(pdf_path):
     # draw_info_pad(
     #     p["info_main"],
     #     file_label(FND_unSkimmed),
-    #     legend_items=[(h3, "Data", "l")],
+    #     legend_items=[(h3, "Data", "pE")],
     #     notes=["Cut: 0.1 < |-t| < 1.0"],
 
     #     # --- layout tweaks ---
@@ -1169,7 +1169,7 @@ def global_eventSelection_Cuts(pdf_path):
     # )
     # h4.SetXTitle("E_{beam} [GeV]")
     # h4.SetYTitle("Events")
-    # h4.Draw("hist")
+    # h4.Draw("pE")
 
     # if bggen:
     #     draw_mc_same(
@@ -1181,7 +1181,7 @@ def global_eventSelection_Cuts(pdf_path):
     # draw_info_pad(
     #     p["info_main"],
     #     file_label(FND_unSkimmed),
-    #     legend_items=[(h4, "Data", "l")],
+    #     legend_items=[(h4, "Data", "pE")],
     #     notes=["Coherent peak", "8.2 < E_{beam} < 8.6 GeV"],
 
     #     # --- layout tweaks ---
@@ -1236,7 +1236,7 @@ def global_eventSelection_Cuts(pdf_path):
     # )
     # h5.SetXTitle("#chi^{2}/dof")
     # h5.SetYTitle("Events")
-    # h5.Draw("hist")
+    # h5.Draw("pE")
 
     # if bggen:
     #     draw_mc_same(
@@ -1248,7 +1248,7 @@ def global_eventSelection_Cuts(pdf_path):
     # draw_info_pad(
     #     p["info_main"],
     #     file_label(FND_unSkimmed),
-    #     legend_items=[(h5, "Data", "l")],
+    #     legend_items=[(h5, "Data", "pE")],
     #     notes=["Cut: #chi^{2}/dof < 5"],
 
     #     # --- layout tweaks ---
@@ -1303,13 +1303,13 @@ def global_eventSelection_Cuts(pdf_path):
     # )
     # h6.SetXTitle("#Lambda flight length [cm]")
     # h6.SetYTitle("Events")
-    # h6.Draw("hist")
+    # h6.Draw("pE")
     # draw_vertical_lines(h6, [2.0])
 
     # draw_info_pad(
     #     p["info_main"],
     #     file_label(FND_unSkimmed),
-    #     legend_items=[(h6, "Data", "l")],
+    #     legend_items=[(h6, "Data", "pE")],
     #     notes=["Cut: L_{#Lambda} > 2 cm"],
 
     #     # --- layout tweaks ---
@@ -1364,13 +1364,13 @@ def global_eventSelection_Cuts(pdf_path):
     # )
     # h7.SetXTitle("K_{S} flight length [cm]")
     # h7.SetYTitle("Events")
-    # h7.Draw("hist")
+    # h7.Draw("pE")
     # draw_vertical_lines(h7, [2.0])
 
     # draw_info_pad(
     #     p["info_main"],
     #     file_label(FND_unSkimmed),
-    #     legend_items=[(h7, "Data", "l")],
+    #     legend_items=[(h7, "Data", "pE")],
     #     notes=["Cut: L_{K_{S}} > 2 cm"],
 
     #     # --- layout tweaks ---
@@ -1404,7 +1404,9 @@ def global_eventSelection_Cuts(pdf_path):
 
     # )
 
-    # c.Print(pdf_path)
+    # # c.Print(pdf_path)
+    # c.Print(f"{pdf_path})")
+
 
 
 
@@ -3170,8 +3172,8 @@ def massPlots_KStar_flightLength(pdf_path):
     hSig1.SetXTitle("M(K_{S}#pi^{+}) [GeV/c^{2}]")
     hSig1.SetYTitle("Counts / 40 MeV")
 
-    hSig1.SetLineColor(ROOT.kGrey + 3)
-    hSig1.SetFillColor(ROOT.kGrey + 2)
+    hSig1.SetLineColor(ROOT.kGray + 3)
+    hSig1.SetFillColor(ROOT.kGray + 2)
     hSig2.SetLineColor(ROOT.kMagenta)
     hSig2.SetFillColor(ROOT.kMagenta - 3)
     hSig3.SetLineColor(ROOT.kGreen)
@@ -4678,33 +4680,33 @@ def main():
     # deltaTPlots_KShort_vs_PiPlus(allPlots)
     # deltaTPrimePlots_KShort_vs_PiPlus(allPlots)
     # massPlots_KShort_cutComparisons(allPlots)
-    massPlots_KShort_flightLength(allPlots)
-    massPlots_KShort_sideBands(allPlots)
-    massPlots_KShort_missingMass(allPlots)
-    massPlots_KShort_FINAL_SELECTION(allPlots)
-    massPlots_Lambda_flightLength(allPlots)
-    massPlots_Lambda_sideBands(allPlots)
-    massPlots_Lambda_missingMass(allPlots)
-    massPlots_Lambda_FINAL_SELECTION(allPlots)
-    deltaMassPlots_KShort(allPlots)
-    deltaMassPlots_Lambda(allPlots)
-    massPlots_lambdaPiBackground2D(allPlots)
-    massPlots_lambdaPiBackground1D(allPlots)
-    massPlots_KStar_flightLength(allPlots)
-    massPlots_KStar_unusedEnergyStudy(allPlots)
-    missingMassPlots_KStar_sidebands(allPlots)
-    massPlots_KStar_FINAL_SELECTION(allPlots)
-    massPlots_KStar_nonRelFIT(allPlots)
-    massPlots_KStar_relROOFIT(allPlots)
-    massPlots_KStar_Signal_DATA_and_MC(allPlots)
-    massPlots_KStar_FIT_RESULTS(allPlots)
-    cosThetaGJ_KShort(allPlots)
-    cosThetaHelicity_KShort_eventSelectionSkim(allPlots)
-    cosThetaHelicity_KShort_ampToolsSkim(allPlots)
-    cosTheta_vs_lambdaPi_eventSelection(allPlots)
-    cosTheta_vs_lambdaPi_ampToolsSkim(allPlots)
+    # massPlots_KShort_flightLength(allPlots)
+    # massPlots_KShort_sideBands(allPlots)
+    # massPlots_KShort_missingMass(allPlots)
+    # massPlots_KShort_FINAL_SELECTION(allPlots)
+    # massPlots_Lambda_flightLength(allPlots)
+    # massPlots_Lambda_sideBands(allPlots)
+    # massPlots_Lambda_missingMass(allPlots)
+    # massPlots_Lambda_FINAL_SELECTION(allPlots)
+    # deltaMassPlots_KShort(allPlots)
+    # deltaMassPlots_Lambda(allPlots)
+    # massPlots_lambdaPiBackground2D(allPlots)
+    # massPlots_lambdaPiBackground1D(allPlots)
+    # massPlots_KStar_flightLength(allPlots)
+    # massPlots_KStar_unusedEnergyStudy(allPlots)
+    # missingMassPlots_KStar_sidebands(allPlots)
+    # massPlots_KStar_FINAL_SELECTION(allPlots)
+    # massPlots_KStar_nonRelFIT(allPlots)
+    # massPlots_KStar_relROOFIT(allPlots)
+    # massPlots_KStar_Signal_DATA_and_MC(allPlots)
+    # massPlots_KStar_FIT_RESULTS(allPlots)
+    # cosThetaGJ_KShort(allPlots)
+    # cosThetaHelicity_KShort_eventSelectionSkim(allPlots)
+    # cosThetaHelicity_KShort_ampToolsSkim(allPlots)
+    # cosTheta_vs_lambdaPi_eventSelection(allPlots)
+    # cosTheta_vs_lambdaPi_ampToolsSkim(allPlots)
     cosThetaHelicity_KShort_MC(allPlots)
-    efficiency_cosThetaHelicity_KShort(allPlots)
+    # efficiency_cosThetaHelicity_KShort(allPlots)
 
     dt = time.time() - t0
     print(f"Total execution time: {dt:.1f} s")

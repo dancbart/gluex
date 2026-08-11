@@ -3,6 +3,8 @@ KShortPipLambda/archive/
 KShortPipLambda/sdme/config/archive/
 KShortPipLambda/sdme/outputTrees/
 KShortPipLambda/sdme/fits/
+KShortPipLambda_MC/config_files/MC_joshJackson.config
+KShortPipLambda_MC/config_files/MC_ksaldan.config
 thesisTEMP.tex
 /KShortPipLambda/sdme/config/outFIT*.txt
 /KShortPipLambda/sdme/config/testFit_successful*/

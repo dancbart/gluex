@@ -6,16 +6,16 @@ ROOT.gROOT.SetBatch(True)
 
 from pyamptools import atiSetup
 atiSetup.setup(globals(), use_fsroot=True)
+allPlots = "plots/sdme_plots.pdf"
 
 # -----------------------------
 # Files / globals
 # -----------------------------
-t_bin = "#bf{-t = (0.3 - 0.8) GeV^{2}}" # t_bin label for plots.  MUST match the t_bin used to create the ROOT file.
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/032926_t110_fit1/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/042826_t110_fit1/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/20260529_t38_fit0_v3/KsPipLamb_ALL.root"
-FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/20260601_t38_fit0_v0/KsPipLamb_ALL.root"
-allPlots = "plots/sdme_plots.pdf"
+t_bin = "#bf{-t = (0.8 - 1.0) GeV^{2}}" # t_bin label for plots.  MUST match the t_bin used to create the ROOT file.
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_TwoPiAngles_500Mx3_MC_20260716_115925/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_TwoPiAngles_500Mx3_MC_20260727_162303/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_TwoPiAngles_500Mx3_MC_20260728_091248/KsPipLamb_ALL.root"
+FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_TwoPiAngles_500Mx3_MC_20260804_114746/KsPipLamb_ALL.root"
 
 NT = "ntFSGlueX_MODECODE"
 TREENAME = "ntFSGlueX_100000000_1100"
@@ -120,6 +120,11 @@ def load_histograms(filename):
         "psigen_sdme": get_hist_or_raise(f, "psigen_sdme"),
         "psibkg_sdme": get_hist_or_raise(f, "psibkg_sdme"),
         "psiacc_bernBkg": get_hist_or_raise(f, "psiacc_bernBkg"),
+
+        "MKpidat":         get_hist_or_raise(f, "MKpidat"),
+        "MKpiacc_sdme":    get_hist_or_raise(f, "MKpiacc_sdme"),
+        "MKpibkg_sdme":    get_hist_or_raise(f, "MKpibkg_sdme"),
+        "MKpiacc_bernBkg": get_hist_or_raise(f, "MKpiacc_bernBkg"),
     }
 
     f.Close()
@@ -941,7 +946,81 @@ def phi_minus_bigPhi_plots(hist, pdf_path):
     keep(c_psi_corr)
     add_pdf_page(c_psi_corr, pdf_path)
 
-    close_pdf(c_psi_corr,pdf_path)  # ← fixed: was close_pdf(pdf_path)
+    # close_pdf(c_psi_corr,pdf_path)  # ← fixed: was close_pdf(pdf_path)
+
+def MKpi_plots(hist, pdf_path):
+    MKpidat         = hist["MKpidat"]
+    MKpiacc_sdme    = hist["MKpiacc_sdme"]
+    MKpibkg_sdme    = hist["MKpibkg_sdme"]
+    MKpiacc_bernBkg = hist["MKpiacc_bernBkg"]
+
+    c, pad_plot, pad_info = make_canvas_with_bottompad("c_MKpi", info_frac=0.22)
+    pad_plot.cd()
+
+    h_data        = MKpidat.Clone("h_MKpi_data")
+    h_3Dsidebands = MKpibkg_sdme.Clone("h_MKpi_3D_SB")
+    h_bern       = MKpiacc_bernBkg.Clone("h_MKpi_bern")
+    h_acc        = MKpiacc_sdme.Clone("h_MKpi_acc")
+
+    # Layer 1 (data)
+    h_data.SetLineColor(ROOT.kBlack)
+
+    # Layer 2 (bottom): accidental sidebands only
+    h_3Dsidebands.SetLineColor(ROOT.kRed - 3)
+    h_3Dsidebands.SetFillColorAlpha(ROOT.kRed - 4, 0.60)
+    h_3Dsidebands.SetFillStyle(1001)
+
+    # Layer 3 (middle): accidental + bernstein
+    h_bkg_total = h_3Dsidebands.Clone("h_MKpi_bkg_total")
+    h_bkg_total.Add(h_bern)
+    h_bkg_total.SetLineColor(ROOT.kBlue - 3)
+    h_bkg_total.SetFillColorAlpha(ROOT.kBlue, 0.30)
+    h_bkg_total.SetFillStyle(1001)
+
+    # Layer 4 (top): accidental + bernstein + signal MC
+    h_total = h_bkg_total.Clone("h_MKpi_total")
+    h_total.Add(h_acc)
+    h_total.SetLineColor(ROOT.kGreen - 6)
+    h_total.SetFillColorAlpha(ROOT.kGreen - 2, 0.50)
+    h_total.SetFillStyle(1001)
+
+    # Bernstein alone for display
+    h_bern_only = h_bern.Clone("h_MKpi_bern_only")
+    h_bern_only.SetLineColor(ROOT.kViolet - 3)
+    h_bern_only.SetFillColorAlpha(ROOT.kViolet - 2, 0.50)
+    h_bern_only.SetFillStyle(1001)
+
+    h_total.SetTitle("")
+    h_total.SetXTitle("M(Ks #pi^{+}) [GeV/c^{2}]")
+    h_total.SetYTitle("Candidates / 40 MeV")
+    h_total.SetMinimum(0)
+
+    # Draw largest first so smaller layers appear on top
+    h_total.Draw("hist")
+    h_data.Draw("pE same")
+    h_bkg_total.Draw("hist same")
+    h_bern_only.Draw("hist same")
+    h_3Dsidebands.Draw("hist same")
+
+    draw_bottom_info_pad(
+        pad_info,
+        label_text="M(Ks #pi^{+}) SDME fit",
+        legend_items=[
+            (h_total,      "3D_SB+poly+accmc", "f"),
+            (h_bkg_total,  "3D_SB+poly",         "f"),
+            (h_bern_only,  "poly only",             "f"),
+            (h_3Dsidebands, "3D_SB",                 "f"),
+        ],
+        notes=[
+            f"{t_bin} " f"Total int: {h_total.Integral():.0f}",
+            f"accmc int: {h_acc.Integral():.0f}",
+            f"Bernstein int: {h_bern.Integral():.0f}",
+            f"3D_SB int: {h_3Dsidebands.Integral():.0f}",
+        ],
+    )
+
+    keep(c)
+    close_pdf(c, pdf_path)
 
 
 # -----------------------------
@@ -959,6 +1038,7 @@ def main():
     phi_plots(hist, allPlots)
     bigPhi_plots(hist, allPlots)
     phi_minus_bigPhi_plots(hist, allPlots)
+    MKpi_plots(hist, allPlots) 
 
     end_time = time.time()
     print(f"Time to run: {end_time - start_time:.1f} seconds")

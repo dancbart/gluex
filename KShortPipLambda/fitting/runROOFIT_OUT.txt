@@ -1,158 +1,120 @@
-[#1] INFO:Eval -- RooRealVar::setRange(mass) new range named 'PWA Fit' created with bounds [0.61,2.3]
-[#1] INFO:Eval -- RooRealVar::setRange(mass) new range named 'fit_nll_bern2BW_dataHist_P' created with bounds [0.61,2.3]
+Main tree entries:   267831
+Friend tree entries: 267831
+bin1 content = 271.158 of 91614.3
+peak bin: content = 6350.82 +/- 77.7797
+effective entries = 89715.3 (raw = 267831)
 [#1] INFO:Fitting -- RooAbsPdf::fitTo(bern2BW) fixing normalization set for coefficient determination to observables in data
 [#1] INFO:Fitting -- using CPU computation library compiled with -mavx512
 [#1] INFO:Fitting -- RooAddition::defaultErrorLevel(nll_bern2BW_dataHist_P) Summation contains a RooNLLVar, using its error level
 [#1] INFO:Minimization -- RooAbsMinimizerFcn::setOptimizeConst: activating const optimization
-Minuit2Minimizer: Minimize with max-calls 6000 convergence for edm < 1 strategy 1
+Minuit2Minimizer: Minimize with max-calls 5000 convergence for edm < 1 strategy 1
 Info in <Minuit2>: MnSeedGenerator Computing seed using NumericalGradient calculator
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(bkg_Int[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
 [#1] INFO:NumericIntegration -- RooRealIntegral::init(rel_intBW_Int[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
-[#1] INFO:NumericIntegration -- RooRealIntegral::init(rel_intBW_over_rel_intBW_Int[mass]_Int[mass|]_Norm[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
-[#1] INFO:NumericIntegration -- RooRealIntegral::init(rel_intBW_over_rel_intBW_Int[mass]_Int[mass|PWA Fit]_Norm[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
-[#1] INFO:NumericIntegration -- RooRealIntegral::init(rel_intBW_over_rel_intBW_Int[mass]_Int[mass|PWA Fit]_Norm[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
-Info in <Minuit2>: MnSeedGenerator Initial state: FCN =       4909.511916 Edm =       3350.045343 NCalls =     49
-Info in <Minuit2>: NegativeG2LineSearch Doing a NegativeG2LineSearch since one of the G2 component is negative
-Info in <Minuit2>: MnSeedGenerator Negative G2 found - new state: 
-  Minimum value : 3705.534514
-  Edm           : 327.6090093
-  Internal parameters:	[     -1.760447094     -1.370461484     -1.370461484     -1.370461484     0.4779951985    -0.2013579208   0.005633454617     -1.130126329     0.1809864512     0.2013579208....     -0.2218144705]	
-  Internal gradient  :	[     -442.5647226     -208.5738462     -410.8987792      200.6558697     -617.7999723     -1239.030325      14.66617442    -0.3053263264      1049.683208       225.892263....      -451.9036885]	
-  Internal covariance matrix:
-[[  0.00011401177              0              0              0              0              0              0              0              0              0....               0]
- [              0  0.00047169066              0              0              0              0              0              0              0              0....               0]
- [              0              0  0.00031389151              0              0              0              0              0              0              0....               0]
- [              0              0              0  0.00017532982              0              0              0              0              0              0....               0]
- [              0              0              0              0  6.8145307e-05              0              0              0              0              0....               0]
- [              0              0              0              0              0  6.2108683e-05              0              0              0              0....               0]
- [              0              0              0              0              0              0       1.019637              0              0              0....               0]
- [              0              0              0              0              0              0              0    0.049182848              0              0....               0]
- [              0              0              0              0              0              0              0              0  0.00037422007              0....               0]
- [              0              0              0              0              0              0              0              0              0  0.00054486764....               0]
-....
- [              0              0              0              0              0              0              0              0              0              0....    0.0020068228]]]
+Info in <Minuit2>: MnSeedGenerator Initial state: FCN =       15389.73252 Edm =       7080.449518 NCalls =     43
 Info in <Minuit2>: MnSeedGenerator Initial state  
-  Minimum value : 3705.534514
-  Edm           : 327.6090093
-  Internal parameters:	[     -1.760447094     -1.370461484     -1.370461484     -1.370461484     0.4779951985    -0.2013579208   0.005633454617     -1.130126329     0.1809864512     0.2013579208....     -0.2218144705]	
-  Internal gradient  :	[     -442.5647226     -208.5738462     -410.8987792      200.6558697     -617.7999723     -1239.030325      14.66617442    -0.3053263264      1049.683208       225.892263....      -451.9036885]	
+  Minimum value : 15389.73252
+  Edm           : 7080.449518
+  Internal parameters:	[     -1.287002218     -0.927295218     -1.287002218   -0.08845452519    -0.2355042367    -0.3398369095     0.1809864512     0.2013579208    -0.5962439085    -0.7297276562]	
+  Internal gradient  :	[     -1283.299221       2268.62872      3.755098975     -1635.901319      6502.246277      5767.380887       11286.5297      9124.105631     -5385.605352      -5174.51536]	
   Internal covariance matrix:
-[[  0.00011401177              0              0              0              0              0              0              0              0              0....               0]
- [              0  0.00047169066              0              0              0              0              0              0              0              0....               0]
- [              0              0  0.00031389151              0              0              0              0              0              0              0....               0]
- [              0              0              0  0.00017532982              0              0              0              0              0              0....               0]
- [              0              0              0              0  6.8145307e-05              0              0              0              0              0....               0]
- [              0              0              0              0              0  6.2108683e-05              0              0              0              0....               0]
- [              0              0              0              0              0              0       1.019637              0              0              0....               0]
- [              0              0              0              0              0              0              0    0.049182848              0              0....               0]
- [              0              0              0              0              0              0              0              0  0.00037422007              0....               0]
- [              0              0              0              0              0              0              0              0              0  0.00054486764....               0]
-....
- [              0              0              0              0              0              0              0              0              0              0....    0.0020068228]]]
-Info in <Minuit2>: VariableMetricBuilder Start iterating until Edm is < 0.001 with call limit = 6000
-Info in <Minuit2>: VariableMetricBuilder    0 - FCN =       3705.534514 Edm =       327.6090093 NCalls =    194
-Info in <Minuit2>: VariableMetricBuilder    1 - FCN =       3493.227051 Edm =       23.17286097 NCalls =    225
-Info in <Minuit2>: VariableMetricBuilder    2 - FCN =       3482.732566 Edm =       15.17426304 NCalls =    256
-Info in <Minuit2>: VariableMetricBuilder    3 - FCN =       3471.595458 Edm =       4.480196663 NCalls =    287
-Info in <Minuit2>: VariableMetricBuilder    4 - FCN =       3465.111754 Edm =       3.136310624 NCalls =    315
-Info in <Minuit2>: VariableMetricBuilder    5 - FCN =        3456.84968 Edm =       4.581941096 NCalls =    348
-Info in <Minuit2>: VariableMetricBuilder    6 - FCN =       3445.276417 Edm =       55.96916638 NCalls =    391
-Info in <Minuit2>: VariableMetricBuilder    7 - FCN =       3444.316217 Edm =       6.637007389 NCalls =    423
-Info in <Minuit2>: VariableMetricBuilder    8 - FCN =       3443.947433 Edm =       3256430.668 NCalls =    462
-Warning in <Minuit2>: VariableMetricBuilder No improvement in line search
-Info in <Minuit2>: VariableMetricBuilder    9 - FCN =       3443.947433 Edm =       3256430.668 NCalls =    473
-Warning in <Minuit2>: VariableMetricBuilder Iterations finish without convergence; Edm 7.13406e+06 Requested 0.001
-Warning in <Minuit2>: MnPosDef Matrix forced pos-def by adding to diagonal 618.924
+[[   0.0010893869              0              0              0              0              0              0              0              0              0]
+ [              0  0.00033776995              0              0              0              0              0              0              0              0]
+ [              0              0  6.9358496e-05              0              0              0              0              0              0              0]
+ [              0              0              0   2.777948e-06              0              0              0              0              0              0]
+ [              0              0              0              0  1.7551898e-05              0              0              0              0              0]
+ [              0              0              0              0              0  1.8074938e-05              0              0              0              0]
+ [              0              0              0              0              0              0  4.5592915e-05              0              0              0]
+ [              0              0              0              0              0              0              0  7.2019395e-05              0              0]
+ [              0              0              0              0              0              0              0              0  0.00014159278              0]
+ [              0              0              0              0              0              0              0              0              0  0.00028116223]]]
+Info in <Minuit2>: VariableMetricBuilder Start iterating until Edm is < 0.001 with call limit = 5000
+Info in <Minuit2>: VariableMetricBuilder    0 - FCN =       15389.73252 Edm =       7080.449518 NCalls =     43
+Info in <Minuit2>: VariableMetricBuilder    1 - FCN =       12118.72156 Edm =       3372.882708 NCalls =     67
+Info in <Minuit2>: VariableMetricBuilder    2 - FCN =       11318.92005 Edm =        188.756197 NCalls =     96
+Info in <Minuit2>: VariableMetricBuilder    3 - FCN =       11105.73336 Edm =       55.57016577 NCalls =    118
+Info in <Minuit2>: VariableMetricBuilder    4 - FCN =       11022.11741 Edm =       21.58369761 NCalls =    140
+Info in <Minuit2>: VariableMetricBuilder    5 - FCN =       10989.73087 Edm =       9.111044322 NCalls =    162
+Info in <Minuit2>: VariableMetricBuilder    6 - FCN =       10978.49706 Edm =       1.911857018 NCalls =    184
+Info in <Minuit2>: VariableMetricBuilder    7 - FCN =       10975.53453 Edm =      0.2126299915 NCalls =    206
+Info in <Minuit2>: VariableMetricBuilder    8 - FCN =       10975.17121 Edm =     0.06052612254 NCalls =    228
+Info in <Minuit2>: VariableMetricBuilder    9 - FCN =       10975.02108 Edm =     0.04226812876 NCalls =    250
+Info in <Minuit2>: VariableMetricBuilder   10 - FCN =       10974.82024 Edm =     0.02583627238 NCalls =    272
+Info in <Minuit2>: VariableMetricBuilder   11 - FCN =       10974.78286 Edm =    0.002764857286 NCalls =    294
+Info in <Minuit2>: VariableMetricBuilder   12 - FCN =        10974.7793 Edm =   0.0001080877018 NCalls =    316
 Info in <Minuit2>: VariableMetricBuilder After Hessian
-Info in <Minuit2>: VariableMetricBuilder   10 - FCN =       3443.947433 Edm =      0.5246364882 NCalls =    598
-Info in <Minuit2>: VariableMetricBuilder Tolerance not sufficient, continue minimization; Edm 0.524636 Required 0.001
-Warning in <Minuit2>: DavidonErrorUpdator delgam < 0 : first derivatives increasing along search line (details in info log)
-Info in <Minuit2>: DavidonErrorUpdator Explanation:
-   The distance from the minimum cannot be estimated, since the minimized
-   function seems not to be strictly convex in the space probed by the fit.
-   That is expected if the starting parameters are e.g. close to a local maximum
-   of the minimized function. If this function is expected to be fully convex
-   in the probed range or Minuit is already close to the function minimum, this
-   may hint to numerical or analytical issues with the minimized function.
-   This was found by projecting the difference of gradients at two points, s0 and p1,
-   onto the direction given by the difference of s0 and p1, where:
- * s0:  	[     -1.657285169     -1.114271158     -1.121373984      -1.54461929     0.4878183684    -0.1685069225     -6.048451637     -2.514752763    -0.2290456684    -0.0108077786....     -0.3711544228]	 
- * p1:  	[     -1.657317678     -1.114236891     -1.121408916     -1.544643588      0.489039619    -0.1685149442     -6.001233881     -2.449871056    -0.2290701202    -0.0107803386....     -0.3609500787]	 
- * gradient at s0:  	[      27.56344665     -123.7788949        130.19155      14.50659639      -153.344797      106.5564788     -4.033652216     -6.552436044       51.8329877     -94.81147279....       1.371385718]	 
- * gradient at p1:  	[      25.09437694     -105.6130458       111.377991       12.7872276     -935.7528167      26.84349511      3.673911494     -2.513562868      41.56503051     -96.31306698....       7.202508413]	 
-   To understand whether this hints to an issue in the minimized function,
-   the minimized function can be plotted along points between s0 and p1 to
-   look for unexpected behavior.
-Info in <Minuit2>: VariableMetricBuilder   11 - FCN =       3443.160031 Edm =      0.9533507674 NCalls =    633
-Warning in <Minuit2>: VariableMetricBuilder Matrix not pos.def, gdel = 4.00094 > 0
-Warning in <Minuit2>: MnPosDef non-positive diagonal element in covariance matrix[ 4 ] = -5.23507e-06
-Warning in <Minuit2>: MnPosDef non-positive diagonal element in covariance matrix[ 5 ] = -2.11021e-10
-Warning in <Minuit2>: MnPosDef non-positive diagonal element in covariance matrix[ 6 ] = -0.0073383
-Warning in <Minuit2>: MnPosDef non-positive diagonal element in covariance matrix[ 7 ] = -0.0138369
-Warning in <Minuit2>: MnPosDef non-positive diagonal element in covariance matrix[ 8 ] = -1.96072e-09
-Warning in <Minuit2>: MnPosDef non-positive diagonal element in covariance matrix[ 10 ] = -2.67369e-08
-Warning in <Minuit2>: MnPosDef non-positive diagonal element in covariance matrix[ 11 ] = -0.000341717
-Warning in <Minuit2>: MnPosDef Added to diagonal of Error matrix a value 0.513837
-Warning in <Minuit2>: VariableMetricBuilder gdel = -469004
-Warning in <Minuit2>: VariableMetricBuilder No improvement in line search
-Info in <Minuit2>: VariableMetricBuilder   12 - FCN =       3443.160031 Edm =      0.9533507674 NCalls =    644
-Warning in <Minuit2>: VariableMetricBuilder Iterations finish without convergence; Edm 4.53594 Requested 0.001
-Warning in <Minuit2>: VariableMetricBuilder FunctionMinimum is invalid after second try
-Warning in <Minuit2>: Minuit2Minimizer::Minimize Minimization did NOT converge, Edm is above max
-Minuit2Minimizer : Invalid minimum - status = 3
-FVAL  = 3443.16
-Edm   = 0.953351
-Nfcn  = 633
-Info in <Minuit2>: Minuit2Minimizer::Hesse Using max-calls 6000
-Warning in <Minuit2>: MnPosDef Matrix forced pos-def by adding to diagonal 0.0639618
-Info in <Minuit2>: Minuit2Minimizer::Hesse Hesse is valid - matrix is full but made positive defined
-Info in <Minuit2>: Minuit2Minimizer::Hesse Using max-calls 6000
-Warning in <Minuit2>: MnPosDef non-positive diagonal element in covariance matrix[ 3 ] = -23357.5
-Warning in <Minuit2>: MnPosDef Added to diagonal of Error matrix a value 23358
-Warning in <Minuit2>: MnPosDef Matrix forced pos-def by adding to diagonal 42.2235
-Info in <Minuit2>: Minuit2Minimizer::Hesse Hesse is valid - matrix is full but made positive defined
+Info in <Minuit2>: VariableMetricBuilder   13 - FCN =        10974.7793 Edm =   0.0009234694704 NCalls =    404
+Minuit2Minimizer : Valid minimum - status = 0
+FVAL  = 10974.7793019898945
+Edm   = 0.000923469470370758948
+Nfcn  = 404
+coef0	  = 0.0619418	 +/-  0.0173229	(limited)
+coef2	  = 0.332471	 +/-  0.0329732	(limited)
+coef3	  = 0.110299	 +/-  0.00554157	(limited)
+massBW_1	  = 0.893317	 +/-  0.000458292	(limited)
+massBW_2	  = 1.41405	 +/-  0.00206519	(limited)
+phase	  = -1.88984	 +/-  0.0378746	(limited)
+scale	  = 0.447688	 +/-  0.00502234	(limited)
+sig2bkg	  = 0.521484	 +/-  0.0065815	(limited)
+widthBW_1	  = 0.0833836	 +/-  0.00123376	(limited)
+widthBW_2	  = 0.137813	 +/-  0.00364117	(limited)
+Info in <Minuit2>: Minuit2Minimizer::Hesse Using max-calls 5000
+Info in <Minuit2>: Minuit2Minimizer::Hesse Hesse is valid - matrix is accurate
+Info in <Minuit2>: Minuit2Minimizer::Hesse Using max-calls 5000
+Info in <Minuit2>: Minuit2Minimizer::Hesse Hesse is valid - matrix is accurate
 [#1] INFO:Fitting -- RooAbsPdf::fitTo(bern2BW) Calculating sum-of-weights-squared correction matrix for covariance matrix
 [#1] INFO:Minimization -- RooAbsMinimizerFcn::setOptimizeConst: deactivating const optimization
+
+  RooFitResult: minimized FCN value: 10974.8, estimated distance to minimum: 84.3728
+                covariance matrix quality: Full, accurate covariance matrix
+                Status : MINIMIZE=0 HESSE=0 HESSE=0 
+
+    Constant Parameter    Value     
+  --------------------  ------------
+                 coef1    1.0000e+00
+              massd1_2    4.9700e-01
+              massd2_2    1.3900e-01
+                  qmax    1.0406e+00
+                  qmin    0.0000e+00
+                  rInt    1.0000e+00
+                 spin1    1.0000e+00
+                 spin2    1.0000e+00
+
+    Floating Parameter  InitialValue    FinalValue +/-  Error     GblCorr.
+  --------------------  ------------  --------------------------  --------
+                 coef0    1.0000e-01    6.1942e-02 +/-  2.02e-02  <none>
+                 coef2    5.0000e-01    3.3247e-01 +/-  3.75e-02  <none>
+                 coef3    1.0000e-01    1.1030e-01 +/-  5.74e-03  <none>
+              massBW_1    8.9200e-01    8.9332e-01 +/-  4.78e-04  <none>
+              massBW_2    1.4300e+00    1.4140e+00 +/-  2.37e-03  <none>
+                 phase   -2.0000e+00   -1.8898e+00 +/-  4.57e-02  <none>
+                 scale    5.9000e-01    4.4769e-01 +/-  4.55e-03  <none>
+               sig2bkg    6.0000e-01    5.2148e-01 +/-  5.85e-03  <none>
+             widthBW_1    4.8500e-02    8.3384e-02 +/-  1.22e-03  <none>
+             widthBW_2    1.0000e-01    1.3781e-01 +/-  3.32e-03  <none>
+
+status=0 covQual=3
 [#1] INFO:Eval -- RooRealVar::setRange(mass) new range named 'FOM' created with bounds [0.8,1]
 [#1] INFO:NumericIntegration -- RooRealIntegral::init(rel_intBW_Int[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(bkg_Int[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
 [#1] INFO:NumericIntegration -- RooRealIntegral::init(rel_intBW_Int[mass|FOM]_Norm[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
-[#1] INFO:Eval -- RooRealVar::setRange(mass) new range named 'PWA Plot' created with bounds [0.5,2.5]
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(bkg_Int[mass|FOM]_Norm[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
 [#1] INFO:InputArguments -- RooAbsData::plotOn(dataHist_P) INFO: dataset has non-integer weights, auto-selecting SumW2 errors instead of Poisson errors
-[#1] INFO:Plotting -- RooAbsPdf::plotOn(bern2BW) p.d.f was fitted in a subrange and no explicit NormRange() was specified. Plotting / normalising in fit range. To override, do one of the following
-	- Clear the automatic fit range attribute: <pdf>.removeStringAttribute("fitrange");
-	- Explicitly specify the plotting range: Range("<rangeName>").
-	- Explicitly specify where to compute the normalisation: NormRange("<rangeName>").
-	The default (full) range can be denoted with Range("") / NormRange("").
-[#1] INFO:Plotting -- RooAbsPdf::plotOn(bern2BW) only plotting range 'PWA Plot'
-[#1] INFO:Plotting -- RooAbsPdf::plotOn(bern2BW) p.d.f. curve is normalized using explicit choice of ranges 'fit_nll_bern2BW_dataHist_P'
 [#1] INFO:NumericIntegration -- RooRealIntegral::init(rel_intBW_Int[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
-[#1] INFO:NumericIntegration -- RooRealIntegral::init(bern2BW_Int[mass|fit_nll_bern2BW_dataHist_P]_Norm[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
-[#1] INFO:Plotting -- RooAbsPdf::plotOn(bern2BW) p.d.f was fitted in a subrange and no explicit NormRange() was specified. Plotting / normalising in fit range. To override, do one of the following
-	- Clear the automatic fit range attribute: <pdf>.removeStringAttribute("fitrange");
-	- Explicitly specify the plotting range: Range("<rangeName>").
-	- Explicitly specify where to compute the normalisation: NormRange("<rangeName>").
-	The default (full) range can be denoted with Range("") / NormRange("").
-[#1] INFO:Plotting -- RooAbsPdf::plotOn(bern2BW) only plotting range 'PWA Plot'
-[#1] INFO:Plotting -- RooAbsPdf::plotOn(bern2BW) p.d.f. curve is normalized using explicit choice of ranges 'fit_nll_bern2BW_dataHist_P'
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(bkg_Int[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
 [#1] INFO:Plotting -- RooAbsPdf::plotOn(bern2BW) directly selected PDF components: (rel_intBW)
 [#1] INFO:Plotting -- RooAbsPdf::plotOn(bern2BW) indirectly selected PDF components: ()
 [#1] INFO:NumericIntegration -- RooRealIntegral::init(rel_intBW_Int[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
-[#1] INFO:NumericIntegration -- RooRealIntegral::init(bern2BW_Int[mass|fit_nll_bern2BW_dataHist_P]_Norm[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
-[#1] INFO:Plotting -- RooAbsPdf::plotOn(bern2BW) p.d.f was fitted in a subrange and no explicit NormRange() was specified. Plotting / normalising in fit range. To override, do one of the following
-	- Clear the automatic fit range attribute: <pdf>.removeStringAttribute("fitrange");
-	- Explicitly specify the plotting range: Range("<rangeName>").
-	- Explicitly specify where to compute the normalisation: NormRange("<rangeName>").
-	The default (full) range can be denoted with Range("") / NormRange("").
-[#1] INFO:Plotting -- RooAbsPdf::plotOn(bern2BW) only plotting range 'PWA Plot'
-[#1] INFO:Plotting -- RooAbsPdf::plotOn(bern2BW) p.d.f. curve is normalized using explicit choice of ranges 'fit_nll_bern2BW_dataHist_P'
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(bkg_Int[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
 [#1] INFO:Plotting -- RooAbsPdf::plotOn(bern2BW) directly selected PDF components: (bkg)
 [#1] INFO:Plotting -- RooAbsPdf::plotOn(bern2BW) indirectly selected PDF components: ()
 [#1] INFO:NumericIntegration -- RooRealIntegral::init(rel_intBW_Int[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
-[#1] INFO:NumericIntegration -- RooRealIntegral::init(bern2BW_Int[mass|fit_nll_bern2BW_dataHist_P]_Norm[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(bkg_Int[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
 Fit log written.
 Found curve_total
 Found curve_sig
 Found curve_bkg
-Chi2/NDF: 16.3308
+Chi2/NDF: 6.33181
 Info in <TCanvas::Print>: pdf file /work/halld/home/dbarton/gluex/KShortPipLambda/fitting/plots/plots_rooFit_kStar.pdf has been created
 /work/halld/home/dbarton/software/FSRoot/rootlogoff.FSROOT.C:6:64: error: 'FSTree' is not a class, namespace, or enumeration
 cout << "FSTree::clearChainCache()..." << endl;                FSTree::clearChainCache();
