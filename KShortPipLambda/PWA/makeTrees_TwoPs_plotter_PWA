@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+set -e
+
+# ----- USER INPUT (positional) -----
+FITFILE=$1
+OUTFOLDER=$2
+
+if [ -z "$OUTFOLDER" ] || [ -z "$FITFILE" ]; then
+	echo "Usage:"
+	echo "  $(basename "$0") path/to/fitFile.fit outputFolderName"
+	exit 1
+fi
+
+# Resolve the fit file to an absolute path BEFORE we cd, or -f will be
+# interpreted relative to the output dir and fail to load.
+FITFILE=$(realpath "$FITFILE")
+
+baseDir="/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees"
+outDir="${baseDir}/${OUTFOLDER}"
+
+PLOTTER="/work/halld/home/dbarton/software/halld_sim/src/.Linux_Alma9-x86_64-gcc11.5.0/programs/AmplitudeAnalysis/TwoPsPlotter/TwoPsPlotter"
+
+echo "Creating output directory:"
+echo "  $outDir"
+
+# prevent accidental overwrite
+if [ -d "$outDir" ]; then
+	echo "ERROR: Output directory already exists:"
+	echo "  $outDir"
+	exit 1
+fi
+mkdir -p "$outDir"
+
+# cd into the output dir: the per-reaction <reaction>.root and params.txt/
+# params.csv are written with BARE filenames (relative to cwd), so this is
+# what actually places them here. -o is passed too (used in -sFile mode).
+cd "$outDir"
+
+# Flags: -mcGen also projects genMC; -bkgFile also makes the bkgnd histograms.
+# Drop either if you don't want it.
+"$PLOTTER" -f "$FITFILE" -o "$outDir" -mcGen -bkgFile -txt -csv > outPLOT.txt 2>&1
+
+echo "Done."
+echo "Output written to:"
+echo " $outDir"
