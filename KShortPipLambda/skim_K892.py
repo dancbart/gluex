@@ -17,13 +17,15 @@ FND45 = "/volatile/halld/home/dbarton/pipkslamb/data/sp18fa18sp20/tree_pipkslamb
 FND90 = "/volatile/halld/home/dbarton/pipkslamb/data/sp18fa18sp20/tree_pipkslamb__B4_M16_M18_FSFlat_sum_PERP_90_sp18fa18sp20_40856_73266.root"
 FND135 = "/volatile/halld/home/dbarton/pipkslamb/data/sp18fa18sp20/tree_pipkslamb__B4_M16_M18_FSFlat_sum_PARA_135_sp18fa18sp20_40856_73266.root"
 
-FND_MC_sp18 = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/phaseSpace20260606_200M/root/trees/flatten/tree_pipkslamb__B4_M16_M18_FSflat_sum_40856_42559.root"
-FND_MC_fa18 = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/phaseSpace20260609_200M/root/trees/flatten/tree_pipkslamb__B4_M16_M18_FSflat_sum_50685_51768.root"
-FND_MC_sp20 = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/phaseSpace20260606_400M/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum_71350_73266.root"
+FND_MC_sp18 = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/phaseSpace20260630_500M_wTHROWN/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum_40856_42559.root"
+FND_MC_fa18 = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/phaseSpace20260630_500M_wTHROWN/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum_50685_51768.root"
+# this is ACTUALLY fall 2018 (until spring 2020 finishes generating) 7/14/2026.
+FND_MC_sp20 = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/phaseSpace20260630_500M_wTHROWN/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum_50685_51768.root"
 
-FND_THROWN_sp18 = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/phaseSpace20260606_200M/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum_40856_42559.root"
-FND_THROWN_fa18 = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/phaseSpace20260609_200M/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum_50685_51768.root"
-FND_THROWN_sp20 = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/phaseSpace20260606_400M/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum_71350_73266.root"
+FND_THROWN_sp18 = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/phaseSpace20260630_500M_wTHROWN/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum_40856_42559.root"
+FND_THROWN_fa18 = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/phaseSpace20260630_500M_wTHROWN/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum_50685_51768.root"
+# this is ACTUALLY fall 2018 (until spring 2020 finishes generating) 7/14/2026.
+FND_THROWN_sp20 = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/phaseSpace20260630_500M_wTHROWN/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum_50685_51768.root"
 
 # =========================================================
 # OUTPUT file locations
@@ -336,32 +338,32 @@ def skim_K892_data_SIG_BKGND_SKIMS_ALL():
     # ------------------------------------------------------------
     # pol0
     # ------------------------------------------------------------
-    ROOT.FSModeTree.skimTree(FND0_generalCuts_t38, NT, "", FND0_data,  f"{signalCuts}")
-    ROOT.FSModeTree.skimTree(FND0_generalCuts_t38, NT, "", FND0_bkgnd, f"{sidebandWeights}")
+    ROOT.FSModeTree.skimTree(FND0_generalCuts_t810, NT, "", FND0_data,  f"{signalCuts}")
+    ROOT.FSModeTree.skimTree(FND0_generalCuts_t810, NT, "", FND0_bkgnd, f"{sidebandWeights}")
     friendTreeContents = [(ROOT.TString("weight"), ROOT.TString(f"{sidebandWeights}"))]
     ROOT.FSModeTree.createFriendTree(FND0_bkgnd, NT, "", "weight", friendTreeContents)
 
     # ------------------------------------------------------------
     # pol45
     # ------------------------------------------------------------
-    ROOT.FSModeTree.skimTree(FND45_generalCuts_t38, NT, "", FND45_data,  f"{signalCuts}")
-    ROOT.FSModeTree.skimTree(FND45_generalCuts_t38, NT, "", FND45_bkgnd, f"{sidebandWeights}")
+    ROOT.FSModeTree.skimTree(FND45_generalCuts_t810, NT, "", FND45_data,  f"{signalCuts}")
+    ROOT.FSModeTree.skimTree(FND45_generalCuts_t810, NT, "", FND45_bkgnd, f"{sidebandWeights}")
     friendTreeContents = [(ROOT.TString("weight"), ROOT.TString(f"{sidebandWeights}"))]
     ROOT.FSModeTree.createFriendTree(FND45_bkgnd, NT, "", "weight", friendTreeContents)
 
     # ------------------------------------------------------------
     # pol90
     # ------------------------------------------------------------
-    ROOT.FSModeTree.skimTree(FND90_generalCuts_t38, NT, "", FND90_data,  f"{signalCuts}")
-    ROOT.FSModeTree.skimTree(FND90_generalCuts_t38, NT, "", FND90_bkgnd, f"{sidebandWeights}")
+    ROOT.FSModeTree.skimTree(FND90_generalCuts_t810, NT, "", FND90_data,  f"{signalCuts}")
+    ROOT.FSModeTree.skimTree(FND90_generalCuts_t810, NT, "", FND90_bkgnd, f"{sidebandWeights}")
     friendTreeContents = [(ROOT.TString("weight"), ROOT.TString(f"{sidebandWeights}"))]
     ROOT.FSModeTree.createFriendTree(FND90_bkgnd, NT, "", "weight", friendTreeContents)
 
     # ------------------------------------------------------------
     # pol135
     # ------------------------------------------------------------
-    ROOT.FSModeTree.skimTree(FND135_generalCuts_t38, NT, "", FND135_data,  f"{signalCuts}")
-    ROOT.FSModeTree.skimTree(FND135_generalCuts_t38, NT, "", FND135_bkgnd, f"{sidebandWeights}")
+    ROOT.FSModeTree.skimTree(FND135_generalCuts_t810, NT, "", FND135_data,  f"{signalCuts}")
+    ROOT.FSModeTree.skimTree(FND135_generalCuts_t810, NT, "", FND135_bkgnd, f"{sidebandWeights}")
     friendTreeContents = [(ROOT.TString("weight"), ROOT.TString(f"{sidebandWeights}"))]
     ROOT.FSModeTree.createFriendTree(FND135_bkgnd, NT, "", "weight", friendTreeContents)
 
@@ -386,9 +388,9 @@ def skim_K892_data_SIG_BKGND_SKIMS_ALL():
 def skim_K892_accmc():
     setup()
     # ---- Step 1: GENERAL SKIMS to reduce file size ----
-    ROOT.FSModeTree.skimTree(FND_MC_sp18, NT, "", FND_generalCuts_MC_sp18, f"{generalCuts_t38}")
-    ROOT.FSModeTree.skimTree(FND_MC_fa18, NT, "", FND_generalCuts_MC_fa18, f"{generalCuts_t38}")
-    ROOT.FSModeTree.skimTree(FND_MC_sp20, NT, "", FND_generalCuts_MC_sp20, f"{generalCuts_t38}")
+    ROOT.FSModeTree.skimTree(FND_MC_sp18, NT, "", FND_generalCuts_MC_sp18, f"{generalCuts_t810}")
+    ROOT.FSModeTree.skimTree(FND_MC_fa18, NT, "", FND_generalCuts_MC_fa18, f"{generalCuts_t810}")
+    ROOT.FSModeTree.skimTree(FND_MC_sp20, NT, "", FND_generalCuts_MC_sp20, f"{generalCuts_t810}")
 
     merged_file = FND_generalCuts_MC_sp18fa18sp20
 
@@ -411,9 +413,9 @@ def skim_K892_accmc():
 
 def skim_K892_genmc():
     setup_genmc()
-    ROOT.FSModeTree.skimTree(FND_THROWN_sp18, NT, "",FND_generalCuts_THROWN_sp18, signalCuts_THROWN_t38)
-    ROOT.FSModeTree.skimTree(FND_THROWN_fa18, NT, "",FND_generalCuts_THROWN_fa18, signalCuts_THROWN_t38)
-    ROOT.FSModeTree.skimTree(FND_THROWN_sp20, NT, "",FND_generalCuts_THROWN_sp20, signalCuts_THROWN_t38)
+    ROOT.FSModeTree.skimTree(FND_THROWN_sp18, NT, "",FND_generalCuts_THROWN_sp18, signalCuts_THROWN_t810)
+    ROOT.FSModeTree.skimTree(FND_THROWN_fa18, NT, "",FND_generalCuts_THROWN_fa18, signalCuts_THROWN_t810)
+    ROOT.FSModeTree.skimTree(FND_THROWN_sp20, NT, "",FND_generalCuts_THROWN_sp20, signalCuts_THROWN_t810)
 
     merged_file = FND_genmc
 
@@ -431,16 +433,16 @@ def skim_K892_genmc():
 
 def skim_K892():
     # skim_DATA_EVENT_SELECTION_SKIMS()
-    # skim_MONTE_CARLO_EVENT_SELECTION_SKIMS()
-    # skim_THROWN_MC_EVENT_SELECTION_SKIMS()
-    skim_DATA_KPI_SYSTEM_SKIMS()
+    skim_MONTE_CARLO_EVENT_SELECTION_SKIMS()
+    skim_THROWN_MC_EVENT_SELECTION_SKIMS()
+    # skim_DATA_KPI_SYSTEM_SKIMS()
     # skim_K892_data_GENERAL_SKIMS()
     # skim_K892_data_GENERAL_SKIMS_t13()
     # skim_K892_data_GENERAL_SKIMS_t38()
     # skim_K892_data_GENERAL_SKIMS_t810()
     # skim_K892_data_SIG_BKGND_SKIMS_ALL()
-    # skim_K892_accmc()
-    # skim_K892_genmc()
+    skim_K892_accmc()
+    skim_K892_genmc()
 
 if __name__ == "__main__":
     skim_K892()

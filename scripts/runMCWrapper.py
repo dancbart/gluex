@@ -8,13 +8,11 @@ from datetime import datetime
 # CONFIGURATION
 #====================================================================================
 
-workflow      = "MC_pipkslamb_2020-01_phaseSpace_spring2020"
-timestamp     = datetime.today().strftime("%Y%m%d_%H%M%S")
-
 configFile    = "/work/halld/home/dbarton/gluex/KShortPipLambda_MC/config_files/MC_genAmp2.config"
 
 # Spring 2018
-# runRangeLow   = 40856
+runRangeLow   = 40856
+runRangeHigh  = 40860
 # runRangeHigh  = 42559
 
 # Fall 2018
@@ -22,14 +20,31 @@ configFile    = "/work/halld/home/dbarton/gluex/KShortPipLambda_MC/config_files/
 # runRangeHigh  = 51768
 
 # Spring 2020
-runRangeLow   = 71350
-runRangeHigh  = 73266
+# runRangeLow   = 71350
+# runRangeHigh  = 73266
 
-# numEvents   = 1000    # per run (production)
-numEvents   = 40000000    # per run (production)
+numEvents   = 1000
+# numEvents   = 2000000000
 batchMode     = 2
 
-# logBaseDir    = "/farm_out/dbarton"
+# Read workflow name from config file
+workflow = ""
+with open(configFile) as f:
+    for line in f:
+        line = line.strip()
+        if line.startswith("WORKFLOW_NAME"):
+            workflow = line.split("=")[1].strip()
+            break
+
+if not workflow:
+    print("ERROR: WORKFLOW_NAME not found in config file")
+    exit(1)
+    
+# timestamp used in output folder naming
+timestamp     = datetime.today().strftime("%Y%m%d_%H%M%S")
+logBaseDir    = "/farm_out/dbarton"
+logOutputDir = os.path.join(logBaseDir, "%s_%s" % (workflow, timestamp))
+os.makedirs(logOutputDir, exist_ok=True)
 
 #====================================================================================
 # SUBMISSION
@@ -38,7 +53,7 @@ batchMode     = 2
 # Resolve $MCWRAPPER_CENTRAL from the environment
 mcwrapper_central = os.environ.get("MCWRAPPER_CENTRAL", "")
 if not mcwrapper_central:
-    print("ERROR: $MCWRAPPER_CENTRAL is not set. Are you inside the container?")
+    print("ERROR: $MCWRAPPER_CENTRAL is not set. Have you sourced the GlueX environment'gxenv'?")
     exit(1)
 
 mcWrapper = os.path.join(mcwrapper_central, "gluex_MC.py")
@@ -50,15 +65,16 @@ print("Run range        : %d - %d" % (runRangeLow, runRangeHigh))
 print("Events           : {:,} per run".format(numEvents))
 print("Timestamp        : %s" % timestamp)
 print("MCWRAPPER_CENTRAL: %s" % mcwrapper_central)
+print("Log output dir   : %s" % logOutputDir)
 print("=" * 60)
 
 # Create the swif2 workflow before submitting jobs
-print("Creating workflow: %s" % workflow)
-call("swif2 create %s" % workflow, shell=True)
-print("")
+# print("Creating workflow: %s" % workflow)
+# call("swif2 create %s" % workflow, shell=True)
+# print("")
 
 cmd = (
-    "{mcWrapper} {config} {runLow}-{runHigh} {nEvents} batch={batch}"
+    "{mcWrapper} {config} {runLow}-{runHigh} {nEvents} batch={batch} logdir={logdir}"
 ).format(
     mcWrapper = mcWrapper,
     config    = configFile,
@@ -66,6 +82,7 @@ cmd = (
     runHigh   = runRangeHigh,
     nEvents   = numEvents,
     batch     = batchMode,
+    logdir    = logOutputDir,
 )
 
 print("Submitting run range %d-%d" % (runRangeLow, runRangeHigh))
