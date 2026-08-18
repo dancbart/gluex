@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import signal
 import os
 import ROOT
 import subprocess
@@ -12,9 +11,9 @@ atiSetup.setup(globals(), use_fsroot=True)
 NT = "ntFSGlueX_100000000_1100"
 
 # ---------------------- inputs (DATA & MC) ---------------------
-FND0 = "/volatile/halld/home/dbarton/pipkslamb/data/sp18fa18sp20/tree_pipkslamb__B4_M16_M18_FSFlat_sum_PARA_0_sp18fa18sp20_40856_73266.root"
-FND45 = "/volatile/halld/home/dbarton/pipkslamb/data/sp18fa18sp20/tree_pipkslamb__B4_M16_M18_FSFlat_sum_PERP_45_sp18fa18sp20_40856_73266.root"
-FND90 = "/volatile/halld/home/dbarton/pipkslamb/data/sp18fa18sp20/tree_pipkslamb__B4_M16_M18_FSFlat_sum_PERP_90_sp18fa18sp20_40856_73266.root"
+FND0   = "/volatile/halld/home/dbarton/pipkslamb/data/sp18fa18sp20/tree_pipkslamb__B4_M16_M18_FSFlat_sum_PARA_0_sp18fa18sp20_40856_73266.root"
+FND45  = "/volatile/halld/home/dbarton/pipkslamb/data/sp18fa18sp20/tree_pipkslamb__B4_M16_M18_FSFlat_sum_PERP_45_sp18fa18sp20_40856_73266.root"
+FND90  = "/volatile/halld/home/dbarton/pipkslamb/data/sp18fa18sp20/tree_pipkslamb__B4_M16_M18_FSFlat_sum_PERP_90_sp18fa18sp20_40856_73266.root"
 FND135 = "/volatile/halld/home/dbarton/pipkslamb/data/sp18fa18sp20/tree_pipkslamb__B4_M16_M18_FSFlat_sum_PARA_135_sp18fa18sp20_40856_73266.root"
 
 FND_MC_sp18 = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/phaseSpace20260630_500M_wTHROWN/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum_40856_42559.root"
@@ -27,138 +26,113 @@ FND_THROWN_fa18 = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/phaseSpace
 # this is ACTUALLY fall 2018 (until spring 2020 finishes generating) 7/14/2026.
 FND_THROWN_sp20 = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/phaseSpace20260630_500M_wTHROWN/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum_50685_51768.root"
 
+
 # =========================================================
 # OUTPUT file locations
 # =========================================================
 # ------ for event selection plots only, not for AmpTools. ------
 baseDir_eventSelection = "/volatile/halld/home/dbarton/pipkslamb/skims/"
 # ------ for AmpTools. Files needed for AmpTools go here. -------
-baseDir = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/sourceFiles/"
-
+baseDir = "/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/"
 
 
 # =========================================================
-# OUTPUT file names
+# T_BIN_EVENT_SELECTION: used only in event-selection skims.
+# T_BINS: used only in AmpTools skims (general, signal, accmc, genmc).
+#
+# T-BIN DEFINITIONS
+# (label, reco_t_cut_name, thrown_t_cut_name, t_lo, t_hi)
+#
+# setup() and setup_genmc() loop over BOTH to define all t-range cuts,
+# guaranteeing the cut expressions are identical across both workflows.
 # =========================================================
 
-# ---------------------------------------------------------
-# EVENT SELECTION OUTPUT FILENAMES, not for AmpTools.
-# These are just for event selection plots.
-# ---------------------------------------------------------
+T_BIN_EVENT_SELECTION = ("tEvSel", "tRange_evSel", "tRangeTHROWN_evSel", 0.1, 2.0)
+
+T_BINS = [
+    ("t0120", "tRange0120", "tRangeTHROWN0120", 0.1, 2.0),
+    ("t0103", "tRange0103", "tRangeTHROWN0103", 0.1, 0.3),
+    ("t0305", "tRange0305", "tRangeTHROWN0305", 0.3, 0.5),
+    ("t0507", "tRange0507", "tRangeTHROWN0507", 0.5, 0.7),
+    ("t0710", "tRange0710", "tRangeTHROWN0710", 0.7, 1.0),
+    ("t1013", "tRange1013", "tRangeTHROWN1013", 1.0, 1.3),
+    ("t1316", "tRange1316", "tRangeTHROWN1316", 1.3, 1.6),
+    ("t1620", "tRange1620", "tRangeTHROWN1620", 1.6, 2.0),
+]
+
+MC_PERIODS = [
+    ("sp18", FND_MC_sp18,   FND_THROWN_sp18),
+    ("fa18", FND_MC_fa18,   FND_THROWN_fa18),
+    ("sp20", FND_MC_sp20,   FND_THROWN_sp20),
+]
+
+
+# =========================================================
+# OUTPUT file names — EVENT SELECTION (static, not looped)
+# =========================================================
 
 # --- DATA --- #
-FND0_eventSelectionCuts = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_pol0.root"
-FND45_eventSelectionCuts = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_pol45.root"
-FND90_eventSelectionCuts = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_pol90.root"
-FND135_eventSelectionCuts = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_pol135.root"
-FND_eventSelectionCuts_ALLpols = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_ALLpols.root"
+FND0_eventSelectionCuts         = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_pol0.root"
+FND45_eventSelectionCuts        = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_pol45.root"
+FND90_eventSelectionCuts        = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_pol90.root"
+FND135_eventSelectionCuts       = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_pol135.root"
+FND_eventSelectionCuts_ALLpols  = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_ALLpols.root"
 
 # --- MC --- #
-FND_eventSelectionCuts_MC_sp18 = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_MC_sp18.root"
-FND_eventSelectionCuts_MC_fa18 = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_MC_fa18.root"
-FND_eventSelectionCuts_MC_sp20 = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_MC_sp20.root"
+FND_eventSelectionCuts_MC_sp18         = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_MC_sp18.root"
+FND_eventSelectionCuts_MC_fa18         = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_MC_fa18.root"
+FND_eventSelectionCuts_MC_sp20         = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_MC_sp20.root"
 FND_eventSelectionCuts_MC_sp18fa18sp20 = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_MC_sp18fa18sp20.root"
 
 # --- THROWN MC --- #
-FND_eventSelectionCuts_THROWN_MC_sp18 = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_THROWN_MC_sp18.root"
-FND_eventSelectionCuts_THROWN_MC_fa18 = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_THROWN_MC_fa18.root"
-FND_eventSelectionCuts_THROWN_MC_sp20 = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_THROWN_MC_sp20.root"
-FND_eventSelectionCuts_THROWN_MC_sp18_fa18sp20 = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_THROWN_MC_sp18fa18sp20.root"
+FND_eventSelectionCuts_THROWN_MC_sp18         = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_THROWN_MC_sp18.root"
+FND_eventSelectionCuts_THROWN_MC_fa18         = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_THROWN_MC_fa18.root"
+FND_eventSelectionCuts_THROWN_MC_sp20         = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_THROWN_MC_sp20.root"
+FND_eventSelectionCuts_THROWN_MC_sp18fa18sp20 = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_THROWN_MC_sp18fa18sp20.root"
 
-# ---------------------------------------------------------
-# ROOFIT OUTPUT FILENAMES, not for AmpTools.
-# Used for RooFit (Relativistic 1D fits of K Pi system) whos fit results are fed into AmpTools.
-# ---------------------------------------------------------
+# --- ROOFIT --- #
 FND_eventSelectionCuts_KpiSystem_ALLpols = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_ALLpols_KPiSystem.root"
 
 
-# ---------------------------------------------------------
-# AMPTOOLS OUTPUT FILENAMES, DATA
-# These files get fed into AmpTools.
-# ---------------------------------------------------------
 
-# STEP 1: first make general cuts to reduce file size
-# mandelstam t(0.1, 2.0)
-FND0_generalCuts_t0120 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t0120_pol0.root"
-FND45_generalCuts_t0120 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t0120_pol45.root"
-FND90_generalCuts_t0120 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t0120_pol90.root"
-FND135_generalCuts_t0120 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t0120_pol135.root"
+# =========================================================
+# OUTPUT file names — AMPTOOLS GENERAL SKIMS (Static, no looping).
+#
+# These are intermediate files used as input to the signal/sideband
+# skim loop. They can be toggled off independently without breaking
+# the t-bin loop, since they contain no t information.
+# 
+# Data skims are separated by polarization (but not periods).  Polarization of data required for AmpTools fits.  File sizes small enough to add all periods together later in script.
+# MC skims are separated by period (but not polarization).  Polarization not simulated in MC. Period separation done to avoid large file sizes.
+# =========================================================
 
-# mandelstam t(0.1, 0.3)
-FND0_generalCuts_t13 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t13_pol0.root"
-FND45_generalCuts_t13 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t13_pol45.root"
-FND90_generalCuts_t13 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t13_pol90.root"
-FND135_generalCuts_t13 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t13_pol135.root"
+# DATA: Per-polarization general skims (no t-bin cut).
+FND0_generalCuts   = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_pol0.root"
+FND45_generalCuts  = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_pol45.root"
+FND90_generalCuts  = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_pol90.root"
+FND135_generalCuts = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_pol135.root"
 
-# mandelstam t(0.3, 0.5)
-FND0_generalCuts_t35 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t35_pol0.root"
-FND45_generalCuts_t35 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t35_pol45.root"
-FND90_generalCuts_t35 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t35_pol90.root"
-FND135_generalCuts_t35 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t35_pol135.root"
+POLS_GENERAL = [
+    ("pol0",   FND0,   FND0_generalCuts),
+    ("pol45",  FND45,  FND45_generalCuts),
+    ("pol90",  FND90,  FND90_generalCuts),
+    ("pol135", FND135, FND135_generalCuts),
+]
 
-# mandelstam t(0.5, 0.7)
-FND0_generalCuts_t57 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t57_pol0.root"
-FND45_generalCuts_t57 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t57_pol45.root"
-FND90_generalCuts_t57 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t57_pol90.root"
-FND135_generalCuts_t57 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t57_pol135.root"
-
-# mandelstam t(0.7, 1.0)
-FND0_generalCuts_t710 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t710_pol0.root"
-FND45_generalCuts_t710 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t710_pol45.root"
-FND90_generalCuts_t710 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t710_pol90.root"
-FND135_generalCuts_t710 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t710_pol135.root"
-
-# mandelstam t(1.0, 1.3)
-FND0_generalCuts_t1013 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t1013_pol0.root"
-FND45_generalCuts_t1013 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t1013_pol45.root"
-FND90_generalCuts_t1013 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t1013_pol90.root"
-FND135_generalCuts_t1013 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t1013_pol135.root"
-
-# mandelstam t(1.3, 1.6)
-FND0_generalCuts_t1316 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t1316_pol0.root"
-FND45_generalCuts_t1316 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t1316_pol45.root"
-FND90_generalCuts_t1316 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t1316_pol90.root"
-FND135_generalCuts_t1316 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t1316_pol135.root"
-
-# mandelstam t(1.6, 2.0)
-FND0_generalCuts_t1620 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t1620_pol0.root"
-FND45_generalCuts_t1620 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t1620_pol45.root"
-FND90_generalCuts_t1620 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t1620_pol90.root"
-FND135_generalCuts_t1620 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t1620_pol135.root"
-
-# STEP 2: Now make the individual files that get fed into AmpTools
-FND0_data = f"{baseDir}tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_pol0.root"
-FND45_data = f"{baseDir}tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_pol45.root"
-FND90_data = f"{baseDir}tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_pol90.root"
-FND135_data = f"{baseDir}tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_pol135.root"
-FND_data_ALLpols = f"{baseDir}tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_ALLpols.root"
-
-FND0_bkgnd = f"{baseDir}tree_pipkslamb__B4_M16_M18_SIDEBAND_SKIM_K892_pol0.root"
-FND45_bkgnd = f"{baseDir}tree_pipkslamb__B4_M16_M18_SIDEBAND_SKIM_K892_pol45.root"
-FND90_bkgnd = f"{baseDir}tree_pipkslamb__B4_M16_M18_SIDEBAND_SKIM_K892_pol90.root"
-FND135_bkgnd = f"{baseDir}tree_pipkslamb__B4_M16_M18_SIDEBAND_SKIM_K892_pol135.root"
-
-
-# ---------------------------------------------------------
-# AMPTOOLS OUTPUT FILENAMES, MONTE CARLO
-# These are the files that get fed into AmpTools.
-# ---------------------------------------------------------
-
-# Per-period general skims (accmc / reconstructed)
+# MONTE-CARLO: Per-period general skims (no t-bin cut).
 FND_generalCuts_MC_sp18 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_sp18.root"
 FND_generalCuts_MC_fa18 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_fa18.root"
 FND_generalCuts_MC_sp20 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_sp20.root"
-# Combined (hadd of the three above); signal skim runs on this
 FND_generalCuts_MC_sp18fa18sp20 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_sp18fa18sp20.root"
-FND_accmc               = f"{baseDir}tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_MC.root"  # accepted MC (not THROWN)
 
-# Per-period general skims (genmc / thrown)
-FND_generalCuts_THROWN_sp18 = f"{baseDir}tree_pipkslamb_GENERAL_SKIM_K892_THROWN_sp18.root"
-FND_generalCuts_THROWN_fa18 = f"{baseDir}tree_pipkslamb_GENERAL_SKIM_K892_THROWN_fa18.root"
-FND_generalCuts_THROWN_sp20 = f"{baseDir}tree_pipkslamb_GENERAL_SKIM_K892_THROWN_sp20.root"
-# Combined (hadd of the three above); signal skim runs on this
-FND_generalCuts_THROWN_sp18fa18sp20  = f"{baseDir}tree_pipkslamb_GENERAL_SKIM_K892_THROWN_sp18fa18sp20.root"
-FND_genmc               = f"{baseDir}tree_pipkslamb_SIGNAL_SKIM_K892_THROWN_sp18fa18sp20.root"  # aka THROWN
+MC_PERIODS_GENERAL = [
+    ("sp18", FND_MC_sp18,   FND_THROWN_sp18, FND_generalCuts_MC_sp18),
+    ("fa18", FND_MC_fa18,   FND_THROWN_fa18, FND_generalCuts_MC_fa18),
+    ("sp20", FND_MC_sp20,   FND_THROWN_sp20, FND_generalCuts_MC_sp20),
+]
+
+
+
 
 # --------------- particle definitions (from 'flatten' for FSRoot) --------------
 DecayingLambda = "1"
@@ -170,13 +144,21 @@ PiMinus1       = "2b"
 PiPlus1        = "3"
 
 
+# =========================================================
+# CUT DEFINITIONS
+# t-range cuts are generated dynamically from T_BINS and
+# T_BIN_EVENT_SELECTION, guaranteeing consistency across
+# both the event-selection and AmpTools workflows.
+# =========================================================
 
-# -------------- CUT DEFINITIONS ----------------
 def setup():
-    ROOT.FSCut.defineCut("tRange110", f"abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))>0.1 && abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))<1.0")
-    ROOT.FSCut.defineCut("tRange13", f"abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))>0.1 && abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))<0.3")
-    ROOT.FSCut.defineCut("tRange38", f"abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))>0.3 && abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))<0.8")
-    ROOT.FSCut.defineCut("tRange810", f"abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))>0.8 && abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))<1.0")
+    # --- t-range cuts: generated from T_BINS + T_BIN_EVENT_SELECTION ---
+    for (label, t_cut_name, _, lo, hi) in T_BINS + [T_BIN_EVENT_SELECTION]:
+        ROOT.FSCut.defineCut(t_cut_name,
+            f"abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))>{lo} && "
+            f"abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))<{hi}")
+
+    # --- all other cuts ---
     ROOT.FSCut.defineCut("rf", "abs(RFDeltaT)>2.0", "abs(RFDeltaT)>6.0", 0.1667)
     ROOT.FSCut.defineCut("chi2DOF", "Chi2DOF<5.0")
     ROOT.FSCut.defineCut("unusedE", "EnUnusedSh<0.1")
@@ -192,279 +174,273 @@ def setup():
     ROOT.FSCut.defineCut("flightLengthLambda", "VeeLP1>2.0")
     ROOT.FSCut.defineCut("flightLengthKShort", "VeeLP2>2.0")
     ROOT.FSCut.defineCut("targetZ", "ProdVz>52.0 && ProdVz<78.0")
-    ROOT.FSCut.defineCut("KShort", f"abs(MASS({DecayingKShort})-0.4976)<0.03", f"(abs(MASS({DecayingKShort})-0.4976+0.0974)<0.015 || abs(MASS({DecayingKShort})-0.4976-0.1226)<0.015)", 1.0)
-    ROOT.FSCut.defineCut("Lambda", f"abs(MASS({DecayingLambda})-1.119)<0.01375", f"(abs(MASS({DecayingLambda})-1.119+0.032875)<0.006875 || abs(MASS({DecayingLambda})-1.119-0.032125)<0.006875)", 1.0)
-    ROOT.FSCut.defineCut("selectKSTAR892", f"MASS({DecayingKShort},{PiPlus1})>0.80 && MASS({DecayingKShort},{PiPlus1})<1.00")
-    ROOT.FSCut.defineCut("rejectSigma1385", f"MASS({DecayingLambda},{PiPlus1})>2.00 && MASS({DecayingLambda},{PiPlus1})<4.0")
+    ROOT.FSCut.defineCut("KShort",
+        f"abs(MASS({DecayingKShort})-0.4976)<0.03",
+        f"(abs(MASS({DecayingKShort})-0.4976+0.0974)<0.015 || abs(MASS({DecayingKShort})-0.4976-0.1226)<0.015)",
+        1.0)
+    ROOT.FSCut.defineCut("Lambda",
+        f"abs(MASS({DecayingLambda})-1.119)<0.01375",
+        f"(abs(MASS({DecayingLambda})-1.119+0.032875)<0.006875 || abs(MASS({DecayingLambda})-1.119-0.032125)<0.006875)",
+        1.0)
+    ROOT.FSCut.defineCut("selectKSTAR892",
+        f"MASS({DecayingKShort},{PiPlus1})>0.80 && MASS({DecayingKShort},{PiPlus1})<1.00")
+    ROOT.FSCut.defineCut("rejectSigma1385",
+        f"MASS({DecayingLambda},{PiPlus1})>2.00 && MASS({DecayingLambda},{PiPlus1})<4.0")
 
 def setup_genmc():
-    ROOT.FSCut.defineCut("tRangeTHROWN110", "abs(-1*MCMASS2(GLUEXTARGET,-1))>0.1 && abs(-1*MCMASS2(GLUEXTARGET,-1))<1.0")
-    ROOT.FSCut.defineCut("tRangeTHROWN13", "abs(-1*MCMASS2(GLUEXTARGET,-1))>0.1 && abs(-1*MCMASS2(GLUEXTARGET,-1))<0.3")
-    ROOT.FSCut.defineCut("tRangeTHROWN38", "abs(-1*MCMASS2(GLUEXTARGET,-1))>0.3 && abs(-1*MCMASS2(GLUEXTARGET,-1))<0.8")
-    ROOT.FSCut.defineCut("tRangeTHROWN810", "abs(-1*MCMASS2(GLUEXTARGET,-1))>0.8 && abs(-1*MCMASS2(GLUEXTARGET,-1))<1.0")
-    ROOT.FSCut.defineCut("KShortTHROWN", "abs(MCMASS(2)-0.4976)<0.03", "(abs(MCMASS(2)-0.4976+0.0974)<0.015 || abs(MCMASS(2)-0.4976-0.1226)<0.015)", 1.0)
-    ROOT.FSCut.defineCut("LambdaTHROWN", "abs(MCMASS(1)-1.119)<0.01375", "(abs(MCMASS(1)-1.119+0.032875)<0.006875 || abs(MCMASS(1)-1.119-0.032125)<0.006875)", 1.0)
+    # --- t-range cuts: generated from T_BINS + T_BIN_EVENT_SELECTION ---
+    for (label, _, thrown_t_cut_name, lo, hi) in T_BINS + [T_BIN_EVENT_SELECTION]:
+        ROOT.FSCut.defineCut(thrown_t_cut_name,
+            f"abs(-1*MCMASS2(GLUEXTARGET,-1))>{lo} && "
+            f"abs(-1*MCMASS2(GLUEXTARGET,-1))<{hi}")
+
+    # --- all other cuts ---
+    ROOT.FSCut.defineCut("KShortTHROWN",
+        "abs(MCMASS(2)-0.4976)<0.03",
+        "(abs(MCMASS(2)-0.4976+0.0974)<0.015 || abs(MCMASS(2)-0.4976-0.1226)<0.015)",
+        1.0)
+    ROOT.FSCut.defineCut("LambdaTHROWN",
+        "abs(MCMASS(1)-1.119)<0.01375",
+        "(abs(MCMASS(1)-1.119+0.032875)<0.006875 || abs(MCMASS(1)-1.119-0.032125)<0.006875)",
+        1.0)
     ROOT.FSCut.defineCut("coherentPeakTHROWN", "MCEnPB>8.2 && MCEnPB<8.6")
     ROOT.FSCut.defineCut("selectKSTAR892THROWN", "MCMASS(2,3)>0.80 && MCMASS(2,3)<1.00")
     ROOT.FSCut.defineCut("rejectSigma1385THROWN", "MCMASS(1,3)>2.00 && MCMASS(1,3)<4.0")
 
 
 # =========================================================
-# CUT LISTS
-
-# Context: FSRoot expects strings to be passed into macros, such as "CUT()".  As formatted, the lists below are parsed as strings by FSRoot, satisfying this requirement.  Within this script, FSRoot functions as a "nested software".  This (nested) software workflow can be visualized as: FSRoot-->ROOT-->Python (i.e. FSRoot lives inside ROOT, ROOT lives inside Python, Python runs the script).  Why we do this:  FSRoot contins specialized macros making analysis much quicker; ROOT is the basic framework for processing .root files; Python is the script that calls all this into action.  There are other ways to do this, like using ROOT directly in a c++ script.  This is just a preference.
-
-# Also, why are cut lists defined here, instead of passing lists dirctly to functions: Defining the lists once as global variables, then passing those globals to all the different skim functions ensures the same cuts are applied accross the board.  Alternatively, cut lists can be passed directly to the functions, as mentioned.  Either approach works, as long as FSRoot gets arguments in the format it expects, i.e. strings.
+# CUT STRINGS
+#
+# Static cut strings are defined here. t-dependent cut strings
+# are built dynamically inside loops from T_BINS /
+# T_BIN_EVENT_SELECTION.
+#
+# Context: FSRoot expects strings passed to macros like "CUT()".
+# FSRoot-->ROOT-->Python: FSRoot lives inside ROOT, ROOT inside
+# Python. Cut lists defined once here ensure identical cuts
+# are applied across all skim functions.
 # =========================================================
 
 # ------ USE FOR EVENT SELECTION PLOTS ONLY ------- #
-generalCuts_eventSelection = "CUT(tRange110,chi2DOF,unusedTracks,coherentPeak,targetZ)"
+# t-range cut name comes from T_BIN_EVENT_SELECTION at module load time.
+generalCuts_eventSelection = f"CUT({T_BIN_EVENT_SELECTION[1]},chi2DOF,unusedTracks,coherentPeak,targetZ)"
+thrownCuts_eventSelection  = f"CUT({T_BIN_EVENT_SELECTION[2]},coherentPeakTHROWN,selectKSTAR892THROWN)"
 
 # ---------- USE FOR ROOFIT FITTING ONLY ---------- #
-# ?? do i need to add "rf,KShort,Lambda" to 'KPiSystemCuts' ??
-KPiSystemCuts = "CUT(tRange110,chi2DOF,unusedTracks,coherentPeak,targetZ,flightLengthKShort,flightLengthLambda,rejectSigma1385)"
+KPiSystemCuts         = f"CUT({T_BIN_EVENT_SELECTION[1]},chi2DOF,unusedTracks,coherentPeak,targetZ,flightLengthKShort,flightLengthLambda,rejectSigma1385)"
 KPiSystemCuts_weights = "CUTWT(rf,KShort,Lambda)"
 
 # ----------- USE FOR AMPTOOLS FITTING ------------ #
-generalCuts = "CUT(tRange110,chi2DOF,unusedTracks,coherentPeak,targetZ,flightLengthKShort,flightLengthLambda,rejectSigma1385,selectKSTAR892)"
-generalCuts_t13 = "CUT(tRange13,chi2DOF,unusedTracks,coherentPeak,targetZ,flightLengthKShort,flightLengthLambda,rejectSigma1385,selectKSTAR892)"
-generalCuts_t38 = "CUT(tRange38,chi2DOF,unusedTracks,coherentPeak,targetZ,flightLengthKShort,flightLengthLambda,rejectSigma1385,selectKSTAR892)"
-generalCuts_t810 = "CUT(tRange810,chi2DOF,unusedTracks,coherentPeak,targetZ,flightLengthKShort,flightLengthLambda,rejectSigma1385,selectKSTAR892)"
-# ----- Above: to make smaller trees. Below: actually used in AmpTools ---- #
-signalCuts = "CUT(rf,KShort,Lambda)"
-signalCutsMC = "CUT(KShort,Lambda)"
-# signalCuts_weights = "CUTWT(rf,KShort,Lambda)" # "CUTWT" only used for MC in the amptools skimming process.
-signalCuts_weightsMC = "CUTWT(KShort,Lambda)"
-sidebandWeights = "CUTSBWT(rf,KShort,Lambda)"
-# THROWN trees are used for efficiency corrections, among other things.  In deciding what cuts to apply think: In general, we want to see the whole phase space, BUT in the kinematic region of interest.  For example, it makes sense to cut on the beam energy used in the analysis, and the invariant mass of the resonance being studied (i.e. K*), and Mandalstam t.  But cuts on THROWN should NOT try to "clean the signal" by applying sideband cuts, or to improve selection of individual final-state particles(flight lengths, rf or baryon background rejection, etc), in so doing you wouldn't be looking at the "whole" phase space, and an acceptance correction (one of the main functions of the THROWN tree) would be inaccurate.
-# The cuts below satisfy these criteria.  They cut on the beam energy and the invariant mass of the K* resonance, and Mandalstam t, but they do NOT apply cuts that would otherwise "clean the signal".
-signalCuts_THROWN = "CUT(tRangeTHROWN110,coherentPeakTHROWN,selectKSTAR892THROWN)"
-signalCuts_THROWN_t13 = "CUT(tRangeTHROWN13,coherentPeakTHROWN,selectKSTAR892THROWN)"
-signalCuts_THROWN_t38 = "CUT(tRangeTHROWN38,coherentPeakTHROWN,selectKSTAR892THROWN)"
-signalCuts_THROWN_t810 = "CUT(tRangeTHROWN810,coherentPeakTHROWN,selectKSTAR892THROWN)"
+
+# General skim: no t-bin cut. One file per polarization / MC period.
+# These are intermediate files to speed up iteration on signal cuts.
+# Toggle off skim_K892_data_GENERAL_SKIMS() and skim_K892_accmc_GENERAL_SKIMS()
+# safely — t-bin cuts are applied downstream in the signal/sideband loop.
+generalCuts_noT = ("CUT(chi2DOF,unusedTracks,coherentPeak,targetZ,"
+                   "flightLengthKShort,flightLengthLambda,rejectSigma1385,selectKSTAR892)")
+
+# Signal / sideband skims: t-bin cut strings built dynamically per bin inside loops.
+signalCuts         = "CUT({t_cut_name},rf,KShort,Lambda)"
+sidebandWeights    = "CUT({t_cut_name})*CUTSBWT(rf,KShort,Lambda)"
+sidebandWeights_friendTree    = "CUTSBWT(rf,KShort,Lambda)"  # no t_cut_name needed here
+
+# MC signal skim (no RF cut for MC): t-bin cut strings built dynamically per bin inside loops.
+MC_signalCuts      = "CUT({t_cut_name},KShort,Lambda)"
+# MC_signalWeights = "CUT({t_cut_name})*CUTWT(KShort,Lambda)" # Not used because MC background file is not used in AmpTools fits.  Instead, MC sideband weights are applied to the MC signal file itself via the friend tree.
+MC_signalWeights_friendTree = "CUTWT(KShort,Lambda)" # no t_cut_name needed here
+
+# MC THROWN skim (no RF cut for THROWN): 
+MC_thrownCuts      = "CUT({thrown_t_cut_name},coherentPeakTHROWN,selectKSTAR892THROWN)"
+
+# THROWN trees: cut on beam energy, K* mass, and t only.
+# Do NOT apply signal-cleaning cuts (flight lengths, sideband, etc.)
+# so the full phase space is preserved for acceptance corrections.
+# Thrown cut strings built dynamically per bin inside loops:
+# MC_thrownCuts_t = f"CUT({thrown_t_cut_name},coherentPeakTHROWN,selectKSTAR892THROWN)"
 
 
+# =========================================================
 # actual skimming functions start here . . .
+# =========================================================
+
 
 # ---------------------------------------------------------
-# EVENT SELECTION SKIMS.  NOT for AmpTools.  These are just for event selection plots.
+# EVENT SELECTION SKIMS.  NOT for AmpTools.
+# These are just for event selection plots.
 # ---------------------------------------------------------
 def skim_DATA_EVENT_SELECTION_SKIMS():
     setup()
-    ROOT.FSModeTree.skimTree(FND0, NT, "", FND0_eventSelectionCuts, f"{generalCuts_eventSelection}")
-    ROOT.FSModeTree.skimTree(FND45, NT, "", FND45_eventSelectionCuts, f"{generalCuts_eventSelection}")
-    ROOT.FSModeTree.skimTree(FND90, NT, "", FND90_eventSelectionCuts, f"{generalCuts_eventSelection}")
-    ROOT.FSModeTree.skimTree(FND135, NT, "", FND135_eventSelectionCuts, f"{generalCuts_eventSelection}")
+    ROOT.FSModeTree.skimTree(FND0,   NT, "", FND0_eventSelectionCuts,   generalCuts_eventSelection)
+    ROOT.FSModeTree.skimTree(FND45,  NT, "", FND45_eventSelectionCuts,  generalCuts_eventSelection)
+    ROOT.FSModeTree.skimTree(FND90,  NT, "", FND90_eventSelectionCuts,  generalCuts_eventSelection)
+    ROOT.FSModeTree.skimTree(FND135, NT, "", FND135_eventSelectionCuts, generalCuts_eventSelection)
 
-    # merge individual polarization skims into one file for plotting.
-    merged_file = FND_eventSelectionCuts_ALLpols
-
-    cmd = [
-        "hadd", "-f", merged_file,
-        FND0_eventSelectionCuts,
-        FND45_eventSelectionCuts,
-        FND90_eventSelectionCuts,
-        FND135_eventSelectionCuts,
-    ]
-
+    cmd = ["hadd", "-f", FND_eventSelectionCuts_ALLpols,
+           FND0_eventSelectionCuts, FND45_eventSelectionCuts,
+           FND90_eventSelectionCuts, FND135_eventSelectionCuts]
     print("Merging event-selection skim files:")
     print(" ".join(cmd))
     subprocess.run(cmd, check=True)
 
+
 def skim_MONTE_CARLO_EVENT_SELECTION_SKIMS():
     setup()
-    ROOT.FSModeTree.skimTree(FND_MC_sp18, NT, "", FND_eventSelectionCuts_MC_sp18, f"{generalCuts_eventSelection}")
-    ROOT.FSModeTree.skimTree(FND_MC_fa18, NT, "", FND_eventSelectionCuts_MC_fa18, f"{generalCuts_eventSelection}")
-    ROOT.FSModeTree.skimTree(FND_MC_sp20, NT, "", FND_eventSelectionCuts_MC_sp20, f"{generalCuts_eventSelection}")
+    ROOT.FSModeTree.skimTree(FND_MC_sp18, NT, "", FND_eventSelectionCuts_MC_sp18, generalCuts_eventSelection)
+    ROOT.FSModeTree.skimTree(FND_MC_fa18, NT, "", FND_eventSelectionCuts_MC_fa18, generalCuts_eventSelection)
+    ROOT.FSModeTree.skimTree(FND_MC_sp20, NT, "", FND_eventSelectionCuts_MC_sp20, generalCuts_eventSelection)
 
-    merged_file = FND_eventSelectionCuts_MC_sp18fa18sp20
-
-    cmd = [
-        "hadd", "-f", merged_file,
-        FND_eventSelectionCuts_MC_sp18,
-        FND_eventSelectionCuts_MC_fa18,
-        FND_eventSelectionCuts_MC_sp20,
-    ]
-
+    cmd = ["hadd", "-f", FND_eventSelectionCuts_MC_sp18fa18sp20,
+           FND_eventSelectionCuts_MC_sp18, FND_eventSelectionCuts_MC_fa18,
+           FND_eventSelectionCuts_MC_sp20]
     print("Merging MC event-selection skim files:")
     print(" ".join(cmd))
     subprocess.run(cmd, check=True)
 
+
 def skim_THROWN_MC_EVENT_SELECTION_SKIMS():
     setup_genmc()
-    ROOT.FSModeTree.skimTree(FND_THROWN_sp18, NT, "", FND_eventSelectionCuts_THROWN_MC_sp18, f"{signalCuts_THROWN}")
-    ROOT.FSModeTree.skimTree(FND_THROWN_fa18, NT, "", FND_eventSelectionCuts_THROWN_MC_fa18, f"{signalCuts_THROWN}")
-    ROOT.FSModeTree.skimTree(FND_THROWN_sp20, NT, "", FND_eventSelectionCuts_THROWN_MC_sp20, f"{signalCuts_THROWN}")
-    
-    merged_file = FND_eventSelectionCuts_THROWN_MC_sp18_fa18sp20
+    ROOT.FSModeTree.skimTree(FND_THROWN_sp18, NT, "", FND_eventSelectionCuts_THROWN_MC_sp18, thrownCuts_eventSelection)
+    ROOT.FSModeTree.skimTree(FND_THROWN_fa18, NT, "", FND_eventSelectionCuts_THROWN_MC_fa18, thrownCuts_eventSelection)
+    ROOT.FSModeTree.skimTree(FND_THROWN_sp20, NT, "", FND_eventSelectionCuts_THROWN_MC_sp20, thrownCuts_eventSelection)
 
-    cmd = [
-        "hadd", "-f", merged_file,
-        FND_eventSelectionCuts_THROWN_MC_sp18,
-        FND_eventSelectionCuts_THROWN_MC_fa18,
-        FND_eventSelectionCuts_THROWN_MC_sp20,
-    ]
-
+    cmd = ["hadd", "-f", FND_eventSelectionCuts_THROWN_MC_sp18fa18sp20,
+           FND_eventSelectionCuts_THROWN_MC_sp18, FND_eventSelectionCuts_THROWN_MC_fa18,
+           FND_eventSelectionCuts_THROWN_MC_sp20]
     print("Merging THROWN event-selection skim files:")
     print(" ".join(cmd))
     subprocess.run(cmd, check=True)
 
 
-
 def skim_DATA_KPI_SYSTEM_SKIMS():
     setup()
-    ROOT.FSModeTree.skimTree(FND_eventSelectionCuts_ALLpols, NT, "", FND_eventSelectionCuts_KpiSystem_ALLpols, f"{KPiSystemCuts}")
-    friendTreeContents = [(ROOT.TString("weight"), ROOT.TString(f"{KPiSystemCuts_weights}"))]
+    ROOT.FSModeTree.skimTree(FND_eventSelectionCuts_ALLpols, NT, "",
+                             FND_eventSelectionCuts_KpiSystem_ALLpols, KPiSystemCuts)
+    friendTreeContents = [(ROOT.TString("weight"), ROOT.TString(KPiSystemCuts_weights))]
     ROOT.FSModeTree.createFriendTree(FND_eventSelectionCuts_KpiSystem_ALLpols, NT, "", "weight", friendTreeContents)
 
 
 # ---------------------------------------------------------
-# GENERAL SKIMS:  These are created to provide smaller
-# files for 'SIGNAL SKIMS' section.
-# (not used for AmpTools directly, just a pre-skimming).
+# AMPTOOLS GENERAL SKIMS (toggleable, no t-bin cut)
+# One output file per polarization / MC period.
+# Safe to comment out — downstream signal/sideband loop
+# applies t-bin cuts, so these files cannot go stale.
 # ---------------------------------------------------------
 
 def skim_K892_data_GENERAL_SKIMS():
     setup()
-    ROOT.FSModeTree.skimTree(FND0, NT, "", FND0_generalCuts, f"{generalCuts}")
-    ROOT.FSModeTree.skimTree(FND45, NT, "", FND45_generalCuts, f"{generalCuts}")
-    ROOT.FSModeTree.skimTree(FND90, NT, "", FND90_generalCuts, f"{generalCuts}")
-    ROOT.FSModeTree.skimTree(FND135, NT, "", FND135_generalCuts, f"{generalCuts}")
+    for (pol_label, fnd_raw, general_out) in POLS_GENERAL:
+        print(f"General-skimming data {pol_label}: {fnd_raw} --> {general_out}")
+        ROOT.FSModeTree.skimTree(fnd_raw, NT, "", general_out, generalCuts_noT)
 
-def skim_K892_data_GENERAL_SKIMS_t13():
+
+def skim_K892_accmc_GENERAL_SKIMS():
+    """
+    General-skim each MC period (no t-bin cut), then hadd into one
+    combined file. The signal skim loop reads from the combined file.
+    """
     setup()
-    ROOT.FSModeTree.skimTree(FND0, NT, "", FND0_generalCuts_t13, f"{generalCuts_t13}")
-    ROOT.FSModeTree.skimTree(FND45, NT, "", FND45_generalCuts_t13, f"{generalCuts_t13}")
-    ROOT.FSModeTree.skimTree(FND90, NT, "", FND90_generalCuts_t13, f"{generalCuts_t13}")
-    ROOT.FSModeTree.skimTree(FND135, NT, "", FND135_generalCuts_t13, f"{generalCuts_t13}")
+    period_files = []
+    for (period_label, fnd_mc, _, general_out) in MC_PERIODS_GENERAL:
+        print(f"General-skimming accmc {period_label}: {fnd_mc} --> {general_out}")
+        ROOT.FSModeTree.skimTree(fnd_mc, NT, "", general_out, generalCuts_noT)
+        period_files.append(general_out)
 
-def skim_K892_data_GENERAL_SKIMS_t38():
-    setup()
-    ROOT.FSModeTree.skimTree(FND0, NT, "", FND0_generalCuts_t38, f"{generalCuts_t38}")
-    ROOT.FSModeTree.skimTree(FND45, NT, "", FND45_generalCuts_t38, f"{generalCuts_t38}")
-    ROOT.FSModeTree.skimTree(FND90, NT, "", FND90_generalCuts_t38, f"{generalCuts_t38}")
-    ROOT.FSModeTree.skimTree(FND135, NT, "", FND135_generalCuts_t38, f"{generalCuts_t38}")
-
-def skim_K892_data_GENERAL_SKIMS_t810():
-    setup()
-    ROOT.FSModeTree.skimTree(FND0, NT, "", FND0_generalCuts_t810, f"{generalCuts_t810}")
-    ROOT.FSModeTree.skimTree(FND45, NT, "", FND45_generalCuts_t810, f"{generalCuts_t810}")
-    ROOT.FSModeTree.skimTree(FND90, NT, "", FND90_generalCuts_t810, f"{generalCuts_t810}")
-    ROOT.FSModeTree.skimTree(FND135, NT, "", FND135_generalCuts_t810, f"{generalCuts_t810}")
-
-
-# ---------------------------------------------------------
-# SIGNAL SKIMS (these get fed into AmpTools)
-# ---------------------------------------------------------
-def skim_K892_data_SIG_BKGND_SKIMS_ALL():
-    setup()
-
-    # ------------------------------------------------------------
-    # pol0
-    # ------------------------------------------------------------
-    ROOT.FSModeTree.skimTree(FND0_generalCuts_t810, NT, "", FND0_data,  f"{signalCuts}")
-    ROOT.FSModeTree.skimTree(FND0_generalCuts_t810, NT, "", FND0_bkgnd, f"{sidebandWeights}")
-    friendTreeContents = [(ROOT.TString("weight"), ROOT.TString(f"{sidebandWeights}"))]
-    ROOT.FSModeTree.createFriendTree(FND0_bkgnd, NT, "", "weight", friendTreeContents)
-
-    # ------------------------------------------------------------
-    # pol45
-    # ------------------------------------------------------------
-    ROOT.FSModeTree.skimTree(FND45_generalCuts_t810, NT, "", FND45_data,  f"{signalCuts}")
-    ROOT.FSModeTree.skimTree(FND45_generalCuts_t810, NT, "", FND45_bkgnd, f"{sidebandWeights}")
-    friendTreeContents = [(ROOT.TString("weight"), ROOT.TString(f"{sidebandWeights}"))]
-    ROOT.FSModeTree.createFriendTree(FND45_bkgnd, NT, "", "weight", friendTreeContents)
-
-    # ------------------------------------------------------------
-    # pol90
-    # ------------------------------------------------------------
-    ROOT.FSModeTree.skimTree(FND90_generalCuts_t810, NT, "", FND90_data,  f"{signalCuts}")
-    ROOT.FSModeTree.skimTree(FND90_generalCuts_t810, NT, "", FND90_bkgnd, f"{sidebandWeights}")
-    friendTreeContents = [(ROOT.TString("weight"), ROOT.TString(f"{sidebandWeights}"))]
-    ROOT.FSModeTree.createFriendTree(FND90_bkgnd, NT, "", "weight", friendTreeContents)
-
-    # ------------------------------------------------------------
-    # pol135
-    # ------------------------------------------------------------
-    ROOT.FSModeTree.skimTree(FND135_generalCuts_t810, NT, "", FND135_data,  f"{signalCuts}")
-    ROOT.FSModeTree.skimTree(FND135_generalCuts_t810, NT, "", FND135_bkgnd, f"{sidebandWeights}")
-    friendTreeContents = [(ROOT.TString("weight"), ROOT.TString(f"{sidebandWeights}"))]
-    ROOT.FSModeTree.createFriendTree(FND135_bkgnd, NT, "", "weight", friendTreeContents)
-
-    # ------------------------------------------------------------
-    # merge signal skims
-    # ------------------------------------------------------------
-    if os.path.exists(FND_data_ALLpols):
-        os.remove(FND_data_ALLpols)
-
-    cmd_sig = [
-        "hadd", "-f", FND_data_ALLpols,
-        FND0_data,
-        FND45_data,
-        FND90_data,
-        FND135_data,
-    ]
-    print("Merging signal skim files:")
-    print(" ".join(cmd_sig))
-    subprocess.run(cmd_sig, check=True)
-
-
-def skim_K892_accmc():
-    setup()
-    # ---- Step 1: GENERAL SKIMS to reduce file size ----
-    ROOT.FSModeTree.skimTree(FND_MC_sp18, NT, "", FND_generalCuts_MC_sp18, f"{generalCuts_t810}")
-    ROOT.FSModeTree.skimTree(FND_MC_fa18, NT, "", FND_generalCuts_MC_fa18, f"{generalCuts_t810}")
-    ROOT.FSModeTree.skimTree(FND_MC_sp20, NT, "", FND_generalCuts_MC_sp20, f"{generalCuts_t810}")
-
-    merged_file = FND_generalCuts_MC_sp18fa18sp20
-
-    cmd = [
-        "hadd", "-f", merged_file,
-        FND_generalCuts_MC_sp18,
-        FND_generalCuts_MC_fa18,
-        FND_generalCuts_MC_sp20,
-    ]
-
-    print("merging accmc GENERAL SKIM files:")
-    print(" ".join(cmd))
-    subprocess.run(cmd,check=True)
-
-    # ---- Step 2: signal skim + friend tree on the combined file ----
-    ROOT.FSModeTree.skimTree(FND_generalCuts_MC_sp18fa18sp20, NT, "", FND_accmc, f"{signalCutsMC}")
-    friendTreeContentsMC = [(ROOT.TString("weight"), ROOT.TString(f"{signalCuts_weightsMC}"))]
-    ROOT.FSModeTree.createFriendTree(FND_accmc, NT, "", "weight", friendTreeContentsMC)
-
-
-def skim_K892_genmc():
-    setup_genmc()
-    ROOT.FSModeTree.skimTree(FND_THROWN_sp18, NT, "",FND_generalCuts_THROWN_sp18, signalCuts_THROWN_t810)
-    ROOT.FSModeTree.skimTree(FND_THROWN_fa18, NT, "",FND_generalCuts_THROWN_fa18, signalCuts_THROWN_t810)
-    ROOT.FSModeTree.skimTree(FND_THROWN_sp20, NT, "",FND_generalCuts_THROWN_sp20, signalCuts_THROWN_t810)
-
-    merged_file = FND_genmc
-
-    cmd = [
-        "hadd", "-f", merged_file,
-        FND_generalCuts_THROWN_sp18,
-        FND_generalCuts_THROWN_fa18,
-        FND_generalCuts_THROWN_sp20,
-    ]
-
-    print("Merging genmc SKIM files:")
+    cmd = ["hadd", "-f", FND_generalCuts_MC_sp18fa18sp20] + period_files
+    print("Merging accmc general-skim files:")
     print(" ".join(cmd))
     subprocess.run(cmd, check=True)
 
 
+# ---------------------------------------------------------
+# AMPTOOLS SIGNAL / SIDEBAND SKIMS — loop over T_BINS
+#
+# Reads from the general-skim files (no t-bin cut).
+# Applies t-bin cut + signal/sideband cuts per bin.
+#
+# signal:   CUT(tRange*, rf, KShort, Lambda)
+# sideband: CUT(tRange*)*CUTSBWT(rf, KShort, Lambda)
+#           with createFriendTree for the weight column.
+# ---------------------------------------------------------
+
+def skim_K892_data_SIG_BKGND_SKIMS():
+    setup()
+    for (label, t_cut_name, _, lo, hi) in T_BINS:
+        signalCuts_t      = signalCuts.format(t_cut_name=t_cut_name)
+        sidebandWeights_t = sidebandWeights.format(t_cut_name=t_cut_name)
+
+        signal_files = []
+        for (pol_label, _, general_out) in POLS_GENERAL:
+            signal_out = f"{baseDir}tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_{label}_{pol_label}.root"
+            bkgnd_out  = f"{baseDir}tree_pipkslamb__B4_M16_M18_SIDEBAND_SKIM_K892_{label}_{pol_label}.root"
+
+            ROOT.FSModeTree.skimTree(general_out, NT, "", signal_out, f"{signalCuts_t}")
+            ROOT.FSModeTree.skimTree(general_out, NT, "", bkgnd_out,  f"{sidebandWeights_t}")
+            friendTreeContents = [(ROOT.TString("weight"), ROOT.TString(f"{sidebandWeights_friendTree}"))]
+            ROOT.FSModeTree.createFriendTree(bkgnd_out, NT, "", "weight", friendTreeContents)
+
+            signal_files.append(signal_out)
+
+        allpols_out = f"{baseDir}tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_{label}_ALLpols.root"
+        if os.path.exists(allpols_out):
+            os.remove(allpols_out)
+        cmd = ["hadd", "-f", allpols_out] + signal_files
+        print(f"Merging signal skims for {label}:")
+        print(" ".join(cmd))
+        subprocess.run(cmd, check=True)
+
+
+# ---------------------------------------------------------
+# AMPTOOLS MC SKIMS — loop over T_BINS
+# Reads from general-skim files (accmc) or raw thrown files (genmc).
+# ---------------------------------------------------------
+
+def skim_K892_accmc():
+    """
+    For each t-bin: signal skim + friend-tree weight from the
+    combined general-skim file (no t-bin cut).
+    """
+    setup()
+    for (label, t_cut_name, _, lo, hi) in T_BINS:
+        MC_signalCuts_t = f"{MC_signalCuts.format(t_cut_name=t_cut_name)}"
+
+        accmc_out = f"{baseDir}tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_MC_{label}.root"
+        ROOT.FSModeTree.skimTree(FND_generalCuts_MC_sp18fa18sp20, NT, "", accmc_out, MC_signalCuts_t)
+        friendTreeContentsMC = [(ROOT.TString("weight"), ROOT.TString(MC_signalWeights_friendTree))]
+        ROOT.FSModeTree.createFriendTree(accmc_out, NT, "", "weight", friendTreeContentsMC)
+
+
+def skim_K892_genmc():
+    """
+    For each t-bin: skim each thrown period, then hadd into one
+    genmc file per bin. Thrown trees are small enough to skim
+    directly without a general-skim step.
+    """
+    setup_genmc()
+    for (label, _, thrown_t_cut_name, lo, hi) in T_BINS:
+        MC_thrownCuts_t = f"{MC_thrownCuts.format(thrown_t_cut_name=thrown_t_cut_name)}"
+
+        period_files = []
+        for (period_label, _, fnd_thrown, _) in MC_PERIODS_GENERAL:
+            thrown_out = f"{baseDir}tree_pipkslamb_THROWN_SKIM_K892_{label}_{period_label}.root"
+            print(f"Skimming genmc [{label}] {period_label}: {fnd_thrown} --> {thrown_out}")
+            ROOT.FSModeTree.skimTree(fnd_thrown, NT, "", thrown_out, MC_thrownCuts_t)
+            period_files.append(thrown_out)
+
+        genmc_out = f"{baseDir}tree_pipkslamb_SIGNAL_SKIM_K892_THROWN_{label}_sp18fa18sp20.root"
+        cmd = ["hadd", "-f", genmc_out] + period_files
+        print(f"Merging genmc skims for {label}:")
+        print(" ".join(cmd))
+        subprocess.run(cmd, check=True)
+
+
 def skim_K892():
-    # skim_DATA_EVENT_SELECTION_SKIMS()
+    skim_DATA_EVENT_SELECTION_SKIMS()
     skim_MONTE_CARLO_EVENT_SELECTION_SKIMS()
     skim_THROWN_MC_EVENT_SELECTION_SKIMS()
-    # skim_DATA_KPI_SYSTEM_SKIMS()
-    # skim_K892_data_GENERAL_SKIMS()
-    # skim_K892_data_GENERAL_SKIMS_t13()
-    # skim_K892_data_GENERAL_SKIMS_t38()
-    # skim_K892_data_GENERAL_SKIMS_t810()
-    # skim_K892_data_SIG_BKGND_SKIMS_ALL()
+    skim_DATA_KPI_SYSTEM_SKIMS()
+    skim_K892_data_GENERAL_SKIMS()
+    skim_K892_accmc_GENERAL_SKIMS()
+    skim_K892_data_SIG_BKGND_SKIMS()
     skim_K892_accmc()
     skim_K892_genmc()
 
