@@ -78,11 +78,11 @@ FND_eventSelectionCuts_KpiSystem_ALLpols = f"{baseDir_eventSelection}tree_pipksl
 # ---------------------------------------------------------
 
 # STEP 1: first make general cuts to reduce file size
-# mandelstam t(0.1, 1.0)
-FND0_generalCuts = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_pol0.root"
-FND45_generalCuts = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_pol45.root"
-FND90_generalCuts = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_pol90.root"
-FND135_generalCuts = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_pol135.root"
+# mandelstam t(0.1, 2.0)
+FND0_generalCuts_t0120 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t0120_pol0.root"
+FND45_generalCuts_t0120 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t0120_pol45.root"
+FND90_generalCuts_t0120 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t0120_pol90.root"
+FND135_generalCuts_t0120 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t0120_pol135.root"
 
 # mandelstam t(0.1, 0.3)
 FND0_generalCuts_t13 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t13_pol0.root"
@@ -90,17 +90,41 @@ FND45_generalCuts_t13 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_
 FND90_generalCuts_t13 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t13_pol90.root"
 FND135_generalCuts_t13 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t13_pol135.root"
 
-# mandelstam t(0.3, 0.8)
-FND0_generalCuts_t38 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t38_pol0.root"
-FND45_generalCuts_t38 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t38_pol45.root"
-FND90_generalCuts_t38 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t38_pol90.root"
-FND135_generalCuts_t38 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t38_pol135.root"
+# mandelstam t(0.3, 0.5)
+FND0_generalCuts_t35 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t35_pol0.root"
+FND45_generalCuts_t35 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t35_pol45.root"
+FND90_generalCuts_t35 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t35_pol90.root"
+FND135_generalCuts_t35 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t35_pol135.root"
 
-# mandelstam t(0.8, 1.0)
-FND0_generalCuts_t810 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t810_pol0.root"
-FND45_generalCuts_t810 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t810_pol45.root"
-FND90_generalCuts_t810 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t810_pol90.root"
-FND135_generalCuts_t810 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t810_pol135.root"
+# mandelstam t(0.5, 0.7)
+FND0_generalCuts_t57 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t57_pol0.root"
+FND45_generalCuts_t57 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t57_pol45.root"
+FND90_generalCuts_t57 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t57_pol90.root"
+FND135_generalCuts_t57 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t57_pol135.root"
+
+# mandelstam t(0.7, 1.0)
+FND0_generalCuts_t710 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t710_pol0.root"
+FND45_generalCuts_t710 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t710_pol45.root"
+FND90_generalCuts_t710 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t710_pol90.root"
+FND135_generalCuts_t710 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t710_pol135.root"
+
+# mandelstam t(1.0, 1.3)
+FND0_generalCuts_t1013 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t1013_pol0.root"
+FND45_generalCuts_t1013 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t1013_pol45.root"
+FND90_generalCuts_t1013 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t1013_pol90.root"
+FND135_generalCuts_t1013 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t1013_pol135.root"
+
+# mandelstam t(1.3, 1.6)
+FND0_generalCuts_t1316 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t1316_pol0.root"
+FND45_generalCuts_t1316 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t1316_pol45.root"
+FND90_generalCuts_t1316 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t1316_pol90.root"
+FND135_generalCuts_t1316 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t1316_pol135.root"
+
+# mandelstam t(1.6, 2.0)
+FND0_generalCuts_t1620 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t1620_pol0.root"
+FND45_generalCuts_t1620 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t1620_pol45.root"
+FND90_generalCuts_t1620 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t1620_pol90.root"
+FND135_generalCuts_t1620 = f"{baseDir}tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_t1620_pol135.root"
 
 # STEP 2: Now make the individual files that get fed into AmpTools
 FND0_data = f"{baseDir}tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_pol0.root"
