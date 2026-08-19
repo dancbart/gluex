@@ -19,10 +19,10 @@ Usage:
     )
 
     T_BINS = ALL_T_BINS          # or a subset
-    T_BIN_EVENT_SELECTION = EVENT_SELECTION_T_BINS
+    EVENT_SELECTION_T_BIN = EVENT_SELECTION_T_BINS
 
-    setup(T_BINS, T_BIN_EVENT_SELECTION)
-    setup_genmc(T_BINS, T_BIN_EVENT_SELECTION)
+    setup(T_BINS, EVENT_SELECTION_T_BINS)
+    setup_genmc(T_BINS, EVENT_SELECTION_T_BINS)
 """
 
 import ROOT
@@ -54,7 +54,10 @@ PiPlus1        = "3"
 # regardless of which bins are selected.
 # =========================================================
 
-EVENT_SELECTION_T_BINS = ("tEvSel", "tRange_evSel", "tRangeTHROWN_evSel", 0.1, 2.0)
+EVENT_SELECTION_T_BINS = [
+    ("tEvSel_0120", "tRange_evSel_0120", "tRangeTHROWN_evSel_0120", 0.1, 2.0),
+    ("tEvSel_0110", "tRange_evSel_0110", "tRangeTHROWN_evSel_0110", 0.1, 1.0),
+]
 
 ALL_T_BINS = [
     ("t0120", "tRange0120", "tRangeTHROWN0120", 0.1, 2.0),
@@ -75,12 +78,12 @@ ALL_T_BINS = [
 # Both must be called AFTER atiSetup.setup(globals(), use_fsroot=True).
 # =========================================================
 
-def setup(t_bins, t_bin_event_selection):
+def setup(t_bins, event_selection_t_bins):
     """Define all FSRoot cuts for reconstructed data and MC.
 
     Args:
         t_bins: list of (label, t_cut_name, thrown_t_cut_name, lo, hi)
-        t_bin_event_selection: single tuple of the same format for the
+        event_selection_t_bins: list of tuples of the same format for the
                                event-selection t-range cut
     """
     # Guard: skip if cuts are already registered (e.g. setup() called twice)
@@ -94,8 +97,8 @@ def setup(t_bins, t_bin_event_selection):
     ROOT.FSCut.defineCut("tprimeKsMid",  "TPRIMEKS > 0.2 && TPRIMEKS < 0.6")
     ROOT.FSCut.defineCut("tprimeKsHigh", "TPRIMEKS > 0.6 && TPRIMEKS < 1.0")
 
-    # --- t-range cuts: generated from t_bins + t_bin_event_selection ---
-    for (label, t_cut_name, _, lo, hi) in t_bins + [t_bin_event_selection]:
+    # --- t-range cuts: generated from t_bins + event_selection_t_bins ---
+    for (label, t_cut_name, _, lo, hi) in t_bins + event_selection_t_bins:
         ROOT.FSCut.defineCut(t_cut_name,
             f"abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))>{lo} && "
             f"abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))<{hi}")
@@ -132,16 +135,16 @@ def setup(t_bins, t_bin_event_selection):
     ROOT.FSCut.defineCut("nonLambda", "MASS(1a,1b)>1.14 && MASS(1a,1b)<1.675")
 
 
-def setup_genmc(t_bins, t_bin_event_selection):
+def setup_genmc(t_bins, event_selection_t_bins):
     """Define all FSRoot cuts for thrown MC trees.
 
     Args:
         t_bins: list of (label, t_cut_name, thrown_t_cut_name, lo, hi)
-        t_bin_event_selection: single tuple of the same format for the
+        event_selection_t_bins: list of tuples of the same format for the
                                event-selection t-range cut
     """
-    # --- t-range cuts: generated from t_bins + t_bin_event_selection ---
-    for (label, _, thrown_t_cut_name, lo, hi) in t_bins + [t_bin_event_selection]:
+    # --- t-range cuts: generated from t_bins + event_selection_t_bins ---
+    for (label, _, thrown_t_cut_name, lo, hi) in t_bins + event_selection_t_bins:
         ROOT.FSCut.defineCut(thrown_t_cut_name,
             f"abs(-1*MCMASS2(GLUEXTARGET,-1))>{lo} && "
             f"abs(-1*MCMASS2(GLUEXTARGET,-1))<{hi}")
@@ -171,18 +174,22 @@ def setup_genmc(t_bins, t_bin_event_selection):
 # Python. Cut strings defined once here ensure identical cuts
 # are applied across all scripts that import this module.
 #
-# Note: generalCuts_eventSelection and thrownCuts_eventSelection
-# reference EVENT_SELECTION_T_BINS. If your script uses a
-# custom t_bin_event_selection, build these strings locally using
-# your tuple's [1] and [2] elements.
+# Event-selection and RooFit cut strings include a t-range placeholder
+# because EVENT_SELECTION_T_BINS now has two entries. Build them per
+# bin in the calling script:
+#   for (label, t_cut_name, thrown_t_cut_name, lo, hi) in EVENT_SELECTION_T_BINS:
+#       generalCuts_eventSelection_t = generalCuts_eventSelection.format(t_cut_name=t_cut_name)
 # =========================================================
 
 # ------ USE FOR EVENT SELECTION PLOTS ONLY ------- #
-generalCuts_eventSelection = f"CUT({EVENT_SELECTION_T_BINS[1]},chi2DOF,unusedTracks,coherentPeak,targetZ)"
-thrownCuts_eventSelection  = f"CUT({EVENT_SELECTION_T_BINS[2]},coherentPeakTHROWN,selectKSTAR892THROWN)"
+# Usage: generalCuts_eventSelection.format(t_cut_name=t_cut_name)
+#        thrownCuts_eventSelection.format(thrown_t_cut_name=thrown_t_cut_name)
+generalCuts_eventSelection = "CUT({t_cut_name},chi2DOF,unusedTracks,coherentPeak,targetZ)"
+thrownCuts_eventSelection  = "CUT({thrown_t_cut_name},coherentPeakTHROWN,selectKSTAR892THROWN)"
 
 # ---------- USE FOR ROOFIT FITTING ONLY ---------- #
-KPiSystemCuts         = f"CUT({EVENT_SELECTION_T_BINS[1]},chi2DOF,unusedTracks,coherentPeak,targetZ,flightLengthKShort,flightLengthLambda,rejectSigma1385)"
+# Usage: KPiSystemCuts.format(t_cut_name=t_cut_name)
+KPiSystemCuts         = "CUT({t_cut_name},chi2DOF,unusedTracks,coherentPeak,targetZ,flightLengthKShort,flightLengthLambda,rejectSigma1385)"
 KPiSystemCuts_weights = "CUTWT(rf,KShort,Lambda)"
 
 # ----------- USE FOR AMPTOOLS FITTING ------------ #
@@ -221,24 +228,3 @@ MC_signalCuts_eventSelection = "CUT({t_cut_name},KShort,Lambda,selectKSTAR892)"
 signalCuts_weights = "CUTWT(rf,KShort,Lambda)"
 baseCuts           = "flightLengthKShort,flightLengthLambda,rejectSigma1385"
 sidebandCuts       = "rf,KShort,Lambda"
-
-# Explanation of cut methods (Boris):
-
-    # CUT(base, sideband)
-    #     logical AND of signal region(s) in `base` and `sideband` cuts, weight = 1
-    #     yields not sideband-subtracted signal distribution
-    # CUT(base) && CUTSB(sideband)
-    #     logical AND of signal region(s) in `base` cut(s) and all sideband regions in `sideband` cut(s)
-    #     histograms are scaled with sideband weights and summed
-    #     yields sideband distribution that is subtracted from signal distribution
-    # CUT(base) * CUTSBWT(sideband)
-    #     equivalent to above; but the sideband weights are baked into cut string and only a single histogram is created
-    #     NOTE! applying weights in TFormulas does not work with RDataFrame
-    # CUT(base) && CUTSUB(sideband)
-    #     selects signal region(s) defined by `base` and `sideband` cut(s) and subtracts sideband regions in `sideband` cut(s)
-    #     the sideband histograms are scaled with the corresponding sideband weight and summed
-    #     summed sideband histograms are subtracted from signal histogram to yield sideband-subtracted distribution
-    # CUT(base) * CUTWT(sideband)
-    #     equivalent to above; but the sideband weights are baked into cut string and only a single sideband histogram is created
-    #     equivalent to CUT(base, sideband) - CUT(base) * CUTSBWT(sideband)
-    #     NOTE! applying weights in TFormulas does not work with RDataFrame
