@@ -1,4 +1,5 @@
 {
+    "python.analysis.extraPaths": ["/work/halld/home/dbarton/gluex/KShortPipLambda/"],
     "files.associations": {
         "*.config": "shellscript",
         "*.input": "ssh_config",
