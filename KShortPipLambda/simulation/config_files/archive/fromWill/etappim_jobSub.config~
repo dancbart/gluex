@@ -1,0 +1,70 @@
+#THESE TWO ARE OPTIONAL IF THE STANDARD RUNNING DOESN'T SUIT YOUR NEEDS
+#CUSTOM_MAKEMC=use-this-script-instead
+#CUSTOM_GCONTROL=use-this-Gcontrol-instead
+#========================================================================
+
+#VARIATION=mc calibtime=timegoeshere #set your jana calib context here with or without calibtime Default is variation=mc
+#RECON_CALIBTIME=timegoeshere
+
+RCDB_QUERY=@is_dirc_production and @status_approved
+
+#RUNNING_DIRECTORY=/run/in/this/directory #where the code should run.  This is defaulted to ./.  Use only when NEEDED
+
+#ccdbSQLITEPATH=/your/sqlite/path/ccdb.sqlite  #if you use SQLITE and it is not part of the environment file that gets sourced
+#rcdbSQLITEPATH=/your/sqlite/path/rcdb.sqlite  #if you use SQLITE and it is not part of the environment file that gets sourced
+
+TAG=etaprimepim
+
+DATA_OUTPUT_BASE_DIR=/u/home/wimoehl/files/etaprimepim/SIGMC/
+
+NCORES=4      # Number of CPU threads to use or nodes:node-id:ppn or nodes:ppn depending on your system
+
+GENERATOR=gen_amp_V2 #or you may specifile file:/.../file-to-use.hddm
+GENERATOR_CONFIG=/u/home/wimoehl/SIGMC/CONFIG/etappim_genampv2.cfg
+GENERATOR_POSTPROCESS=decay_evtgen:/u/home/wimoehl/SIGMC/CONFIG/userDecay.dec
+
+#common parameters for generators
+#FLUX_TO_GEN=ccdb
+#FLUX_TO_GEN=/[full path]/flux.root:flux_hist
+#POL_TO_GEN=/[full path]/tpol.root:pol_hist
+#eBEAM_ENERGY=12 #either use rcdb or do not set to pull the value for the chosen run number from the rcdb
+#eBEAM_CURRENT=0.01 #either use rcdb or do not set to pull the value for the chosen run number from the rcdb in uA
+#RADIATOR_THICKNESS=50.e-06#either use rcdb or do not set to pull the value for the chosen run number from the rcdb
+#COHERENT_PEAK=9 #either use rcdb or do not set to pull the value for the chosen run number from the rcdb
+GEN_MIN_ENERGY=8.0
+GEN_MAX_ENERGY=8.6
+
+# these two lines weren't needed before, think it is because ccdb is not replacing TEMPBEAMCONFIG in genr8 config file
+#eBEAM_ENERGY=12
+#COHERENT_PEAK=9
+
+
+GEANT_VERSION=4
+NOSECONDARIES=0
+#VERTEX_VOLUME=ccdb:29.5 #defines the VERTEX card in geant.  The first value should be a comma seperated string x,y,z,var_xx,var_xy,var_yy,dxdz,dydz and the second part is the length (only the length need be given)
+
+BKG=Random:recon-2019_11-ver01.2 #[None, Random:[TAG], BeamPhotons, TagOnly, custom e.g bg.hddm:1.8] Can be stacked eg Random:[TAG]+TagOnly:.123 where the :[num] defines BGRATE
+
+ANA_ENVIRONMENT_FILE=/group/halld/www/halldweb/html/halld_versions/analysis-2019_11-ver09.xml
+
+#optional additional plugins that will be run along side danarest and hd_root.  This should be a comma separated list (e.g. plugin1,plugin2)
+CUSTOM_PLUGINS=file:/u/home/wimoehl/SIGMC/CONFIG/jana_pi1Search.config
+#====================================================================================
+#EVERYTHING BELOW FOR BATCH ONLY
+
+VERBOSE=True
+BATCH_SYSTEM=swif2#swif2cont #SWIF2cont#qsub #can be swif2 or condor or osg or qsub adding :[name] will pass -q [name] into PBS. 
+
+WORKFLOW_NAME = etapim
+
+#environment file location
+ENVIRONMENT_FILE=/group/halld/www/halldweb/html/halld_versions/version.xml
+
+Partition = production
+
+# RESOURCES for swif2 jobs
+DISK=4GB            # Max Disk usage
+RAM=4GB            # Max RAM usage
+TIMELIMIT=4h      # Max walltime.  This may be of the form xx:xx:xx depending on your system
+OS=el9        # Specify CentOS65 machines
+

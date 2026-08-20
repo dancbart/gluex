@@ -1,0 +1,70 @@
+======================================================
+  Interfering 2 Relativistic Breit-Wigner + Bernstein
+  M(Ks pi+) Fit Results
+======================================================
+
+--- Initial Parameters (starting values) ---
+  massBW_1   = 0.8920  [0.6340, 1.2000]
+  widthBW_1  = 0.0485  [0.0200, 0.1500]
+  massBW_2   = 1.4300  [1.2000, 1.8000]
+  widthBW_2  = 0.1000  [0.0500, 0.3500]
+  scale      = 0.5900  [0.0000, 1.0000]
+  phase      = -2.0000  [-6.0000, 6.0000]
+  rInt       = 1.0000  [-inf, inf]
+  sig2bkg    = 0.6000  [0.0000, 1.0000]
+  coef0      = 0.1000  [0.0000, 5.0000]
+  coef1      = 1.0000  [-inf, inf]
+  coef2      = 0.5000  [0.0000, 5.0000]
+  coef3      = 0.1000  [0.0000, 5.0000]
+
+--- Figures of Merit (0.8, 1.0) GeV ---
+  Signal yield : 25315.5
+  Background   : 7467.2
+  S/B          : 3.390
+  Purity S/(S+B): 0.772
+--- Fit Convergence ---
+  Status     : 0
+  covQual    : 3  (accurate)
+  Converged  : YES
+  Edm        : 84.372817  (post-SumW2, not a convergence measure)
+  NLL value  : 10974.779302
+  Chi2/NDF   : 6.3318
+  Num invalid NLL : 0
+
+--- Parameters at limits ---
+  none
+
+--- Fitted Parameters ---
+  massBW_1   = 0.893317 +/- 0.000478 GeV
+  widthBW_1  = 0.083384 +/- 0.001223 GeV
+  massBW_2   = 1.414046 +/- 0.002375 GeV
+  widthBW_2  = 0.137813 +/- 0.003323 GeV
+  scale      = 0.447688 +/- 0.004555
+  phase      = -1.889838 +/- 0.045705 rad
+  sig2bkg    = 0.521484 +/- 0.005852
+  (fixed: coef1=1, rInt=1 [fully coherent])
+  coef0      = 0.061942 +/- 0.020227
+  coef2      = 0.332471 +/- 0.037493
+  coef3      = 0.110299 +/- 0.005737
+
+--- Correlations (|rho| > 0.5) ---
+  coef0      coef2       +0.832
+  coef0      coef3       +0.522
+  coef0      phase       -0.584
+  coef0      sig2bkg     +0.582
+  coef2      massBW_2    +0.522
+  coef2      phase       -0.681
+  coef3      phase       -0.510
+  massBW_1   massBW_2    -0.545
+  massBW_1   phase       +0.621
+  massBW_2   phase       -0.868
+  scale      widthBW_2   +0.745
+  sig2bkg    widthBW_1   +0.543
+
+--- PDG Reference Values ---
+  K*(892):  mass = 0.89166 GeV,  width = 0.0485 GeV
+  K*(1410): mass = 1.421   GeV,  width = 0.236  GeV
+
+--- Fit Range ---
+  M(Ks pi+) in [0.634, 2.203] GeV
+======================================================

@@ -1,0 +1,137 @@
+Main tree entries:   267831
+Friend tree entries: 267831
+bin1 content = 271.158 of 91614.3
+peak bin: content = 6350.82 +/- 77.7797
+effective entries = 89715.3 (raw = 267831)
+[#1] INFO:Fitting -- RooAbsPdf::fitTo(bern2BW) fixing normalization set for coefficient determination to observables in data
+[#1] INFO:Fitting -- using CPU computation library compiled with -mavx512
+[#1] INFO:Fitting -- RooAddition::defaultErrorLevel(nll_bern2BW_dataHist_P) Summation contains a RooNLLVar, using its error level
+[#1] INFO:Minimization -- RooAbsMinimizerFcn::setOptimizeConst: activating const optimization
+Minuit2Minimizer: Minimize with max-calls 5000 convergence for edm < 1 strategy 1
+Info in <Minuit2>: MnSeedGenerator Computing seed using NumericalGradient calculator
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(bkg_Int[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(rel_intBW_Int[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
+Info in <Minuit2>: MnSeedGenerator Initial state: FCN =       15389.73252 Edm =       7080.449518 NCalls =     43
+Info in <Minuit2>: MnSeedGenerator Initial state  
+  Minimum value : 15389.73252
+  Edm           : 7080.449518
+  Internal parameters:	[     -1.287002218     -0.927295218     -1.287002218   -0.08845452519    -0.2355042367    -0.3398369095     0.1809864512     0.2013579208    -0.5962439085    -0.7297276562]	
+  Internal gradient  :	[     -1283.299221       2268.62872      3.755098975     -1635.901319      6502.246277      5767.380887       11286.5297      9124.105631     -5385.605352      -5174.51536]	
+  Internal covariance matrix:
+[[   0.0010893869              0              0              0              0              0              0              0              0              0]
+ [              0  0.00033776995              0              0              0              0              0              0              0              0]
+ [              0              0  6.9358496e-05              0              0              0              0              0              0              0]
+ [              0              0              0   2.777948e-06              0              0              0              0              0              0]
+ [              0              0              0              0  1.7551898e-05              0              0              0              0              0]
+ [              0              0              0              0              0  1.8074938e-05              0              0              0              0]
+ [              0              0              0              0              0              0  4.5592915e-05              0              0              0]
+ [              0              0              0              0              0              0              0  7.2019395e-05              0              0]
+ [              0              0              0              0              0              0              0              0  0.00014159278              0]
+ [              0              0              0              0              0              0              0              0              0  0.00028116223]]]
+Info in <Minuit2>: VariableMetricBuilder Start iterating until Edm is < 0.001 with call limit = 5000
+Info in <Minuit2>: VariableMetricBuilder    0 - FCN =       15389.73252 Edm =       7080.449518 NCalls =     43
+Info in <Minuit2>: VariableMetricBuilder    1 - FCN =       12118.72156 Edm =       3372.882708 NCalls =     67
+Info in <Minuit2>: VariableMetricBuilder    2 - FCN =       11318.92005 Edm =        188.756197 NCalls =     96
+Info in <Minuit2>: VariableMetricBuilder    3 - FCN =       11105.73336 Edm =       55.57016577 NCalls =    118
+Info in <Minuit2>: VariableMetricBuilder    4 - FCN =       11022.11741 Edm =       21.58369761 NCalls =    140
+Info in <Minuit2>: VariableMetricBuilder    5 - FCN =       10989.73087 Edm =       9.111044322 NCalls =    162
+Info in <Minuit2>: VariableMetricBuilder    6 - FCN =       10978.49706 Edm =       1.911857018 NCalls =    184
+Info in <Minuit2>: VariableMetricBuilder    7 - FCN =       10975.53453 Edm =      0.2126299915 NCalls =    206
+Info in <Minuit2>: VariableMetricBuilder    8 - FCN =       10975.17121 Edm =     0.06052612254 NCalls =    228
+Info in <Minuit2>: VariableMetricBuilder    9 - FCN =       10975.02108 Edm =     0.04226812876 NCalls =    250
+Info in <Minuit2>: VariableMetricBuilder   10 - FCN =       10974.82024 Edm =     0.02583627238 NCalls =    272
+Info in <Minuit2>: VariableMetricBuilder   11 - FCN =       10974.78286 Edm =    0.002764857286 NCalls =    294
+Info in <Minuit2>: VariableMetricBuilder   12 - FCN =        10974.7793 Edm =   0.0001080877018 NCalls =    316
+Info in <Minuit2>: VariableMetricBuilder After Hessian
+Info in <Minuit2>: VariableMetricBuilder   13 - FCN =        10974.7793 Edm =   0.0009234694704 NCalls =    404
+Minuit2Minimizer : Valid minimum - status = 0
+FVAL  = 10974.7793019898945
+Edm   = 0.000923469470370758948
+Nfcn  = 404
+coef0	  = 0.0619418	 +/-  0.0173229	(limited)
+coef2	  = 0.332471	 +/-  0.0329732	(limited)
+coef3	  = 0.110299	 +/-  0.00554157	(limited)
+massBW_1	  = 0.893317	 +/-  0.000458292	(limited)
+massBW_2	  = 1.41405	 +/-  0.00206519	(limited)
+phase	  = -1.88984	 +/-  0.0378746	(limited)
+scale	  = 0.447688	 +/-  0.00502234	(limited)
+sig2bkg	  = 0.521484	 +/-  0.0065815	(limited)
+widthBW_1	  = 0.0833836	 +/-  0.00123376	(limited)
+widthBW_2	  = 0.137813	 +/-  0.00364117	(limited)
+Info in <Minuit2>: Minuit2Minimizer::Hesse Using max-calls 5000
+Info in <Minuit2>: Minuit2Minimizer::Hesse Hesse is valid - matrix is accurate
+Info in <Minuit2>: Minuit2Minimizer::Hesse Using max-calls 5000
+Info in <Minuit2>: Minuit2Minimizer::Hesse Hesse is valid - matrix is accurate
+[#1] INFO:Fitting -- RooAbsPdf::fitTo(bern2BW) Calculating sum-of-weights-squared correction matrix for covariance matrix
+[#1] INFO:Minimization -- RooAbsMinimizerFcn::setOptimizeConst: deactivating const optimization
+
+  RooFitResult: minimized FCN value: 10974.8, estimated distance to minimum: 84.3728
+                covariance matrix quality: Full, accurate covariance matrix
+                Status : MINIMIZE=0 HESSE=0 HESSE=0 
+
+    Constant Parameter    Value     
+  --------------------  ------------
+                 coef1    1.0000e+00
+              massd1_2    4.9700e-01
+              massd2_2    1.3900e-01
+                  qmax    1.0406e+00
+                  qmin    0.0000e+00
+                  rInt    1.0000e+00
+                 spin1    1.0000e+00
+                 spin2    1.0000e+00
+
+    Floating Parameter  InitialValue    FinalValue +/-  Error     GblCorr.
+  --------------------  ------------  --------------------------  --------
+                 coef0    1.0000e-01    6.1942e-02 +/-  2.02e-02  <none>
+                 coef2    5.0000e-01    3.3247e-01 +/-  3.75e-02  <none>
+                 coef3    1.0000e-01    1.1030e-01 +/-  5.74e-03  <none>
+              massBW_1    8.9200e-01    8.9332e-01 +/-  4.78e-04  <none>
+              massBW_2    1.4300e+00    1.4140e+00 +/-  2.37e-03  <none>
+                 phase   -2.0000e+00   -1.8898e+00 +/-  4.57e-02  <none>
+                 scale    5.9000e-01    4.4769e-01 +/-  4.55e-03  <none>
+               sig2bkg    6.0000e-01    5.2148e-01 +/-  5.85e-03  <none>
+             widthBW_1    4.8500e-02    8.3384e-02 +/-  1.22e-03  <none>
+             widthBW_2    1.0000e-01    1.3781e-01 +/-  3.32e-03  <none>
+
+status=0 covQual=3
+[#1] INFO:Eval -- RooRealVar::setRange(mass) new range named 'FOM' created with bounds [0.8,1]
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(rel_intBW_Int[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(bkg_Int[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(rel_intBW_Int[mass|FOM]_Norm[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(bkg_Int[mass|FOM]_Norm[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
+[#1] INFO:InputArguments -- RooAbsData::plotOn(dataHist_P) INFO: dataset has non-integer weights, auto-selecting SumW2 errors instead of Poisson errors
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(rel_intBW_Int[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(bkg_Int[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(bern2BW) directly selected PDF components: (rel_intBW)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(bern2BW) indirectly selected PDF components: ()
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(rel_intBW_Int[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(bkg_Int[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(bern2BW) directly selected PDF components: (bkg)
+[#1] INFO:Plotting -- RooAbsPdf::plotOn(bern2BW) indirectly selected PDF components: ()
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(rel_intBW_Int[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
+[#1] INFO:NumericIntegration -- RooRealIntegral::init(bkg_Int[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
+Fit log written.
+Found curve_total
+Found curve_sig
+Found curve_bkg
+Chi2/NDF: 6.33181
+Info in <TCanvas::Print>: pdf file /work/halld/home/dbarton/gluex/KShortPipLambda/fitting/plots/plots_rooFit_kStar.pdf has been created
+/work/halld/home/dbarton/software/FSRoot/rootlogoff.FSROOT.C:6:64: error: 'FSTree' is not a class, namespace, or enumeration
+cout << "FSTree::clearChainCache()..." << endl;                FSTree::clearChainCache();
+                                                               ^
+/work/halld/home/dbarton/software/FSRoot/rootlogoff.FSROOT.C:6:64: note: 'FSTree' declared here
+/work/halld/home/dbarton/software/FSRoot/rootlogoff.FSROOT.C:7:64: error: use of undeclared identifier 'FSHistogram'
+cout << "FSHistogram::clearHistogramCache()..." << endl;       FSHistogram::clearHistogramCache();
+                                                               ^
+/work/halld/home/dbarton/software/FSRoot/rootlogoff.FSROOT.C:8:64: error: use of undeclared identifier 'FSModeCollection'
+cout << "FSModeCollection::clear()..." << endl;                FSModeCollection::clear();
+                                                               ^
+/work/halld/home/dbarton/software/FSRoot/rootlogoff.FSROOT.C:9:64: error: use of undeclared identifier 'FSXYPointList'
+cout << "FSXYPointList::clearXYPoints()..." << endl;           FSXYPointList::clearXYPoints();
+                                                               ^
+/work/halld/home/dbarton/software/FSRoot/rootlogoff.FSROOT.C:10:64: error: use of undeclared identifier 'FSEEDataSetList'
+cout << "FSEEDataSetList::clearDataSets()..." << endl;         FSEEDataSetList::clearDataSets();
+                                                               ^
+/work/halld/home/dbarton/software/FSRoot/rootlogoff.FSROOT.C:11:64: error: use of undeclared identifier 'FSEEXSList'
+cout << "FSEEXSList::clearXSList()..." << endl;                FSEEXSList::clearXSList();
+                                                               ^

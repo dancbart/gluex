@@ -1,0 +1,70 @@
+Starting runplots at Wed Aug 19 15:03:50 EDT 2026
+
+*******************
+Loading environment
+*******************
+
+PYAMPTOOLS_HOME was set to /app/PyAmpTools
+
+[LOADED ROOT] ROOT 6.28.06 was compiled with gcc 11.5.0 and python 3.9.22
+
+
+Destination Folder: /app/PyAmpTools/external/root/root-6.28.06-gcc11.5.0/include
+Re-Linking:
+   SRC:  /app/PyAmpTools/utility/gluex_style.h
+   DEST: /app/PyAmpTools/external/root/root-6.28.06-gcc11.5.0/include/gluex_style.h
+-- Added above modules to conda environment... ---
+
+*******************
+Loading environment
+*******************
+
+PYAMPTOOLS_HOME is already set. Will not attempt override. PYAMPTOOLS_HOME=/app/PyAmpTools
+
+[LOADED ROOT] ROOT 6.28.06 was compiled with gcc 11.5.0 and python 3.9.22
+
+
+Destination Folder: /app/PyAmpTools/external/root/root-6.28.06-gcc11.5.0/include
+Re-Linking:
+   SRC:  /app/PyAmpTools/utility/gluex_style.h
+   DEST: /app/PyAmpTools/external/root/root-6.28.06-gcc11.5.0/include/gluex_style.h
+-- Added above modules to conda environment... ---
+    CREATING HISTOGRAM... FSRootHist:000001   100000000_1100    OKAY           (entries = 8542256)
+    CREATING HISTOGRAM... FSRootHist:000002   100000000_1100    OKAY           (entries = 209688)
+Info in <TCanvas::Print>: pdf file plots/plots.pdf has been created using the current canvas
+    CREATING HISTOGRAM... FSRootHist:000003   100000000_1100    OKAY           (entries = 8542256)
+    CREATING HISTOGRAM... FSRootHist:000004   100000000_1100    OKAY           (entries = 209688)
+    CREATING HISTOGRAM... FSRootHist:000005   100000000_1100    OKAY           (entries = 51788)
+Info in <TCanvas::Print>: Current canvas added to pdf file plots/plots.pdf
+    CREATING HISTOGRAM... FSRootHist:000006   100000000_1100    OKAY           (entries = 11460897)
+    CREATING HISTOGRAM... FSRootHist:000007   100000000_1100    OKAY           (entries = 459093)
+    CREATING HISTOGRAM... FSRootHist:000008   100000000_1100    OKAY           (entries = 38659)
+Info in <TCanvas::Print>: Current canvas added to pdf file plots/plots.pdf
+    CREATING HISTOGRAM... FSRootHist:000009   100000000_1100    OKAY           (entries = 8542256)
+    CREATING HISTOGRAM... FSRootHist:000010   100000000_1100    OKAY           (entries = 209688)
+Info in <TCanvas::Print>: Current canvas added to pdf file plots/plots.pdf and file closed
+atiSetup| bash called python3
+
+------------------------------------------------
+atiSetup| MPI is disabled
+atiSetup| GPU is disabled
+------------------------------------------------
+
+
+atiSetup| Loading library libIUAmpTools.so ............  ON
+atiSetup| Loading library libAmpTools.so ..............  ON
+atiSetup| Loading library libAmpPlotter.so ............  ON
+atiSetup| Loading library libAmpsDataIO.so ............  ON
+atiSetup| Loading library libFSRoot.so ................  ON
+atiSetup| Loading library libAmpsGen.so ...............  OFF
+
+
+------------------------------------------------
+------------------------------------------------
+
+atiSetup| minor warning: Unable to alias omegapiAngles - doesn't exist under ROOT namespace
+atiSetup| minor warning: Unable to alias URtypes - doesn't exist under ROOT namespace
+atiSetup| minor warning: Unable to alias URConfig - doesn't exist under ROOT namespace
+atiSetup| minor warning: Unable to alias FSFitPrivate - doesn't exist under ROOT namespace
+atiSetup| minor warning: Unable to alias FSFitFunctions - doesn't exist under ROOT namespace
+Total execution time: 73.4 s

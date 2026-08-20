@@ -1,0 +1,2712 @@
+======================================================================
+Timestamp:    2026-06-02 15:59:08
+Fit function: fitData_kstar_2voigt_bern
+Histogram:    hData
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   6034.4100 / 38 = 158.8003
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1235.001389 +/- 10.044658
+  [1] voigt1_mean          =       0.898954 +/- 0.000145
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.036841 +/- 0.000743
+  [4] voigt2_amp           =     401.269848 +/- 10.136853
+  [5] voigt2_mean          =       1.414748 +/- 0.001078
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.076224 +/- 0.002621
+  [8] bern_c0              =       0.000000 +/- 0.025173
+  [9] bern_c1              =    5816.773159 +/- 32.529866
+  [10] bern_c2              =       0.000000 +/- 0.484716
+  [11] bern_c3              =     139.536652 +/- 6.839992
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-02 15:59:08
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   2624.3349 / 38 = 69.0614
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1205.273461 +/- 9.261254
+  [1] voigt1_mean          =       0.898357 +/- 0.000270
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.063469 +/- 0.000807
+  [4] voigt2_amp           =     469.520517 +/- 11.310385
+  [5] voigt2_mean          =       1.411135 +/- 0.001308
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.104153 +/- 0.002871
+  [8] bern_c0              =       0.000000 +/- 0.063689
+  [9] bern_c1              =    4159.299556 +/- 34.190541
+  [10] bern_c2              =       0.000000 +/- 0.920622
+  [11] bern_c3              =     124.149647 +/- 6.387594
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-02 15:59:08
+Fit function: fitBkg_kstar_2voigt_bern
+Histogram:    hBkg
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   592.0771 / 38 = 15.5810
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     276.030035 +/- 3.691551
+  [1] voigt1_mean          =       0.901773 +/- 0.000652
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.096188 +/- 0.001765
+  [4] voigt2_amp           =     111.567029 +/- 5.433907
+  [5] voigt2_mean          =       1.404376 +/- 0.002460
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.146200 +/- 0.007463
+  [8] bern_c0              =       0.000000 +/- 0.138293
+  [9] bern_c1              =     889.458196 +/- 15.222549
+  [10] bern_c2              =       0.000000 +/- 1.051861
+  [11] bern_c3              =      38.515190 +/- 2.297893
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-05 15:54:20
+Fit function: fitData_kstar_2voigt_bern
+Histogram:    hData
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   5.6939 / 0 = nan
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     274.054382 +/- 4.015426
+  [1] voigt1_mean          =       0.960947 +/- 0.001690
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.195134 +/- 0.003830
+  [4] voigt2_amp           =    -281.031821 +/- 4.083435
+  [5] voigt2_mean          =       0.963108 +/- 0.001813
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.200804 +/- 0.004092
+  [8] bern_c0              =       0.156988 +/- 69.575574
+  [9] bern_c1              =       0.000010 +/- 11.284227
+  [10] bern_c2              =       0.000000 +/- 6.286294
+  [11] bern_c3              =       9.788577 +/- 2.624569
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-05 15:54:20
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   5.7715 / 0 = nan
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     277.494456 +/- 0.454429
+  [1] voigt1_mean          =       0.963696 +/- 0.000009
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.188769 +/- 0.000013
+  [4] voigt2_amp           =    -284.633801 +/- 3.739783
+  [5] voigt2_mean          =       0.965735 +/- 0.001030
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.193724 +/- 0.002078
+  [8] bern_c0              =       2.207438 +/- 0.491563
+  [9] bern_c1              =       0.000005 +/- 7.155084
+  [10] bern_c2              =       0.000007 +/- 2.669595
+  [11] bern_c3              =       8.016754 +/- 2.250616
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-05 15:54:20
+Fit function: fitBkg_kstar_2voigt_bern
+Histogram:    hBkg
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   4.9543 / 0 = nan
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     201.419204 +/- 0.658130
+  [1] voigt1_mean          =       0.947416 +/- 0.000017
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.195317 +/- 0.000014
+  [4] voigt2_amp           =    -202.006742 +/- 0.926807
+  [5] voigt2_mean          =       0.947599 +/- 0.000133
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.196153 +/- 0.000491
+  [8] bern_c0              =       0.000000 +/- 4.732415
+  [9] bern_c1              =       0.000000 +/- 0.313858
+  [10] bern_c2              =       0.000000 +/- 0.373885
+  [11] bern_c3              =       1.394674 +/- 0.399456
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-09 11:20:46
+Fit function: fitData_kstar_2voigt_bern
+Histogram:    hData
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   6034.4100 / 38 = 158.8003
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1235.001389 +/- 10.044658
+  [1] voigt1_mean          =       0.898954 +/- 0.000145
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.036841 +/- 0.000743
+  [4] voigt2_amp           =     401.269848 +/- 10.136853
+  [5] voigt2_mean          =       1.414748 +/- 0.001078
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.076224 +/- 0.002621
+  [8] bern_c0              =       0.000000 +/- 0.025173
+  [9] bern_c1              =    5816.773159 +/- 32.529866
+  [10] bern_c2              =       0.000000 +/- 0.484716
+  [11] bern_c3              =     139.536652 +/- 6.839992
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-09 11:20:46
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   2624.3349 / 38 = 69.0614
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1205.273461 +/- 9.261254
+  [1] voigt1_mean          =       0.898357 +/- 0.000270
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.063469 +/- 0.000807
+  [4] voigt2_amp           =     469.520517 +/- 11.310385
+  [5] voigt2_mean          =       1.411135 +/- 0.001308
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.104153 +/- 0.002871
+  [8] bern_c0              =       0.000000 +/- 0.063689
+  [9] bern_c1              =    4159.299556 +/- 34.190541
+  [10] bern_c2              =       0.000000 +/- 0.920622
+  [11] bern_c3              =     124.149647 +/- 6.387594
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-09 11:20:46
+Fit function: fitBkg_kstar_2voigt_bern
+Histogram:    hBkg
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   592.0771 / 38 = 15.5810
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     276.030035 +/- 3.691551
+  [1] voigt1_mean          =       0.901773 +/- 0.000652
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.096188 +/- 0.001765
+  [4] voigt2_amp           =     111.567029 +/- 5.433907
+  [5] voigt2_mean          =       1.404376 +/- 0.002460
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.146200 +/- 0.007463
+  [8] bern_c0              =       0.000000 +/- 0.138293
+  [9] bern_c1              =     889.458196 +/- 15.222549
+  [10] bern_c2              =       0.000000 +/- 1.051861
+  [11] bern_c3              =      38.515190 +/- 2.297893
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-12 12:06:29
+Fit function: fitData_kstar_2voigt_bern
+Histogram:    hData
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   14.8171 / 3 = 4.9390
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =   -5147.740545 +/- 2405.481563
+  [1] voigt1_mean          =      -0.207859 +/- 0.100421
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.044900 +/- 0.028832
+  [4] voigt2_amp           =      15.585260 +/- 10.261838
+  [5] voigt2_mean          =       1.388211 +/- 0.010496
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.050006 +/- 0.000003
+  [8] bern_c0              =       7.332243 +/- 81.675825
+  [9] bern_c1              =       0.092440 +/- 14.972950
+  [10] bern_c2              =      19.622866 +/- 13.334082
+  [11] bern_c3              =       4.658300 +/- 4.276703
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-12 12:06:29
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   15.3794 / 3 = 5.1265
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =   -4966.324685 +/- 4196.456754
+  [1] voigt1_mean          =      -0.047113 +/- 2.442250
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.033832 +/- 0.007726
+  [4] voigt2_amp           =       9.586291 +/- 16.673360
+  [5] voigt2_mean          =       1.399141 +/- 0.046339
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.051129 +/- 0.001039
+  [8] bern_c0              =      14.879871 +/- 1017.778544
+  [9] bern_c1              =       0.006804 +/- 41.672874
+  [10] bern_c2              =      16.262647 +/- 27.787212
+  [11] bern_c3              =       3.866645 +/- 9.584137
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-12 12:06:29
+Fit function: fitBkg_kstar_2voigt_bern
+Histogram:    hBkg
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   8.1274 / 1 = 8.1274
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =   -8512.213121 +/- 710.798760
+  [1] voigt1_mean          =       0.404917 +/- 0.105147
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.032744 +/- 0.004945
+  [4] voigt2_amp           =      79.596010 +/- 40.988348
+  [5] voigt2_mean          =       1.240863 +/- 0.149867
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.097952 +/- 0.061600
+  [8] bern_c0              =       0.824067 +/- 32.668016
+  [9] bern_c1              =      39.636547 +/- 17.486722
+  [10] bern_c2              =      14.459130 +/- 3.242895
+  [11] bern_c3              =       9.450163 +/- 2.622302
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-12 12:21:27
+Fit function: fitData_kstar_2voigt_bern
+Histogram:    hData
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   14.8171 / 3 = 4.9390
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =   -5147.740545 +/- 2405.481563
+  [1] voigt1_mean          =      -0.207859 +/- 0.100421
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.044900 +/- 0.028832
+  [4] voigt2_amp           =      15.585260 +/- 10.261838
+  [5] voigt2_mean          =       1.388211 +/- 0.010496
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.050006 +/- 0.000003
+  [8] bern_c0              =       7.332243 +/- 81.675825
+  [9] bern_c1              =       0.092440 +/- 14.972950
+  [10] bern_c2              =      19.622866 +/- 13.334082
+  [11] bern_c3              =       4.658300 +/- 4.276703
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-12 12:21:27
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   43.7863 / 19 = 2.3045
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =       0.442575 +/- 0.619678
+  [1] voigt1_mean          =       0.885054 +/- 0.000005
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.030000 +/- 0.000000
+  [4] voigt2_amp           =      -0.958101 +/- 0.896161
+  [5] voigt2_mean          =       1.388970 +/- 0.000311
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.384225 +/- 0.000139
+  [8] bern_c0              =       0.000000 +/- 2.174303
+  [9] bern_c1              =       4.100624 +/- 3.733393
+  [10] bern_c2              =       1.380608 +/- 2.541047
+  [11] bern_c3              =       3.275947 +/- 1.241228
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-12 12:21:27
+Fit function: fitBkg_kstar_2voigt_bern
+Histogram:    hBkg
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   8.1274 / 1 = 8.1274
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =   -8512.213121 +/- 710.798760
+  [1] voigt1_mean          =       0.404917 +/- 0.105147
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.032744 +/- 0.004945
+  [4] voigt2_amp           =      79.596010 +/- 40.988348
+  [5] voigt2_mean          =       1.240863 +/- 0.149867
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.097952 +/- 0.061600
+  [8] bern_c0              =       0.824067 +/- 32.668016
+  [9] bern_c1              =      39.636547 +/- 17.486722
+  [10] bern_c2              =      14.459130 +/- 3.242895
+  [11] bern_c3              =       9.450163 +/- 2.622302
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-23 15:05:05
+Fit function: fitData_kstar_2voigt_bern
+Histogram:    hData
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   0.0000 / 0 = nan
+Fit status:   0
+Parameters:
+  [0] voigt1_amp           =    1000.000000 +/- 0.000000
+  [1] voigt1_mean          =       0.892000 +/- 0.000000
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.050000 +/- 0.000000
+  [4] voigt2_amp           =     400.000000 +/- 0.000000
+  [5] voigt2_mean          =       1.430000 +/- 0.000000
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.200000 +/- 0.000000
+  [8] bern_c0              =     100.000000 +/- 0.000000
+  [9] bern_c1              =     100.000000 +/- 0.000000
+  [10] bern_c2              =     100.000000 +/- 0.000000
+  [11] bern_c3              =     100.000000 +/- 0.000000
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-23 15:05:05
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   0.0000 / 0 = nan
+Fit status:   0
+Parameters:
+  [0] voigt1_amp           =    1000.000000 +/- 0.000000
+  [1] voigt1_mean          =       0.892000 +/- 0.000000
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.050000 +/- 0.000000
+  [4] voigt2_amp           =     400.000000 +/- 0.000000
+  [5] voigt2_mean          =       1.430000 +/- 0.000000
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.200000 +/- 0.000000
+  [8] bern_c0              =     100.000000 +/- 0.000000
+  [9] bern_c1              =     100.000000 +/- 0.000000
+  [10] bern_c2              =     100.000000 +/- 0.000000
+  [11] bern_c3              =     100.000000 +/- 0.000000
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-23 15:05:05
+Fit function: fitBkg_kstar_2voigt_bern
+Histogram:    hBkg
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   0.0000 / 0 = nan
+Fit status:   0
+Parameters:
+  [0] voigt1_amp           =    1000.000000 +/- 0.000000
+  [1] voigt1_mean          =       0.892000 +/- 0.000000
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.050000 +/- 0.000000
+  [4] voigt2_amp           =     400.000000 +/- 0.000000
+  [5] voigt2_mean          =       1.430000 +/- 0.000000
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.200000 +/- 0.000000
+  [8] bern_c0              =     100.000000 +/- 0.000000
+  [9] bern_c1              =     100.000000 +/- 0.000000
+  [10] bern_c2              =     100.000000 +/- 0.000000
+  [11] bern_c3              =     100.000000 +/- 0.000000
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-26 08:42:20
+Fit function: fitData_kstar_2voigt_bern
+Histogram:    hData
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   76.7478 / 37 = 2.0743
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     -42.579304 +/- 21.025019
+  [1] voigt1_mean          =       0.899673 +/- 0.007625
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.174981 +/- 0.018233
+  [4] voigt2_amp           =      57.913952 +/- 20.829214
+  [5] voigt2_mean          =       0.904453 +/- 0.012573
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.240095 +/- 0.035179
+  [8] bern_c0              =       1.059080 +/- 2.680051
+  [9] bern_c1              =     126.877332 +/- 14.530272
+  [10] bern_c2              =      92.572480 +/- 11.605385
+  [11] bern_c3              =      41.489493 +/- 4.506986
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-26 08:42:20
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   77.4498 / 37 = 2.0932
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    -119.071312 +/- 76.736367
+  [1] voigt1_mean          =       0.908949 +/- 0.003013
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.199333 +/- 0.016701
+  [4] voigt2_amp           =     130.975279 +/- 77.723032
+  [5] voigt2_mean          =       0.911706 +/- 0.004677
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.217608 +/- 0.009643
+  [8] bern_c0              =       0.000446 +/- 7.006888
+  [9] bern_c1              =     108.139566 +/- 11.661771
+  [10] bern_c2              =      78.502741 +/- 10.169902
+  [11] bern_c3              =      35.500030 +/- 3.980279
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-26 08:42:20
+Fit function: fitBkg_kstar_2voigt_bern
+Histogram:    hBkg
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   78.6196 / 37 = 2.1249
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =      -0.135901 +/- 0.316789
+  [1] voigt1_mean          =       0.920305 +/- 0.000006
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.160176 +/- 0.000113
+  [4] voigt2_amp           =  -42638.430817 +/- 51.472308
+  [5] voigt2_mean          =      15.809715 +/- 0.030530
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.161664 +/- 0.025067
+  [8] bern_c0              =       8.225331 +/- 0.636860
+  [9] bern_c1              =      25.306055 +/- 2.950215
+  [10] bern_c2              =      17.023187 +/- 1.377134
+  [11] bern_c3              =      12.601653 +/- 1.490275
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-26 09:48:13
+Fit function: fitData_kstar_2voigt_bern
+Histogram:    hData
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   422.2240 / 37 = 11.4115
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     479.417546 +/- 8.787902
+  [1] voigt1_mean          =       0.901201 +/- 0.000651
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.080187 +/- 0.002109
+  [4] voigt2_amp           =     291.460585 +/- 11.348752
+  [5] voigt2_mean          =       1.416048 +/- 0.001751
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.127823 +/- 0.005444
+  [8] bern_c0              =       0.000000 +/- 0.485878
+  [9] bern_c1              =    1742.146502 +/- 47.402655
+  [10] bern_c2              =     152.700005 +/- 24.371842
+  [11] bern_c3              =      78.672563 +/- 6.891149
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-26 09:48:13
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   658.6072 / 38 = 17.3318
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     340.124752 +/- 5.622818
+  [1] voigt1_mean          =       0.899445 +/- 0.000465
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.057835 +/- 0.001753
+  [4] voigt2_amp           =     191.898039 +/- 7.455737
+  [5] voigt2_mean          =       1.419146 +/- 0.001694
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.099352 +/- 0.004618
+  [8] bern_c0              =       0.000000 +/- 0.082333
+  [9] bern_c1              =    1694.520212 +/- 32.411933
+  [10] bern_c2              =      16.797457 +/- 20.634967
+  [11] bern_c3              =      81.240030 +/- 6.026672
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-26 09:48:13
+Fit function: fitBkg_kstar_2voigt_bern
+Histogram:    hBkg
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   239.5519 / 38 = 6.3040
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =      71.530784 +/- 2.505976
+  [1] voigt1_mean          =       0.903176 +/- 0.001231
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.083495 +/- 0.003787
+  [4] voigt2_amp           =      43.818639 +/- 3.652155
+  [5] voigt2_mean          =       1.414336 +/- 0.003617
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.138435 +/- 0.011539
+  [8] bern_c0              =       0.000000 +/- 0.154613
+  [9] bern_c1              =     360.256484 +/- 15.103744
+  [10] bern_c2              =      21.853045 +/- 7.234690
+  [11] bern_c3              =      14.457344 +/- 1.905841
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-26 15:56:09
+Fit function: fitSig_kstar_roofit
+Histogram:    h_Pwave (RooFit sideband-subtracted)
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   84.9694 / 66 = 1.2874
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     101.061053 +/- 6.152267
+  [1] voigt1_mean          =       0.898545 +/- 0.001877
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.074345 +/- 0.005335
+  [4] voigt2_amp           =      53.128654 +/- 9.651872
+  [5] voigt2_mean          =       1.422408 +/- 0.006723
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.123176 +/- 0.026022
+  [8] bern_c0              =       0.000000 +/- 0.751209
+  [9] bern_c1              =     269.214175 +/- 39.906214
+  [10] bern_c2              =      96.403571 +/- 27.337238
+  [11] bern_c3              =      24.003451 +/- 9.164863
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-29 18:40:41
+Fit function: fitData_kstar_2voigt_bern
+Histogram:    hData
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   76.7478 / 37 = 2.0743
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     -42.579304 +/- 21.025019
+  [1] voigt1_mean          =       0.899673 +/- 0.007625
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.174981 +/- 0.018233
+  [4] voigt2_amp           =      57.913952 +/- 20.829214
+  [5] voigt2_mean          =       0.904453 +/- 0.012573
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.240095 +/- 0.035179
+  [8] bern_c0              =       1.059080 +/- 2.680051
+  [9] bern_c1              =     126.877332 +/- 14.530272
+  [10] bern_c2              =      92.572480 +/- 11.605385
+  [11] bern_c3              =      41.489493 +/- 4.506986
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-29 18:40:41
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   77.4498 / 37 = 2.0932
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    -119.071312 +/- 76.736367
+  [1] voigt1_mean          =       0.908949 +/- 0.003013
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.199333 +/- 0.016701
+  [4] voigt2_amp           =     130.975279 +/- 77.723032
+  [5] voigt2_mean          =       0.911706 +/- 0.004677
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.217608 +/- 0.009643
+  [8] bern_c0              =       0.000446 +/- 7.006888
+  [9] bern_c1              =     108.139566 +/- 11.661771
+  [10] bern_c2              =      78.502741 +/- 10.169902
+  [11] bern_c3              =      35.500030 +/- 3.980279
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-29 18:40:41
+Fit function: fitBkg_kstar_2voigt_bern
+Histogram:    hBkg
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   78.6196 / 37 = 2.1249
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =      -0.135901 +/- 0.316789
+  [1] voigt1_mean          =       0.920305 +/- 0.000006
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.160176 +/- 0.000113
+  [4] voigt2_amp           =  -42638.430817 +/- 51.472308
+  [5] voigt2_mean          =      15.809715 +/- 0.030530
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.161664 +/- 0.025067
+  [8] bern_c0              =       8.225331 +/- 0.636860
+  [9] bern_c1              =      25.306055 +/- 2.950215
+  [10] bern_c2              =      17.023187 +/- 1.377134
+  [11] bern_c3              =      12.601653 +/- 1.490275
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-29 18:54:54
+Fit function: fitData_kstar_2voigt_bern
+Histogram:    hData
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   76.7478 / 37 = 2.0743
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     -42.579304 +/- 21.025019
+  [1] voigt1_mean          =       0.899673 +/- 0.007625
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.174981 +/- 0.018233
+  [4] voigt2_amp           =      57.913952 +/- 20.829214
+  [5] voigt2_mean          =       0.904453 +/- 0.012573
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.240095 +/- 0.035179
+  [8] bern_c0              =       1.059080 +/- 2.680051
+  [9] bern_c1              =     126.877332 +/- 14.530272
+  [10] bern_c2              =      92.572480 +/- 11.605385
+  [11] bern_c3              =      41.489493 +/- 4.506986
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-29 18:54:54
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   77.4498 / 37 = 2.0932
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    -119.071312 +/- 76.736367
+  [1] voigt1_mean          =       0.908949 +/- 0.003013
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.199333 +/- 0.016701
+  [4] voigt2_amp           =     130.975279 +/- 77.723032
+  [5] voigt2_mean          =       0.911706 +/- 0.004677
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.217608 +/- 0.009643
+  [8] bern_c0              =       0.000446 +/- 7.006888
+  [9] bern_c1              =     108.139566 +/- 11.661771
+  [10] bern_c2              =      78.502741 +/- 10.169902
+  [11] bern_c3              =      35.500030 +/- 3.980279
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-29 18:54:54
+Fit function: fitBkg_kstar_2voigt_bern
+Histogram:    hBkg
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   78.6196 / 37 = 2.1249
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =      -0.135901 +/- 0.316789
+  [1] voigt1_mean          =       0.920305 +/- 0.000006
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.160176 +/- 0.000113
+  [4] voigt2_amp           =  -42638.430817 +/- 51.472308
+  [5] voigt2_mean          =      15.809715 +/- 0.030530
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.161664 +/- 0.025067
+  [8] bern_c0              =       8.225331 +/- 0.636860
+  [9] bern_c1              =      25.306055 +/- 2.950215
+  [10] bern_c2              =      17.023187 +/- 1.377134
+  [11] bern_c3              =      12.601653 +/- 1.490275
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-29 18:57:20
+Fit function: fitData_kstar_2voigt_bern
+Histogram:    hData
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   76.7478 / 37 = 2.0743
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     -42.579304 +/- 21.025019
+  [1] voigt1_mean          =       0.899673 +/- 0.007625
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.174981 +/- 0.018233
+  [4] voigt2_amp           =      57.913952 +/- 20.829214
+  [5] voigt2_mean          =       0.904453 +/- 0.012573
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.240095 +/- 0.035179
+  [8] bern_c0              =       1.059080 +/- 2.680051
+  [9] bern_c1              =     126.877332 +/- 14.530272
+  [10] bern_c2              =      92.572480 +/- 11.605385
+  [11] bern_c3              =      41.489493 +/- 4.506986
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-29 18:57:20
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   77.4498 / 37 = 2.0932
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    -119.071312 +/- 76.736367
+  [1] voigt1_mean          =       0.908949 +/- 0.003013
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.199333 +/- 0.016701
+  [4] voigt2_amp           =     130.975279 +/- 77.723032
+  [5] voigt2_mean          =       0.911706 +/- 0.004677
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.217608 +/- 0.009643
+  [8] bern_c0              =       0.000446 +/- 7.006888
+  [9] bern_c1              =     108.139566 +/- 11.661771
+  [10] bern_c2              =      78.502741 +/- 10.169902
+  [11] bern_c3              =      35.500030 +/- 3.980279
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-29 18:57:20
+Fit function: fitBkg_kstar_2voigt_bern
+Histogram:    hBkg
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   78.6196 / 37 = 2.1249
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =      -0.135901 +/- 0.316789
+  [1] voigt1_mean          =       0.920305 +/- 0.000006
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.160176 +/- 0.000113
+  [4] voigt2_amp           =  -42638.430817 +/- 51.472308
+  [5] voigt2_mean          =      15.809715 +/- 0.030530
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.161664 +/- 0.025067
+  [8] bern_c0              =       8.225331 +/- 0.636860
+  [9] bern_c1              =      25.306055 +/- 2.950215
+  [10] bern_c2              =      17.023187 +/- 1.377134
+  [11] bern_c3              =      12.601653 +/- 1.490275
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-29 19:03:19
+Fit function: fitData_kstar_2voigt_bern
+Histogram:    hData
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   6034.4100 / 38 = 158.8003
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1235.001389 +/- 10.044658
+  [1] voigt1_mean          =       0.898954 +/- 0.000145
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.036841 +/- 0.000743
+  [4] voigt2_amp           =     401.269848 +/- 10.136853
+  [5] voigt2_mean          =       1.414748 +/- 0.001078
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.076224 +/- 0.002621
+  [8] bern_c0              =       0.000000 +/- 0.025173
+  [9] bern_c1              =    5816.773159 +/- 32.529866
+  [10] bern_c2              =       0.000000 +/- 0.484716
+  [11] bern_c3              =     139.536652 +/- 6.839992
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-29 19:03:19
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   2624.3349 / 38 = 69.0614
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1205.273461 +/- 9.261254
+  [1] voigt1_mean          =       0.898357 +/- 0.000270
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.063469 +/- 0.000807
+  [4] voigt2_amp           =     469.520517 +/- 11.310385
+  [5] voigt2_mean          =       1.411135 +/- 0.001308
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.104153 +/- 0.002871
+  [8] bern_c0              =       0.000000 +/- 0.063689
+  [9] bern_c1              =    4159.299556 +/- 34.190541
+  [10] bern_c2              =       0.000000 +/- 0.920622
+  [11] bern_c3              =     124.149647 +/- 6.387594
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-29 19:03:19
+Fit function: fitBkg_kstar_2voigt_bern
+Histogram:    hBkg
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   592.0771 / 38 = 15.5810
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     276.030035 +/- 3.691551
+  [1] voigt1_mean          =       0.901773 +/- 0.000652
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.096188 +/- 0.001765
+  [4] voigt2_amp           =     111.567029 +/- 5.433907
+  [5] voigt2_mean          =       1.404376 +/- 0.002460
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.146200 +/- 0.007463
+  [8] bern_c0              =       0.000000 +/- 0.138293
+  [9] bern_c1              =     889.458196 +/- 15.222549
+  [10] bern_c2              =       0.000000 +/- 1.051861
+  [11] bern_c3              =      38.515190 +/- 2.297893
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 11:01:20
+Fit function: fitData_kstar_2voigt_bern
+Histogram:    hData
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   6034.4100 / 38 = 158.8003
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1235.001389 +/- 10.044658
+  [1] voigt1_mean          =       0.898954 +/- 0.000145
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.036841 +/- 0.000743
+  [4] voigt2_amp           =     401.269848 +/- 10.136853
+  [5] voigt2_mean          =       1.414748 +/- 0.001078
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.076224 +/- 0.002621
+  [8] bern_c0              =       0.000000 +/- 0.025173
+  [9] bern_c1              =    5816.773159 +/- 32.529866
+  [10] bern_c2              =       0.000000 +/- 0.484716
+  [11] bern_c3              =     139.536652 +/- 6.839992
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 11:01:20
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   2624.3349 / 38 = 69.0614
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1205.273461 +/- 9.261254
+  [1] voigt1_mean          =       0.898357 +/- 0.000270
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.063469 +/- 0.000807
+  [4] voigt2_amp           =     469.520517 +/- 11.310385
+  [5] voigt2_mean          =       1.411135 +/- 0.001308
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.104153 +/- 0.002871
+  [8] bern_c0              =       0.000000 +/- 0.063689
+  [9] bern_c1              =    4159.299556 +/- 34.190541
+  [10] bern_c2              =       0.000000 +/- 0.920622
+  [11] bern_c3              =     124.149647 +/- 6.387594
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 11:01:20
+Fit function: fitBkg_kstar_2voigt_bern
+Histogram:    hBkg
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   592.0771 / 38 = 15.5810
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     276.030035 +/- 3.691551
+  [1] voigt1_mean          =       0.901773 +/- 0.000652
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.096188 +/- 0.001765
+  [4] voigt2_amp           =     111.567029 +/- 5.433907
+  [5] voigt2_mean          =       1.404376 +/- 0.002460
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.146200 +/- 0.007463
+  [8] bern_c0              =       0.000000 +/- 0.138293
+  [9] bern_c1              =     889.458196 +/- 15.222549
+  [10] bern_c2              =       0.000000 +/- 1.051861
+  [11] bern_c3              =      38.515190 +/- 2.297893
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 11:04:39
+Fit function: fitData_kstar_2voigt_bern
+Histogram:    hData
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   6034.4100 / 38 = 158.8003
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1235.001389 +/- 10.044658
+  [1] voigt1_mean          =       0.898954 +/- 0.000145
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.036841 +/- 0.000743
+  [4] voigt2_amp           =     401.269848 +/- 10.136853
+  [5] voigt2_mean          =       1.414748 +/- 0.001078
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.076224 +/- 0.002621
+  [8] bern_c0              =       0.000000 +/- 0.025173
+  [9] bern_c1              =    5816.773159 +/- 32.529866
+  [10] bern_c2              =       0.000000 +/- 0.484716
+  [11] bern_c3              =     139.536652 +/- 6.839992
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 11:04:39
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   2624.3349 / 38 = 69.0614
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1205.273461 +/- 9.261254
+  [1] voigt1_mean          =       0.898357 +/- 0.000270
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.063469 +/- 0.000807
+  [4] voigt2_amp           =     469.520517 +/- 11.310385
+  [5] voigt2_mean          =       1.411135 +/- 0.001308
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.104153 +/- 0.002871
+  [8] bern_c0              =       0.000000 +/- 0.063689
+  [9] bern_c1              =    4159.299556 +/- 34.190541
+  [10] bern_c2              =       0.000000 +/- 0.920622
+  [11] bern_c3              =     124.149647 +/- 6.387594
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 11:04:39
+Fit function: fitBkg_kstar_2voigt_bern
+Histogram:    hBkg
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   592.0771 / 38 = 15.5810
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     276.030035 +/- 3.691551
+  [1] voigt1_mean          =       0.901773 +/- 0.000652
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.096188 +/- 0.001765
+  [4] voigt2_amp           =     111.567029 +/- 5.433907
+  [5] voigt2_mean          =       1.404376 +/- 0.002460
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.146200 +/- 0.007463
+  [8] bern_c0              =       0.000000 +/- 0.138293
+  [9] bern_c1              =     889.458196 +/- 15.222549
+  [10] bern_c2              =       0.000000 +/- 1.051861
+  [11] bern_c3              =      38.515190 +/- 2.297893
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 11:09:47
+Fit function: fitData_kstar_2voigt_bern
+Histogram:    hData
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   6034.4100 / 38 = 158.8003
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1235.001389 +/- 10.044658
+  [1] voigt1_mean          =       0.898954 +/- 0.000145
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.036841 +/- 0.000743
+  [4] voigt2_amp           =     401.269848 +/- 10.136853
+  [5] voigt2_mean          =       1.414748 +/- 0.001078
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.076224 +/- 0.002621
+  [8] bern_c0              =       0.000000 +/- 0.025173
+  [9] bern_c1              =    5816.773159 +/- 32.529866
+  [10] bern_c2              =       0.000000 +/- 0.484716
+  [11] bern_c3              =     139.536652 +/- 6.839992
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 11:09:47
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   2624.3349 / 38 = 69.0614
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1205.273461 +/- 9.261254
+  [1] voigt1_mean          =       0.898357 +/- 0.000270
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.063469 +/- 0.000807
+  [4] voigt2_amp           =     469.520517 +/- 11.310385
+  [5] voigt2_mean          =       1.411135 +/- 0.001308
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.104153 +/- 0.002871
+  [8] bern_c0              =       0.000000 +/- 0.063689
+  [9] bern_c1              =    4159.299556 +/- 34.190541
+  [10] bern_c2              =       0.000000 +/- 0.920622
+  [11] bern_c3              =     124.149647 +/- 6.387594
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 11:09:47
+Fit function: fitBkg_kstar_2voigt_bern
+Histogram:    hBkg
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   592.0771 / 38 = 15.5810
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     276.030035 +/- 3.691551
+  [1] voigt1_mean          =       0.901773 +/- 0.000652
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.096188 +/- 0.001765
+  [4] voigt2_amp           =     111.567029 +/- 5.433907
+  [5] voigt2_mean          =       1.404376 +/- 0.002460
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.146200 +/- 0.007463
+  [8] bern_c0              =       0.000000 +/- 0.138293
+  [9] bern_c1              =     889.458196 +/- 15.222549
+  [10] bern_c2              =       0.000000 +/- 1.051861
+  [11] bern_c3              =      38.515190 +/- 2.297893
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 11:16:03
+Fit function: fitData_kstar_2voigt_bern
+Histogram:    hData
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   6034.4100 / 38 = 158.8003
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1235.001389 +/- 10.044658
+  [1] voigt1_mean          =       0.898954 +/- 0.000145
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.036841 +/- 0.000743
+  [4] voigt2_amp           =     401.269848 +/- 10.136853
+  [5] voigt2_mean          =       1.414748 +/- 0.001078
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.076224 +/- 0.002621
+  [8] bern_c0              =       0.000000 +/- 0.025173
+  [9] bern_c1              =    5816.773159 +/- 32.529866
+  [10] bern_c2              =       0.000000 +/- 0.484716
+  [11] bern_c3              =     139.536652 +/- 6.839992
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 11:16:03
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   2624.3349 / 38 = 69.0614
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1205.273461 +/- 9.261254
+  [1] voigt1_mean          =       0.898357 +/- 0.000270
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.063469 +/- 0.000807
+  [4] voigt2_amp           =     469.520517 +/- 11.310385
+  [5] voigt2_mean          =       1.411135 +/- 0.001308
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.104153 +/- 0.002871
+  [8] bern_c0              =       0.000000 +/- 0.063689
+  [9] bern_c1              =    4159.299556 +/- 34.190541
+  [10] bern_c2              =       0.000000 +/- 0.920622
+  [11] bern_c3              =     124.149647 +/- 6.387594
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 11:16:04
+Fit function: fitBkg_kstar_2voigt_bern
+Histogram:    hBkg
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   592.0771 / 38 = 15.5810
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     276.030035 +/- 3.691551
+  [1] voigt1_mean          =       0.901773 +/- 0.000652
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.096188 +/- 0.001765
+  [4] voigt2_amp           =     111.567029 +/- 5.433907
+  [5] voigt2_mean          =       1.404376 +/- 0.002460
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.146200 +/- 0.007463
+  [8] bern_c0              =       0.000000 +/- 0.138293
+  [9] bern_c1              =     889.458196 +/- 15.222549
+  [10] bern_c2              =       0.000000 +/- 1.051861
+  [11] bern_c3              =      38.515190 +/- 2.297893
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 11:19:29
+Fit function: fitData_kstar_2voigt_bern
+Histogram:    hData
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   6034.4100 / 38 = 158.8003
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1235.001389 +/- 10.044658
+  [1] voigt1_mean          =       0.898954 +/- 0.000145
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.036841 +/- 0.000743
+  [4] voigt2_amp           =     401.269848 +/- 10.136853
+  [5] voigt2_mean          =       1.414748 +/- 0.001078
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.076224 +/- 0.002621
+  [8] bern_c0              =       0.000000 +/- 0.025173
+  [9] bern_c1              =    5816.773159 +/- 32.529866
+  [10] bern_c2              =       0.000000 +/- 0.484716
+  [11] bern_c3              =     139.536652 +/- 6.839992
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 11:19:30
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   2624.3349 / 38 = 69.0614
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1205.273461 +/- 9.261254
+  [1] voigt1_mean          =       0.898357 +/- 0.000270
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.063469 +/- 0.000807
+  [4] voigt2_amp           =     469.520517 +/- 11.310385
+  [5] voigt2_mean          =       1.411135 +/- 0.001308
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.104153 +/- 0.002871
+  [8] bern_c0              =       0.000000 +/- 0.063689
+  [9] bern_c1              =    4159.299556 +/- 34.190541
+  [10] bern_c2              =       0.000000 +/- 0.920622
+  [11] bern_c3              =     124.149647 +/- 6.387594
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 11:19:30
+Fit function: fitBkg_kstar_2voigt_bern
+Histogram:    hBkg
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   592.0771 / 38 = 15.5810
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     276.030035 +/- 3.691551
+  [1] voigt1_mean          =       0.901773 +/- 0.000652
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.096188 +/- 0.001765
+  [4] voigt2_amp           =     111.567029 +/- 5.433907
+  [5] voigt2_mean          =       1.404376 +/- 0.002460
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.146200 +/- 0.007463
+  [8] bern_c0              =       0.000000 +/- 0.138293
+  [9] bern_c1              =     889.458196 +/- 15.222549
+  [10] bern_c2              =       0.000000 +/- 1.051861
+  [11] bern_c3              =      38.515190 +/- 2.297893
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 11:22:40
+Fit function: fitData_kstar_2voigt_bern
+Histogram:    hData
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   6034.4100 / 38 = 158.8003
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1235.001389 +/- 10.044658
+  [1] voigt1_mean          =       0.898954 +/- 0.000145
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.036841 +/- 0.000743
+  [4] voigt2_amp           =     401.269848 +/- 10.136853
+  [5] voigt2_mean          =       1.414748 +/- 0.001078
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.076224 +/- 0.002621
+  [8] bern_c0              =       0.000000 +/- 0.025173
+  [9] bern_c1              =    5816.773159 +/- 32.529866
+  [10] bern_c2              =       0.000000 +/- 0.484716
+  [11] bern_c3              =     139.536652 +/- 6.839992
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 11:22:40
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   2624.3349 / 38 = 69.0614
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1205.273461 +/- 9.261254
+  [1] voigt1_mean          =       0.898357 +/- 0.000270
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.063469 +/- 0.000807
+  [4] voigt2_amp           =     469.520517 +/- 11.310385
+  [5] voigt2_mean          =       1.411135 +/- 0.001308
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.104153 +/- 0.002871
+  [8] bern_c0              =       0.000000 +/- 0.063689
+  [9] bern_c1              =    4159.299556 +/- 34.190541
+  [10] bern_c2              =       0.000000 +/- 0.920622
+  [11] bern_c3              =     124.149647 +/- 6.387594
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 11:22:40
+Fit function: fitBkg_kstar_2voigt_bern
+Histogram:    hBkg
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   592.0771 / 38 = 15.5810
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     276.030035 +/- 3.691551
+  [1] voigt1_mean          =       0.901773 +/- 0.000652
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.096188 +/- 0.001765
+  [4] voigt2_amp           =     111.567029 +/- 5.433907
+  [5] voigt2_mean          =       1.404376 +/- 0.002460
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.146200 +/- 0.007463
+  [8] bern_c0              =       0.000000 +/- 0.138293
+  [9] bern_c1              =     889.458196 +/- 15.222549
+  [10] bern_c2              =       0.000000 +/- 1.051861
+  [11] bern_c3              =      38.515190 +/- 2.297893
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 11:43:54
+Fit function: fitData_kstar_2voigt_bern
+Histogram:    hData
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   6034.4100 / 38 = 158.8003
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1235.001389 +/- 10.044658
+  [1] voigt1_mean          =       0.898954 +/- 0.000145
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.036841 +/- 0.000743
+  [4] voigt2_amp           =     401.269848 +/- 10.136853
+  [5] voigt2_mean          =       1.414748 +/- 0.001078
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.076224 +/- 0.002621
+  [8] bern_c0              =       0.000000 +/- 0.025173
+  [9] bern_c1              =    5816.773159 +/- 32.529866
+  [10] bern_c2              =       0.000000 +/- 0.484716
+  [11] bern_c3              =     139.536652 +/- 6.839992
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 11:43:54
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   2624.3349 / 38 = 69.0614
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1205.273461 +/- 9.261254
+  [1] voigt1_mean          =       0.898357 +/- 0.000270
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.063469 +/- 0.000807
+  [4] voigt2_amp           =     469.520517 +/- 11.310385
+  [5] voigt2_mean          =       1.411135 +/- 0.001308
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.104153 +/- 0.002871
+  [8] bern_c0              =       0.000000 +/- 0.063689
+  [9] bern_c1              =    4159.299556 +/- 34.190541
+  [10] bern_c2              =       0.000000 +/- 0.920622
+  [11] bern_c3              =     124.149647 +/- 6.387594
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 11:43:54
+Fit function: fitBkg_kstar_2voigt_bern
+Histogram:    hBkg
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   592.0771 / 38 = 15.5810
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     276.030035 +/- 3.691551
+  [1] voigt1_mean          =       0.901773 +/- 0.000652
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.096188 +/- 0.001765
+  [4] voigt2_amp           =     111.567029 +/- 5.433907
+  [5] voigt2_mean          =       1.404376 +/- 0.002460
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.146200 +/- 0.007463
+  [8] bern_c0              =       0.000000 +/- 0.138293
+  [9] bern_c1              =     889.458196 +/- 15.222549
+  [10] bern_c2              =       0.000000 +/- 1.051861
+  [11] bern_c3              =      38.515190 +/- 2.297893
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 11:48:06
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   2624.3349 / 38 = 69.0614
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1205.273461 +/- 9.261254
+  [1] voigt1_mean          =       0.898357 +/- 0.000270
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.063469 +/- 0.000807
+  [4] voigt2_amp           =     469.520517 +/- 11.310385
+  [5] voigt2_mean          =       1.411135 +/- 0.001308
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.104153 +/- 0.002871
+  [8] bern_c0              =       0.000000 +/- 0.063689
+  [9] bern_c1              =    4159.299556 +/- 34.190541
+  [10] bern_c2              =       0.000000 +/- 0.920622
+  [11] bern_c3              =     124.149647 +/- 6.387594
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 11:50:31
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   2624.3349 / 38 = 69.0614
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1205.273461 +/- 9.261254
+  [1] voigt1_mean          =       0.898357 +/- 0.000270
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.063469 +/- 0.000807
+  [4] voigt2_amp           =     469.520517 +/- 11.310385
+  [5] voigt2_mean          =       1.411135 +/- 0.001308
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.104153 +/- 0.002871
+  [8] bern_c0              =       0.000000 +/- 0.063689
+  [9] bern_c1              =    4159.299556 +/- 34.190541
+  [10] bern_c2              =       0.000000 +/- 0.920622
+  [11] bern_c3              =     124.149647 +/- 6.387594
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 11:55:08
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   2624.3349 / 38 = 69.0614
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1205.273461 +/- 9.261254
+  [1] voigt1_mean          =       0.898357 +/- 0.000270
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.063469 +/- 0.000807
+  [4] voigt2_amp           =     469.520517 +/- 11.310385
+  [5] voigt2_mean          =       1.411135 +/- 0.001308
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.104153 +/- 0.002871
+  [8] bern_c0              =       0.000000 +/- 0.063689
+  [9] bern_c1              =    4159.299556 +/- 34.190541
+  [10] bern_c2              =       0.000000 +/- 0.920622
+  [11] bern_c3              =     124.149647 +/- 6.387594
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 11:57:40
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   2624.3349 / 38 = 69.0614
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1205.273461 +/- 9.261254
+  [1] voigt1_mean          =       0.898357 +/- 0.000270
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.063469 +/- 0.000807
+  [4] voigt2_amp           =     469.520517 +/- 11.310385
+  [5] voigt2_mean          =       1.411135 +/- 0.001308
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.104153 +/- 0.002871
+  [8] bern_c0              =       0.000000 +/- 0.063689
+  [9] bern_c1              =    4159.299556 +/- 34.190541
+  [10] bern_c2              =       0.000000 +/- 0.920622
+  [11] bern_c3              =     124.149647 +/- 6.387594
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 12:23:06
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   2624.3349 / 38 = 69.0614
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1205.273461 +/- 9.261254
+  [1] voigt1_mean          =       0.898357 +/- 0.000270
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.063469 +/- 0.000807
+  [4] voigt2_amp           =     469.520517 +/- 11.310385
+  [5] voigt2_mean          =       1.411135 +/- 0.001308
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.104153 +/- 0.002871
+  [8] bern_c0              =       0.000000 +/- 0.063689
+  [9] bern_c1              =    4159.299556 +/- 34.190541
+  [10] bern_c2              =       0.000000 +/- 0.920622
+  [11] bern_c3              =     124.149647 +/- 6.387594
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 14:07:06
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   2447.7135 / 66 = 37.0866
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     813.453873 +/- 6.511406
+  [1] voigt1_mean          =       0.898698 +/- 0.000369
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.074765 +/- 0.000779
+  [4] voigt2_amp           =     349.711114 +/- 8.238895
+  [5] voigt2_mean          =       1.409791 +/- 0.001234
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.120146 +/- 0.003097
+  [8] bern_c0              =       0.000000 +/- 0.061744
+  [9] bern_c1              =    2364.842748 +/- 24.023269
+  [10] bern_c2              =       0.000000 +/- 1.339787
+  [11] bern_c3              =      85.293722 +/- 3.939293
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-06-30 16:35:30
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   2447.7135 / 66 = 37.0866
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     813.453873 +/- 6.511406
+  [1] voigt1_mean          =       0.898698 +/- 0.000369
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.074765 +/- 0.000779
+  [4] voigt2_amp           =     349.711114 +/- 8.238895
+  [5] voigt2_mean          =       1.409791 +/- 0.001234
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.120146 +/- 0.003097
+  [8] bern_c0              =       0.000000 +/- 0.061744
+  [9] bern_c1              =    2364.842748 +/- 24.023269
+  [10] bern_c2              =       0.000000 +/- 1.339787
+  [11] bern_c3              =      85.293722 +/- 3.939293
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-01 16:47:32
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-01 16:56:54
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-01 17:01:01
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-01 17:02:28
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-01 17:04:20
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-06 16:26:13
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-06 16:30:20
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-06 16:42:57
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-06 16:50:39
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-06 18:14:25
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-06 19:06:47
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 11:25:03
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 11:50:01
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   1135.6698 / 53 = 21.4277
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1420.469315 +/- 10.501882
+  [1] voigt1_mean          =       0.898281 +/- 0.000318
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.085231 +/- 0.000848
+  [4] voigt2_amp           =     633.980129 +/- 13.906785
+  [5] voigt2_mean          =       1.410322 +/- 0.000974
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.128737 +/- 0.003088
+  [8] bern_c0              =       0.000000 +/- 1.227588
+  [9] bern_c1              =    3419.923948 +/- 44.567182
+  [10] bern_c2              =       0.000000 +/- 3.353113
+  [11] bern_c3              =     112.052430 +/- 18.286824
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 12:10:22
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 12:58:16
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 13:29:15
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 14:03:02
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 14:17:51
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 14:20:44
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 16:07:58
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 16:20:28
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 16:23:26
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 16:52:10
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 16:53:37
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 17:01:18
+Fit function: fitData_kstar_2voigt_bern
+Histogram:    hData
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   6034.4100 / 38 = 158.8003
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1235.001389 +/- 10.044658
+  [1] voigt1_mean          =       0.898954 +/- 0.000145
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.036841 +/- 0.000743
+  [4] voigt2_amp           =     401.269848 +/- 10.136853
+  [5] voigt2_mean          =       1.414748 +/- 0.001078
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.076224 +/- 0.002621
+  [8] bern_c0              =       0.000000 +/- 0.025173
+  [9] bern_c1              =    5816.773159 +/- 32.529866
+  [10] bern_c2              =       0.000000 +/- 0.484716
+  [11] bern_c3              =     139.536652 +/- 6.839992
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 17:01:18
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 17:01:18
+Fit function: fitBkg_kstar_2voigt_bern
+Histogram:    hBkg
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   592.0771 / 38 = 15.5810
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     276.030035 +/- 3.691551
+  [1] voigt1_mean          =       0.901773 +/- 0.000652
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.096188 +/- 0.001765
+  [4] voigt2_amp           =     111.567029 +/- 5.433907
+  [5] voigt2_mean          =       1.404376 +/- 0.002460
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.146200 +/- 0.007463
+  [8] bern_c0              =       0.000000 +/- 0.138293
+  [9] bern_c1              =     889.458196 +/- 15.222549
+  [10] bern_c2              =       0.000000 +/- 1.051861
+  [11] bern_c3              =      38.515190 +/- 2.297893
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 17:01:18
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 17:05:09
+Fit function: fitData_kstar_2voigt_bern
+Histogram:    hData
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   6034.4100 / 38 = 158.8003
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =    1235.001389 +/- 10.044658
+  [1] voigt1_mean          =       0.898954 +/- 0.000145
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.036841 +/- 0.000743
+  [4] voigt2_amp           =     401.269848 +/- 10.136853
+  [5] voigt2_mean          =       1.414748 +/- 0.001078
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.076224 +/- 0.002621
+  [8] bern_c0              =       0.000000 +/- 0.025173
+  [9] bern_c1              =    5816.773159 +/- 32.529866
+  [10] bern_c2              =       0.000000 +/- 0.484716
+  [11] bern_c3              =     139.536652 +/- 6.839992
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 17:05:09
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 17:05:09
+Fit function: fitBkg_kstar_2voigt_bern
+Histogram:    hBkg
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTSBWT(rf,KShort,Lambda)
+Fit range:    (0.6, 2.5)
+Chi2 / NDF:   592.0771 / 38 = 15.5810
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     276.030035 +/- 3.691551
+  [1] voigt1_mean          =       0.901773 +/- 0.000652
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.096188 +/- 0.001765
+  [4] voigt2_amp           =     111.567029 +/- 5.433907
+  [5] voigt2_mean          =       1.404376 +/- 0.002460
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.146200 +/- 0.007463
+  [8] bern_c0              =       0.000000 +/- 0.138293
+  [9] bern_c1              =     889.458196 +/- 15.222549
+  [10] bern_c2              =       0.000000 +/- 1.051861
+  [11] bern_c3              =      38.515190 +/- 2.297893
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 17:05:09
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 17:10:19
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 17:15:46
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 17:22:02
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 17:24:51
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 17:37:03
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 17:40:04
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-07 17:43:14
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-10 21:41:00
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-27 14:32:24
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   726.0457 / 53 = 13.6990
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     909.879792 +/- 7.930066
+  [1] voigt1_mean          =       0.898974 +/- 0.000377
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.088295 +/- 0.001033
+  [4] voigt2_amp           =     402.735104 +/- 10.835537
+  [5] voigt2_mean          =       1.409330 +/- 0.001235
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.137537 +/- 0.003917
+  [8] bern_c0              =       0.000000 +/- 0.823977
+  [9] bern_c1              =    2180.203888 +/- 34.253771
+  [10] bern_c2              =       0.000000 +/- 3.725830
+  [11] bern_c3              =      73.032900 +/- 13.808740
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-27 14:36:16
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   578.1017 / 53 = 10.9076
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     917.725765 +/- 8.082404
+  [1] voigt1_mean          =       0.899252 +/- 0.000390
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.089985 +/- 0.001070
+  [4] voigt2_amp           =     409.275813 +/- 10.991372
+  [5] voigt2_mean          =       1.408722 +/- 0.001246
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.140430 +/- 0.003871
+  [8] bern_c0              =       0.000000 +/- 3.013153
+  [9] bern_c1              =    2144.033944 +/- 34.526936
+  [10] bern_c2              =       0.000000 +/- 4.184959
+  [11] bern_c3              =      77.900868 +/- 13.618445
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-27 14:53:11
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   578.1017 / 53 = 10.9076
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     917.725765 +/- 8.082404
+  [1] voigt1_mean          =       0.899252 +/- 0.000390
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.089985 +/- 0.001070
+  [4] voigt2_amp           =     409.275813 +/- 10.991372
+  [5] voigt2_mean          =       1.408722 +/- 0.001246
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.140430 +/- 0.003871
+  [8] bern_c0              =       0.000000 +/- 3.013153
+  [9] bern_c1              =    2144.033944 +/- 34.526936
+  [10] bern_c2              =       0.000000 +/- 4.184959
+  [11] bern_c3              =      77.900868 +/- 13.618445
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-29 12:41:54
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   578.1017 / 53 = 10.9076
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     917.725765 +/- 8.082404
+  [1] voigt1_mean          =       0.899252 +/- 0.000390
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.089985 +/- 0.001070
+  [4] voigt2_amp           =     409.275813 +/- 10.991372
+  [5] voigt2_mean          =       1.408722 +/- 0.001246
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.140430 +/- 0.003871
+  [8] bern_c0              =       0.000000 +/- 3.013153
+  [9] bern_c1              =    2144.033944 +/- 34.526936
+  [10] bern_c2              =       0.000000 +/- 4.184959
+  [11] bern_c3              =      77.900868 +/- 13.618445
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-29 13:01:44
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   578.1017 / 53 = 10.9076
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     917.725765 +/- 8.082404
+  [1] voigt1_mean          =       0.899252 +/- 0.000390
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.089985 +/- 0.001070
+  [4] voigt2_amp           =     409.275813 +/- 10.991372
+  [5] voigt2_mean          =       1.408722 +/- 0.001246
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.140430 +/- 0.003871
+  [8] bern_c0              =       0.000000 +/- 3.013153
+  [9] bern_c1              =    2144.033944 +/- 34.526936
+  [10] bern_c2              =       0.000000 +/- 4.184959
+  [11] bern_c3              =      77.900868 +/- 13.618445
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-29 15:11:03
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   578.1017 / 53 = 10.9076
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     917.725765 +/- 8.082404
+  [1] voigt1_mean          =       0.899252 +/- 0.000390
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.089985 +/- 0.001070
+  [4] voigt2_amp           =     409.275813 +/- 10.991372
+  [5] voigt2_mean          =       1.408722 +/- 0.001246
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.140430 +/- 0.003871
+  [8] bern_c0              =       0.000000 +/- 3.013153
+  [9] bern_c1              =    2144.033944 +/- 34.526936
+  [10] bern_c2              =       0.000000 +/- 4.184959
+  [11] bern_c3              =      77.900868 +/- 13.618445
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-29 17:32:46
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   578.1017 / 53 = 10.9076
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     917.725765 +/- 8.082404
+  [1] voigt1_mean          =       0.899252 +/- 0.000390
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.089985 +/- 0.001070
+  [4] voigt2_amp           =     409.275813 +/- 10.991372
+  [5] voigt2_mean          =       1.408722 +/- 0.001246
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.140430 +/- 0.003871
+  [8] bern_c0              =       0.000000 +/- 3.013153
+  [9] bern_c1              =    2144.033944 +/- 34.526936
+  [10] bern_c2              =       0.000000 +/- 4.184959
+  [11] bern_c3              =      77.900868 +/- 13.618445
+Notes:
+  FOM integration range: (0.80, 1.00)
+
+======================================================================
+Timestamp:    2026-07-29 18:35:27
+Fit function: fitSig_kstar_2voigt_bern
+Histogram:    hSig
+Cut string:   CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(rf,KShort,Lambda)
+Fit range:    (0.61, 2.3)
+Chi2 / NDF:   578.1017 / 53 = 10.9076
+Fit status:   1
+Parameters:
+  [0] voigt1_amp           =     917.725765 +/- 8.082404
+  [1] voigt1_mean          =       0.899252 +/- 0.000390
+  [2] voigt1_sigma         =       0.003000 +/- 0.000000
+  [3] voigt1_width         =       0.089985 +/- 0.001070
+  [4] voigt2_amp           =     409.275813 +/- 10.991372
+  [5] voigt2_mean          =       1.408722 +/- 0.001246
+  [6] voigt2_sigma         =       0.003000 +/- 0.000000
+  [7] voigt2_width         =       0.140430 +/- 0.003871
+  [8] bern_c0              =       0.000000 +/- 3.013153
+  [9] bern_c1              =    2144.033944 +/- 34.526936
+  [10] bern_c2              =       0.000000 +/- 4.184959
+  [11] bern_c3              =      77.900868 +/- 13.618445
+Notes:
+  FOM integration range: (0.80, 1.00)
+
