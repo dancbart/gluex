@@ -5,7 +5,6 @@ scripts/archive/
 calibrations/OUTPUT/
 KShortPipLambda/PWA/outputTrees/
 KShortPipLambda/PWA/fits/
-bin/
 KShortPipLambda/archive/
 KShortPipLambda/sdme/config/archive/
 KShortPipLambda/sdme/outputTrees/
