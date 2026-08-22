@@ -1,4 +1,4 @@
-import os
+import sys, os
 import time
 import ROOT
 
@@ -8,6 +8,9 @@ from pyamptools import atiSetup
 atiSetup.setup(globals(), use_fsroot=True)
 
 ROOT.TGaxis.SetMaxDigits(3)
+
+# path to shared libraries
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "libraries"))
 
 logFile = "plots/plotEventSelection.txt"
 allPlots = "plots/plots.pdf"
@@ -49,6 +52,7 @@ def file_label(fname):
 # =========================================================
 # CUTS — imported from the shared module (single source of truth)
 # =========================================================
+
 from cuts_kStar import (   # noqa: I001
     # particle names (needed by the MASS(...) f-strings throughout)
     DecayingLambda, Proton, PiMinus2, DecayingKShort, PiPlus2, PiMinus1, PiPlus1,

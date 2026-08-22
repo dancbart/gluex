@@ -9,7 +9,7 @@ timestamp     = datetime.today().strftime("%Y%m%d_%H%M%S")  # e.g. 20260601_1430
 
 baseDir       = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/"
 outputDir     = os.path.join(baseDir, "fits", "%s_%s" % (workflow, timestamp))
-configFile    = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/config/fit_PWA.cfg"
+configFile    = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/config/fit_PWA.cfg"
 num_fits      = 5
 
 account       = "halld"
@@ -19,26 +19,29 @@ mem_requested = 1
 time_limit    = 5
 NCORES        = "1" # change to 4 (or higher?) if script uses multi-threading.
 
-# Create shared output directory (same folder for all fits)
+# Create farm_out subdirectory for this run
 os.makedirs(outputDir, exist_ok=True)
+# farmoutDir = "/farm_out/dbarton/%s_%s" % (workflow, timestamp)
+farmoutDir = os.path.join(outputDir, "%s_%s" % (workflow, timestamp))
+os.makedirs(farmoutDir, exist_ok=True)
 
 for fitNumber in range(1, num_fits + 1):
 
     # --- Write a per-fit wrapper bash script ---
     jobName    = "%s_%s_fit%04d" % (workflow, timestamp, fitNumber)
     scriptPath = os.path.join(outputDir, "run_fit_%04d.sh" % fitNumber)
-    logFile    = "/farm_out/dbarton/log_%s.log" % jobName
-    errFile    = "/farm_out/dbarton/err_%s.err" % jobName
+    logFile    = os.path.join(farmoutDir, "fit%04d_stdout.out" % fitNumber)
+    errFile    = os.path.join(farmoutDir, "fit%04d_stderr.err" % fitNumber)
 
     with open(scriptPath, "w") as f:
         f.write("#!/bin/bash\n\n")
         f.write("echo \"=== Fit %d of %d ===\"\n" % (fitNumber, num_fits))
-        f.write('echo "Start time: $(date \'%Y-%m-%d %H:%M:%S\')"\n')
+        f.write('echo "Start time: $(date +\'%Y-%m-%d %H:%M:%S\')"\n')
         f.write("echo \"\"\n\n")
         f.write("cd %s\n\n" % outputDir)
         f.write("/work/halld/home/dbarton/software/halld_sim/src/.Linux_Alma9-x86_64-gcc11.5.0/programs/AmplitudeAnalysis/fit/fit -r %d -c %s\n\n" % (fitNumber, configFile))
         f.write("echo \"\"\n")
-        f.write('echo "End time:   $(date \'%Y-%m-%d %H:%M:%S\')"\n')
+        f.write('echo "End time:   $(date +\'%Y-%m-%d %H:%M:%S\')"\n')
         f.write("echo \"=== Fit %d complete ===\"\n" % fitNumber)
 
     os.chmod(scriptPath, 0o755)

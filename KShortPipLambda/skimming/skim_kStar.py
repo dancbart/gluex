@@ -49,7 +49,7 @@ baseDir = "/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/"
 # guaranteeing the cut expressions are identical across both workflows.
 # =========================================================
 
-from cuts_kStar import (  # noqa: I001
+from libraries.cuts_kStar import (  # noqa: I001
     ALL_T_BINS, EVENT_SELECTION_T_BINS,
     setup, setup_genmc,
     generalCuts_eventSelection, thrownCuts_eventSelection,

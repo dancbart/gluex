@@ -1,4 +1,4 @@
-Starting runplots at Wed Aug 19 15:03:50 EDT 2026
+Starting runplots at Thu Aug 20 21:13:03 EDT 2026
 
 *******************
 Loading environment
@@ -67,4 +67,4 @@ atiSetup| minor warning: Unable to alias URtypes - doesn't exist under ROOT name
 atiSetup| minor warning: Unable to alias URConfig - doesn't exist under ROOT namespace
 atiSetup| minor warning: Unable to alias FSFitPrivate - doesn't exist under ROOT namespace
 atiSetup| minor warning: Unable to alias FSFitFunctions - doesn't exist under ROOT namespace
-Total execution time: 73.4 s
+Total execution time: 98.7 s
