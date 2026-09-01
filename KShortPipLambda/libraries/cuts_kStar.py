@@ -182,14 +182,12 @@ def setup_genmc(t_bins, event_selection_t_bins):
 # =========================================================
 
 # ------ USE FOR EVENT SELECTION PLOTS ONLY ------- #
-# Usage: generalCuts_eventSelection.format(t_cut_name=t_cut_name)
-#        thrownCuts_eventSelection.format(thrown_t_cut_name=thrown_t_cut_name)
-generalCuts_eventSelection = "CUT({t_cut_name},chi2DOF,unusedTracks,coherentPeak,targetZ)"
-thrownCuts_eventSelection  = "CUT({thrown_t_cut_name},coherentPeakTHROWN,selectKSTAR892THROWN)"
+generalCuts_eventSelection = "CUT(chi2DOF,unusedTracks,coherentPeak,targetZ)"
+thrownCuts_eventSelection  = "CUT(coherentPeakTHROWN,selectKSTAR892THROWN)"
 
 # ---------- USE FOR ROOFIT FITTING ONLY ---------- #
 # Usage: KPiSystemCuts.format(t_cut_name=t_cut_name)
-KPiSystemCuts         = "CUT({t_cut_name},chi2DOF,unusedTracks,coherentPeak,targetZ,flightLengthKShort,flightLengthLambda,rejectSigma1385)"
+KPiSystemCuts         = "CUT(chi2DOF,unusedTracks,coherentPeak,targetZ,flightLengthKShort,flightLengthLambda,rejectSigma1385)"
 KPiSystemCuts_weights = "CUTWT(rf,KShort,Lambda)"
 
 # ----------- USE FOR AMPTOOLS FITTING ------------ #

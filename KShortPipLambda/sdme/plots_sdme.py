@@ -11,11 +11,13 @@ allPlots = "plots/sdme_plots.pdf"
 # -----------------------------
 # Files / globals
 # -----------------------------
-t_bin = "#bf{-t = (0.8 - 1.0) GeV^{2}}" # t_bin label for plots.  MUST match the t_bin used to create the ROOT file.
+t_bin = "#bf{-t = (0.1 - 0.3) GeV^{2}}" # t_bin label for plots.  MUST match the t_bin used to create the ROOT file.
 # FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_TwoPiAngles_500Mx3_MC_20260716_115925/KsPipLamb_ALL.root"
 # FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_TwoPiAngles_500Mx3_MC_20260727_162303/KsPipLamb_ALL.root"
 # FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_TwoPiAngles_500Mx3_MC_20260728_091248/KsPipLamb_ALL.root"
-FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_TwoPiAngles_500Mx3_MC_20260804_114746/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_TwoPiAngles_500Mx3_MC_20260804_114746/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_SDME_20260829_1207/KsPipLamb_ALL.root"
+FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_SDME_20260901_1408/KsPipLamb_ALL.root"
 
 NT = "ntFSGlueX_MODECODE"
 TREENAME = "ntFSGlueX_100000000_1100"

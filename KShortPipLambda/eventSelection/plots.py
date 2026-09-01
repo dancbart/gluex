@@ -14,6 +14,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 
 logFile = "plots/plotEventSelection.txt"
 allPlots = "plots/plots.pdf"
+# allPlots = "KShortPipLambda/eventSelection/plots"
 treeName = "ntFSGlueX_100000000_1100"
 bggen = False
 
@@ -24,7 +25,7 @@ gluex_style()
 # Files
 # ------------------------------------------------------------
 # ------ Fit results histogram(s) for K Pi system
-FND_fits = "/work/halld/home/dbarton/gluex/KShortPipLambda/fitting/plots/plots_rooFit_kStar.root"
+FND_fits = "/work/halld/home/dbarton/gluex/KShortPipLambda/eventSelection/1D_fitting/plots/plots_rooFit_kStar.root"
 
 # ------ Use to plot variables used as 'global' cuts (beam energy, unused shower, etc).  These are unskimmed files. ---------------------
 FND_unSkimmed = "/volatile/halld/home/dbarton/pipkslamb/data/sp18fa18sp20/tree_pipkslamb__B4_M16_M18_FSFlat_sum_*_sp18fa18sp20_40856_73266.root"
@@ -34,7 +35,7 @@ FND_unSkimmed_MC = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/MCWjob443
 
 # ------ Use to plot Ks and Lambda, K*, etc. pre-fit distributions -------------------------------------------
 FND_eventSelectionSkims = "/volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_ALLpols.root"
-FND_eventSelectionSkims_MC = "/volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_MC_sp18fa18sp20.root"
+FND_eventSelectionSkims_MC = "/volatile/halld/home/dbarton/pipkslamb/skims//tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_MC_sp18fa18sp20.root"
 # Not used:
 # FND_eventSelectionSkims_MC_THROWN. For plotting, use 'FND_signalSkims_MC_THROWN' (created below).
 
@@ -3275,8 +3276,8 @@ def massPlots_KStar_FINAL_SELECTION(pdf_path):
         notes_step=0.09,
     )
 
-    c.Print(pdf_path) 
-    # c.Print(f"{pdf_path}(") 
+    # c.Print(pdf_path) 
+    c.Print(f"{pdf_path}(") 
 
 # ------------------------------------------------------------
 # KSTAR MASS PLOTS -- non-relativistic fit
@@ -3498,8 +3499,8 @@ def massPlots_KStar_relROOFIT(pdf_path):
         notes_step=0.09,
     )
 
-    c.Print(pdf_path)
-    # c.Print(f"{pdf_path})")
+    # c.Print(pdf_path)
+    c.Print(f"{pdf_path})")
 
 # ------------------------------------------------------------
 # KSTAR MASS PLOTS -- DATA and MONTE CARLO
@@ -4209,7 +4210,7 @@ def main():
     t0 = time.time()
     os.makedirs("plots", exist_ok=True)
 
-    global_eventSelection_Cuts(allPlots)
+    # global_eventSelection_Cuts(allPlots)
     # deltaTPlots_KShort_vs_PiPlus(allPlots)
     # deltaTPrimePlots_KShort_vs_PiPlus(allPlots)
     # massPlots_KShort_cutComparisons(allPlots)
@@ -4228,9 +4229,9 @@ def main():
     # massPlots_KStar_flightLength(allPlots)
     # massPlots_KStar_unusedEnergyStudy(allPlots)
     # missingMassPlots_KStar_sidebands(allPlots)
-    # massPlots_KStar_FINAL_SELECTION(allPlots)
-    # massPlots_KStar_nonRelFIT(allPlots)
-    # massPlots_KStar_relROOFIT(allPlots)
+    massPlots_KStar_FINAL_SELECTION(allPlots)
+    massPlots_KStar_nonRelFIT(allPlots)
+    massPlots_KStar_relROOFIT(allPlots)
     # massPlots_KStar_Signal_DATA_and_MC(allPlots)
     # massPlots_KStar_FIT_RESULTS(allPlots)
     # cosThetaGJ_KShort(allPlots)

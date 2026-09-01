@@ -6,9 +6,9 @@
 #include "TCanvas.h"
 #include "TAxis.h"
 #include "RooPlot.h"
-#include "/work/halld/home/dbarton/gluex/KShortPipLambda/fitting/Roo2BW.h"
+#include "/work/halld/home/dbarton/gluex/KShortPipLambda/eventSelection/1D_fitting/Roo2BW.h"
 #include <fstream>
-#include "/work/halld/home/dbarton/gluex/KShortPipLambda/fitting/RooBernsteinQ.h"
+#include "/work/halld/home/dbarton/gluex/KShortPipLambda/eventSelection/1D_fitting/RooBernsteinQ.h"
 
 using namespace RooFit;
 

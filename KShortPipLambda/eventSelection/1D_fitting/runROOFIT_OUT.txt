@@ -1,8 +1,9 @@
-Main tree entries:   267831
-Friend tree entries: 267831
-bin1 content = 271.158 of 91614.3
-peak bin: content = 6350.82 +/- 77.7797
-effective entries = 89715.3 (raw = 267831)
+Info in <TUnixSystem::ACLiC>: creating shared library /work/halld/home/dbarton/gluex/KShortPipLambda/eventSelection/1D_fitting/Roo2BW_cxx.so
+Main tree entries:   351243
+Friend tree entries: 351243
+bin1 content = 292.991 of 123099
+peak bin: content = 7912.78 +/- 86.5152
+effective entries = 122603 (raw = 351243)
 [#1] INFO:Fitting -- RooAbsPdf::fitTo(bern2BW) fixing normalization set for coefficient determination to observables in data
 [#1] INFO:Fitting -- using CPU computation library compiled with -mavx512
 [#1] INFO:Fitting -- RooAddition::defaultErrorLevel(nll_bern2BW_dataHist_P) Summation contains a RooNLLVar, using its error level
@@ -11,53 +12,55 @@ Minuit2Minimizer: Minimize with max-calls 5000 convergence for edm < 1 strategy 
 Info in <Minuit2>: MnSeedGenerator Computing seed using NumericalGradient calculator
 [#1] INFO:NumericIntegration -- RooRealIntegral::init(bkg_Int[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
 [#1] INFO:NumericIntegration -- RooRealIntegral::init(rel_intBW_Int[mass]) using numeric integrator RooIntegrator1D to calculate Int(mass)
-Info in <Minuit2>: MnSeedGenerator Initial state: FCN =       15389.73252 Edm =       7080.449518 NCalls =     43
+Info in <Minuit2>: MnSeedGenerator Initial state: FCN =       30191.30341 Edm =       11310.46381 NCalls =     45
 Info in <Minuit2>: MnSeedGenerator Initial state  
-  Minimum value : 15389.73252
-  Edm           : 7080.449518
+  Minimum value : 30191.30341
+  Edm           : 11310.46381
   Internal parameters:	[     -1.287002218     -0.927295218     -1.287002218   -0.08845452519    -0.2355042367    -0.3398369095     0.1809864512     0.2013579208    -0.5962439085    -0.7297276562]	
-  Internal gradient  :	[     -1283.299221       2268.62872      3.755098975     -1635.901319      6502.246277      5767.380887       11286.5297      9124.105631     -5385.605352      -5174.51536]	
+  Internal gradient  :	[      640.1304857     -849.4419896      -9604.57432     -7567.647321      3760.227657      847.0826628      12068.16352       16956.2138     -6585.365164      -7968.19383]	
   Internal covariance matrix:
-[[   0.0010893869              0              0              0              0              0              0              0              0              0]
- [              0  0.00033776995              0              0              0              0              0              0              0              0]
- [              0              0  6.9358496e-05              0              0              0              0              0              0              0]
- [              0              0              0   2.777948e-06              0              0              0              0              0              0]
- [              0              0              0              0  1.7551898e-05              0              0              0              0              0]
- [              0              0              0              0              0  1.8074938e-05              0              0              0              0]
- [              0              0              0              0              0              0  4.5592915e-05              0              0              0]
- [              0              0              0              0              0              0              0  7.2019395e-05              0              0]
- [              0              0              0              0              0              0              0              0  0.00014159278              0]
- [              0              0              0              0              0              0              0              0              0  0.00028116223]]]
+[[  0.00023711197              0              0              0              0              0              0              0              0              0]
+ [              0  0.00017643345              0              0              0              0              0              0              0              0]
+ [              0              0  5.3125732e-05              0              0              0              0              0              0              0]
+ [              0              0              0  2.1295261e-06              0              0              0              0              0              0]
+ [              0              0              0              0  1.4449052e-05              0              0              0              0              0]
+ [              0              0              0              0              0  1.6439404e-05              0              0              0              0]
+ [              0              0              0              0              0              0  3.5903992e-05              0              0              0]
+ [              0              0              0              0              0              0              0  5.1160036e-05              0              0]
+ [              0              0              0              0              0              0              0              0  0.00011439258              0]
+ [              0              0              0              0              0              0              0              0              0  0.00023435151]]]
 Info in <Minuit2>: VariableMetricBuilder Start iterating until Edm is < 0.001 with call limit = 5000
-Info in <Minuit2>: VariableMetricBuilder    0 - FCN =       15389.73252 Edm =       7080.449518 NCalls =     43
-Info in <Minuit2>: VariableMetricBuilder    1 - FCN =       12118.72156 Edm =       3372.882708 NCalls =     67
-Info in <Minuit2>: VariableMetricBuilder    2 - FCN =       11318.92005 Edm =        188.756197 NCalls =     96
-Info in <Minuit2>: VariableMetricBuilder    3 - FCN =       11105.73336 Edm =       55.57016577 NCalls =    118
-Info in <Minuit2>: VariableMetricBuilder    4 - FCN =       11022.11741 Edm =       21.58369761 NCalls =    140
-Info in <Minuit2>: VariableMetricBuilder    5 - FCN =       10989.73087 Edm =       9.111044322 NCalls =    162
-Info in <Minuit2>: VariableMetricBuilder    6 - FCN =       10978.49706 Edm =       1.911857018 NCalls =    184
-Info in <Minuit2>: VariableMetricBuilder    7 - FCN =       10975.53453 Edm =      0.2126299915 NCalls =    206
-Info in <Minuit2>: VariableMetricBuilder    8 - FCN =       10975.17121 Edm =     0.06052612254 NCalls =    228
-Info in <Minuit2>: VariableMetricBuilder    9 - FCN =       10975.02108 Edm =     0.04226812876 NCalls =    250
-Info in <Minuit2>: VariableMetricBuilder   10 - FCN =       10974.82024 Edm =     0.02583627238 NCalls =    272
-Info in <Minuit2>: VariableMetricBuilder   11 - FCN =       10974.78286 Edm =    0.002764857286 NCalls =    294
-Info in <Minuit2>: VariableMetricBuilder   12 - FCN =        10974.7793 Edm =   0.0001080877018 NCalls =    316
+Info in <Minuit2>: VariableMetricBuilder    0 - FCN =       30191.30341 Edm =       11310.46381 NCalls =     45
+Info in <Minuit2>: VariableMetricBuilder    1 - FCN =       23576.99694 Edm =       377.0964327 NCalls =     73
+Info in <Minuit2>: VariableMetricBuilder    2 - FCN =       23264.56992 Edm =       110.3181524 NCalls =     97
+Info in <Minuit2>: VariableMetricBuilder    3 - FCN =       23074.95135 Edm =       43.59034064 NCalls =    122
+Info in <Minuit2>: VariableMetricBuilder    4 - FCN =       23017.49294 Edm =       12.88788362 NCalls =    144
+Info in <Minuit2>: VariableMetricBuilder    5 - FCN =       23000.33054 Edm =       5.826172349 NCalls =    166
+Info in <Minuit2>: VariableMetricBuilder    6 - FCN =       22984.27149 Edm =       3.907598568 NCalls =    190
+Info in <Minuit2>: VariableMetricBuilder    7 - FCN =       22979.28929 Edm =      0.6349592169 NCalls =    212
+Info in <Minuit2>: VariableMetricBuilder    8 - FCN =       22977.65426 Edm =       0.303688432 NCalls =    234
+Info in <Minuit2>: VariableMetricBuilder    9 - FCN =       22976.93506 Edm =        0.28067268 NCalls =    256
+Info in <Minuit2>: VariableMetricBuilder   10 - FCN =       22976.00117 Edm =     0.04138143969 NCalls =    278
+Info in <Minuit2>: VariableMetricBuilder   11 - FCN =       22975.93084 Edm =    0.004477008543 NCalls =    300
+Info in <Minuit2>: VariableMetricBuilder   12 - FCN =       22975.91874 Edm =     0.00582757261 NCalls =    322
+Info in <Minuit2>: VariableMetricBuilder   13 - FCN =       22975.88315 Edm =    0.008691910517 NCalls =    345
+Info in <Minuit2>: VariableMetricBuilder   14 - FCN =       22975.86985 Edm =   0.0002775522982 NCalls =    367
 Info in <Minuit2>: VariableMetricBuilder After Hessian
-Info in <Minuit2>: VariableMetricBuilder   13 - FCN =        10974.7793 Edm =   0.0009234694704 NCalls =    404
+Info in <Minuit2>: VariableMetricBuilder   15 - FCN =       22975.86985 Edm =   0.0002941338039 NCalls =    453
 Minuit2Minimizer : Valid minimum - status = 0
-FVAL  = 10974.7793019898945
-Edm   = 0.000923469470370758948
-Nfcn  = 404
-coef0	  = 0.0619418	 +/-  0.0173229	(limited)
-coef2	  = 0.332471	 +/-  0.0329732	(limited)
-coef3	  = 0.110299	 +/-  0.00554157	(limited)
-massBW_1	  = 0.893317	 +/-  0.000458292	(limited)
-massBW_2	  = 1.41405	 +/-  0.00206519	(limited)
-phase	  = -1.88984	 +/-  0.0378746	(limited)
-scale	  = 0.447688	 +/-  0.00502234	(limited)
-sig2bkg	  = 0.521484	 +/-  0.0065815	(limited)
-widthBW_1	  = 0.0833836	 +/-  0.00123376	(limited)
-widthBW_2	  = 0.137813	 +/-  0.00364117	(limited)
+FVAL  = 22975.8698465727321
+Edm   = 0.000294133803916756269
+Nfcn  = 453
+coef0	  = 0.0548412	 +/-  0.0170705	(limited)
+coef2	  = 0.634701	 +/-  0.0485238	(limited)
+coef3	  = 0.259732	 +/-  0.0109058	(limited)
+massBW_1	  = 0.894572	 +/-  0.000399958	(limited)
+massBW_2	  = 1.41642	 +/-  0.001952	(limited)
+phase	  = -1.86273	 +/-  0.0348259	(limited)
+scale	  = 0.434272	 +/-  0.00488785	(limited)
+sig2bkg	  = 0.48336	 +/-  0.00544646	(limited)
+widthBW_1	  = 0.0825754	 +/-  0.00106944	(limited)
+widthBW_2	  = 0.136867	 +/-  0.00347147	(limited)
 Info in <Minuit2>: Minuit2Minimizer::Hesse Using max-calls 5000
 Info in <Minuit2>: Minuit2Minimizer::Hesse Hesse is valid - matrix is accurate
 Info in <Minuit2>: Minuit2Minimizer::Hesse Using max-calls 5000
@@ -65,7 +68,7 @@ Info in <Minuit2>: Minuit2Minimizer::Hesse Hesse is valid - matrix is accurate
 [#1] INFO:Fitting -- RooAbsPdf::fitTo(bern2BW) Calculating sum-of-weights-squared correction matrix for covariance matrix
 [#1] INFO:Minimization -- RooAbsMinimizerFcn::setOptimizeConst: deactivating const optimization
 
-  RooFitResult: minimized FCN value: 10974.8, estimated distance to minimum: 84.3728
+  RooFitResult: minimized FCN value: 22975.9, estimated distance to minimum: 81.0743
                 covariance matrix quality: Full, accurate covariance matrix
                 Status : MINIMIZE=0 HESSE=0 HESSE=0 
 
@@ -82,16 +85,16 @@ Info in <Minuit2>: Minuit2Minimizer::Hesse Hesse is valid - matrix is accurate
 
     Floating Parameter  InitialValue    FinalValue +/-  Error     GblCorr.
   --------------------  ------------  --------------------------  --------
-                 coef0    1.0000e-01    6.1942e-02 +/-  2.02e-02  <none>
-                 coef2    5.0000e-01    3.3247e-01 +/-  3.75e-02  <none>
-                 coef3    1.0000e-01    1.1030e-01 +/-  5.74e-03  <none>
-              massBW_1    8.9200e-01    8.9332e-01 +/-  4.78e-04  <none>
-              massBW_2    1.4300e+00    1.4140e+00 +/-  2.37e-03  <none>
-                 phase   -2.0000e+00   -1.8898e+00 +/-  4.57e-02  <none>
-                 scale    5.9000e-01    4.4769e-01 +/-  4.55e-03  <none>
-               sig2bkg    6.0000e-01    5.2148e-01 +/-  5.85e-03  <none>
-             widthBW_1    4.8500e-02    8.3384e-02 +/-  1.22e-03  <none>
-             widthBW_2    1.0000e-01    1.3781e-01 +/-  3.32e-03  <none>
+                 coef0    1.0000e-01    5.4841e-02 +/-  1.60e-02  <none>
+                 coef2    5.0000e-01    6.3470e-01 +/-  4.65e-02  <none>
+                 coef3    1.0000e-01    2.5973e-01 +/-  9.76e-03  <none>
+              massBW_1    8.9200e-01    8.9457e-01 +/-  4.12e-04  <none>
+              massBW_2    1.4300e+00    1.4164e+00 +/-  2.21e-03  <none>
+                 phase   -2.0000e+00   -1.8627e+00 +/-  3.92e-02  <none>
+                 scale    5.9000e-01    4.3427e-01 +/-  4.58e-03  <none>
+               sig2bkg    6.0000e-01    4.8336e-01 +/-  4.24e-03  <none>
+             widthBW_1    4.8500e-02    8.2575e-02 +/-  1.02e-03  <none>
+             widthBW_2    1.0000e-01    1.3687e-01 +/-  3.25e-03  <none>
 
 status=0 covQual=3
 [#1] INFO:Eval -- RooRealVar::setRange(mass) new range named 'FOM' created with bounds [0.8,1]
@@ -114,8 +117,17 @@ Fit log written.
 Found curve_total
 Found curve_sig
 Found curve_bkg
-Chi2/NDF: 6.33181
-Info in <TCanvas::Print>: pdf file /work/halld/home/dbarton/gluex/KShortPipLambda/fitting/plots/plots_rooFit_kStar.pdf has been created
+SysError in <TFile::TFile>: file /work/halld/home/dbarton/gluex/KShortPipLambda/fitting/plots/plots_rooFit_kStar.root can not be opened No such file or directory
+Error in <TROOT::WriteTObject>: The current directory (Rint) is not associated with a file. The object (h_Pwave) has not been written.
+Error in <TROOT::WriteTObject>: The current directory (Rint) is not associated with a file. The object (curve_total_x) has not been written.
+Error in <TROOT::WriteTObject>: The current directory (Rint) is not associated with a file. The object (curve_total_y) has not been written.
+Error in <TROOT::WriteTObject>: The current directory (Rint) is not associated with a file. The object (curve_sig_x) has not been written.
+Error in <TROOT::WriteTObject>: The current directory (Rint) is not associated with a file. The object (curve_sig_y) has not been written.
+Error in <TROOT::WriteTObject>: The current directory (Rint) is not associated with a file. The object (curve_bkg_x) has not been written.
+Error in <TROOT::WriteTObject>: The current directory (Rint) is not associated with a file. The object (curve_bkg_y) has not been written.
+Error in <TROOT::WriteTObject>: The current directory (Rint) is not associated with a file. The object (figures_of_merit) has not been written.
+Chi2/NDF: 7.16675
+ERROR in TPDF::Open: Cannot open file:/work/halld/home/dbarton/gluex/KShortPipLambda/fitting/plots/plots_rooFit_kStar.pdf
 /work/halld/home/dbarton/software/FSRoot/rootlogoff.FSROOT.C:6:64: error: 'FSTree' is not a class, namespace, or enumeration
 cout << "FSTree::clearChainCache()..." << endl;                FSTree::clearChainCache();
                                                                ^

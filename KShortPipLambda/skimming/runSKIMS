@@ -3,7 +3,7 @@ set -euo pipefail
 
 SIF="/w/halld-scshelf2101/lng/WORK/PyAmpTools9/pyamptools.sif"
 BIND="/volatile/halld/home/dbarton,/cache/halld/home/dbarton,/work/halld/home/dbarton/gluex,/scratch"
-WORKDIR="/work/halld/home/dbarton/gluex/KShortPipLambda"
+WORKDIR="/work/halld/home/dbarton/gluex/KShortPipLambda/skimming"
 LOGFILE="$WORKDIR/skimLOG.txt"
 
 # ------------------------------------------------------------

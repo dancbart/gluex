@@ -11,7 +11,7 @@ from subprocess import call
 
 FILES_PER_JOB = 500  # <-- change depending on how many files to process.  USAGE: Submit large 'chunks' of jobs so the batch system 'sees' a few big jobs instead of many small ones.  Example: Instead of 2,000 jobs, "FILES_PER_JOB=500" submits 2000/500 = 5 jobs.  This avoids penalties for inefficient use of resources.
 
-baseDir = "/work/halld/home/dbarton/gluex"
+baseDir = "/work/halld/home/dbarton/gluex/scripts"
 
 
 #====================================================================================
@@ -19,59 +19,59 @@ baseDir = "/work/halld/home/dbarton/gluex"
 #====================================================================================
 
 # -------------- Spring 2018 RECONSTRUCTED ---------------
-# workflow = "pipkslamb_2018-01_FLATTEN_correctVersionXML"
-# template = baseDir + "/scripts/runFSFlattenSWIF2_TEMPLATE.sh"
-# dataDir = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/phaseSpace20260630_500M_correctVersionXML/root/trees/"
-# baseOutputDir = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/phaseSpace20260630_500M_correctVersionXML/root/trees/flatten/"
+# workflow = "MC_pipkslamb_2018-01_phaseSpace_4Billion_FLATTEN"
+# template = baseDir + "/runFSFlattenSWIF2_TEMPLATE.sh"
+# dataDir = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS08192026/root/trees/"
+# baseOutputDir = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS08192026/root/trees/flatten/"
 # fileBaseName = "tree_pipkslamb__B4_M16_M18_gen_amp_V2"
-# fileList = glob.glob(dataDir + f"{fileBaseName}_04????_???.root")
-# fileList = glob.glob(dataDir + f"{fileBaseName}_04255?_???.root")
+# # fileList = glob.glob(dataDir + f"{fileBaseName}_04????_???.root")
+# fileList = glob.glob(dataDir + f"{fileBaseName}_040856_????.root")
 
 
 # # -------------- Spring 2018 THROWN ---------------
-workflow = "pipkslamb_2018-01_THROWN_FLATTEN_correctVersionXML"
-template = baseDir + "/scripts/runFSFlattenSWIF2_TEMPLATE_THROWN.sh"
-dataDir = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/phaseSpace20260630_500M_correctVersionXML/root/thrown/"
-baseOutputDir = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/phaseSpace20260630_500M_correctVersionXML/root/thrown/flatten/"
+workflow = "MC_pipkslamb_2018-01_phaseSpace_4Billion_FLATTEN_THROWN"
+template = baseDir + "/runFSFlattenSWIF2_TEMPLATE.sh"
+dataDir = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS08192026/root/thrown/"
+baseOutputDir = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS08192026/root/thrown/flatten/"
 fileBaseName = "tree_thrown_gen_amp_V2"
-fileList = glob.glob(dataDir + f"{fileBaseName}_04????_???.root")
-# fileList = glob.glob(dataDir + "{fileBaseName}_04255?_???.root")
+# fileList = glob.glob(dataDir + f"{fileBaseName}_04????_???.root")
+fileList = glob.glob(dataDir + f"{fileBaseName}_040856_????.root")
 
 # # # -------------- Fall 2018 RECONSTRUCTED ---------------
-# workflow = "pipkslamb_2018-08_FLATTEN"
-# template = baseDir + "/scripts/runFSFlattenSWIF2_TEMPLATE.sh"
-# dataDir = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/phaseSpace20260630_500M_wTHROWN/root/trees/"
-# baseOutputDir = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/phaseSpace20260630_500M_wTHROWN/root/trees/flatten/"
+# workflow = "MC_pipkslamb_2018-08_phaseSpace_2point6Billion_FLATTEN"
+# template = baseDir + "/runFSFlattenSWIF2_TEMPLATE.sh"
+# dataDir = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS08192026/root/trees/"
+# baseOutputDir = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS08192026/root/trees/flatten/"
 # fileBaseName = "tree_pipkslamb__B4_M16_M18_gen_amp_V2"
-# fileList = glob.glob(dataDir + f"{fileBaseName}_05????_???.root")
-# fileList = glob.glob(dataDir + "{fileBasename}_0517??_???.root")
+# # fileList = glob.glob(dataDir + f"{fileBaseName}_05????_???.root")
+# fileList = glob.glob(dataDir + f"{fileBaseName}_050697_????.root")
 
 # # -------------- Fall 2018 THROWN ---------------
-# workflow = "pipkslamb_2018-08_THROWN_FLATTEN"
-# template = baseDir + "/scripts/runFSFlattenSWIF2_TEMPLATE_THROWN.sh"
-# dataDir = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/phaseSpace20260630_500M_wTHROWN/root/thrown/"
-# baseOutputDir = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/phaseSpace20260630_500M_wTHROWN/root/thrown/flatten/"
+# workflow = "MC_pipkslamb_2018-08_phaseSpace_2point6Billion_FLATTEN_THROWN"
+# template = baseDir + "/runFSFlattenSWIF2_TEMPLATE.sh"
+# dataDir = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS08192026/root/thrown/"
+# baseOutputDir = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS08192026/root/thrown/flatten/"
 # fileBaseName = "tree_thrown_gen_amp_V2"
-# fileList = glob.glob(dataDir + f"{fileBaseName}_05????_???.root")
-# fileList = glob.glob(dataDir + "{fileBaseName}_0517??_???.root")
+# # fileList = glob.glob(dataDir + f"{fileBaseName}_05????_???.root")
+# fileList = glob.glob(dataDir + f"{fileBaseName}_050697_????.root")
 
 # # -------------- Spring 2020 RECONSTRUCTED ---------------
-# workflow = "pipkslamb_2020-01_FLATTEN"
-# template = baseDir + "/scripts/runFSFlattenSWIF2_TEMPLATE.sh"
-# dataDir = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/phaseSpace20260606_400M/root/trees/"
-# baseOutputDir = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/phaseSpace20260606_400M/root/trees/flatten/"
+# workflow = "MC_pipkslamb_2020-01_phaseSpace_8Billion_FLATTEN"
+# template = baseDir + "/runFSFlattenSWIF2_TEMPLATE.sh"
+# dataDir = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS08192026/root/trees/"
+# baseOutputDir = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS08192026/root/trees/flatten/"
 # fileBaseName = "tree_pipkslamb__B4_M16_M18_gen_amp_V2"
-# fileList = glob.glob(dataDir + f"{fileBaseName}_07????_???.root")
-# fileList = glob.glob(dataDir + "{fileBaseName}_07????_???.root")
+# # fileList = glob.glob(dataDir + f"{fileBaseName}_07????_???.root")
+# fileList = glob.glob(dataDir + f"{fileBaseName}_07135?_???.root")
 
 # -------------- Spring 2020 THROWN ---------------
-# workflow = "pipkslamb_2020-01_THROWN_FLATTEN"
-# template = baseDir + "/scripts/runFSFlattenSWIF2_TEMPLATE_THROWN.sh"
-# dataDir = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/phaseSpace20260606_400M/root/thrown/"
-# baseOutputDir = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/phaseSpace20260606_400M/root/thrown/flatten/"
+# workflow = "MC_pipkslamb_2020-01_phaseSpace_8Billion_FLATTEN_THROWN"
+# template = baseDir + "/runFSFlattenSWIF2_TEMPLATE.sh"
+# dataDir = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS08192026/root/thrown/"
+# baseOutputDir = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS08192026/root/thrown/flatten/"
 # fileBaseName = "tree_thrown_gen_amp_V2"
-# fileList = glob.glob(dataDir + f"{fileBaseName}_07????_???.root")
-# fileList = glob.glob(dataDir + "{fileBaseName}_07????_???.root")
+# # fileList = glob.glob(dataDir + f"{fileBaseName}_07????_???.root")
+# fileList = glob.glob(dataDir + f"{fileBaseName}_07135?_???.root")
 
 
 #====================================================================================
@@ -90,7 +90,10 @@ NCORES = "1"
 
 if not os.path.exists(scriptDir): os.makedirs(scriptDir)
 
-
+# Create the swif2 workflow before submitting jobs
+print("Creating workflow: %s" % workflow)
+call("swif2 create %s" % workflow, shell=True)
+print("")
 
 # Filter to valid files first (matching the regex)
 validFiles = []

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os
+import sys, os
 import ROOT
 import subprocess
 ROOT.gROOT.SetBatch(True)
@@ -7,6 +7,9 @@ ROOT.gROOT.SetBatch(True)
 # Bring in FSRoot
 from pyamptools import atiSetup
 atiSetup.setup(globals(), use_fsroot=True)
+
+# path to shared libraries
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "libraries"))
 
 NT = "ntFSGlueX_100000000_1100"
 
@@ -16,15 +19,23 @@ FND45  = "/volatile/halld/home/dbarton/pipkslamb/data/sp18fa18sp20/tree_pipkslam
 FND90  = "/volatile/halld/home/dbarton/pipkslamb/data/sp18fa18sp20/tree_pipkslamb__B4_M16_M18_FSFlat_sum_PERP_90_sp18fa18sp20_40856_73266.root"
 FND135 = "/volatile/halld/home/dbarton/pipkslamb/data/sp18fa18sp20/tree_pipkslamb__B4_M16_M18_FSFlat_sum_PARA_135_sp18fa18sp20_40856_73266.root"
 
-FND_MC_sp18 = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/phaseSpace20260630_500M_wTHROWN/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum_40856_42559.root"
-FND_MC_fa18 = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/phaseSpace20260630_500M_wTHROWN/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum_50685_51768.root"
-# this is ACTUALLY fall 2018 (until spring 2020 finishes generating) 7/14/2026.
-FND_MC_sp20 = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/phaseSpace20260630_500M_wTHROWN/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum_50685_51768.root"
+# FND_MC_sp18 = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/phaseSpace20260630_500M_wTHROWN/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum_40856_42559.root"
+# FND_MC_fa18 = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/phaseSpace20260630_500M_wTHROWN/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum_50685_51768.root"
+# # this is ACTUALLY fall 2018 (until spring 2020 finishes generating) 7/14/2026.
+# FND_MC_sp20 = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/phaseSpace20260630_500M_wTHROWN/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum_50685_51768.root"
 
-FND_THROWN_sp18 = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/phaseSpace20260630_500M_wTHROWN/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum_40856_42559.root"
-FND_THROWN_fa18 = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/phaseSpace20260630_500M_wTHROWN/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum_50685_51768.root"
-# this is ACTUALLY fall 2018 (until spring 2020 finishes generating) 7/14/2026.
-FND_THROWN_sp20 = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/phaseSpace20260630_500M_wTHROWN/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum_50685_51768.root"
+# FND_THROWN_sp18 = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/phaseSpace20260630_500M_wTHROWN/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum_40856_42559.root"
+# FND_THROWN_fa18 = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/phaseSpace20260630_500M_wTHROWN/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum_50685_51768.root"
+# # this is ACTUALLY fall 2018 (until spring 2020 finishes generating) 7/14/2026.
+# FND_THROWN_sp20 = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/phaseSpace20260630_500M_wTHROWN/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum_50685_51768.root"
+
+FND_MC_sp18 = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS08192026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root"
+FND_MC_fa18 = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS08192026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSFlat_sum.root"
+FND_MC_sp20 = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS08192026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root"
+
+FND_THROWN_sp18 = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS08192026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root"
+FND_THROWN_fa18 = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS08192026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_FSFlat_sum.root"
+FND_THROWN_sp20 = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS08192026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root"
 
 
 # =========================================================
@@ -49,7 +60,7 @@ baseDir = "/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/"
 # guaranteeing the cut expressions are identical across both workflows.
 # =========================================================
 
-from libraries.cuts_kStar import (  # noqa: I001
+from cuts_kStar import (  # noqa: I001
     ALL_T_BINS, EVENT_SELECTION_T_BINS,
     setup, setup_genmc,
     generalCuts_eventSelection, thrownCuts_eventSelection,
@@ -302,13 +313,13 @@ def skim_K892_genmc():
 
 
 def skim_K892():
-    skim_DATA_EVENT_SELECTION_SKIMS()
-    skim_MONTE_CARLO_EVENT_SELECTION_SKIMS()
-    skim_THROWN_MC_EVENT_SELECTION_SKIMS()
-    skim_DATA_KPI_SYSTEM_SKIMS()
-    skim_K892_data_GENERAL_SKIMS()
+    # skim_DATA_EVENT_SELECTION_SKIMS()
+    # skim_MONTE_CARLO_EVENT_SELECTION_SKIMS()
+    # skim_THROWN_MC_EVENT_SELECTION_SKIMS()
+    # skim_DATA_KPI_SYSTEM_SKIMS()
+    # skim_K892_data_GENERAL_SKIMS()
     skim_K892_accmc_GENERAL_SKIMS()
-    skim_K892_data_SIG_BKGND_SKIMS()
+    # skim_K892_data_SIG_BKGND_SKIMS()
     skim_K892_accmc()
     skim_K892_genmc()
 

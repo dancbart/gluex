@@ -1,0 +1,31 @@
+#!/bin/bash
+
+if [ $# -lt 2 ]; then
+    echo "Usage: runHADD_MC <directory> <basename>"
+    echo "Example: runHADD_MC /volatile/.../flatten/ tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat"
+    exit 1
+fi
+
+DIR=$1
+BASE=$2
+CHUNKSIZE=500
+
+cd $DIR
+
+# Stage 1: hadd in chunks of 500
+i=0
+ls ${BASE}_*.root | split -l $CHUNKSIZE - chunk_filelist_
+
+for filelist in chunk_filelist_*; do
+    hadd ${BASE}_chunk$(printf "%04d" $i).root $(cat $filelist) >& /dev/null
+    echo "Hadded chunk $i"
+    ((i++))
+done
+rm chunk_filelist_*
+
+# Stage 2: hadd the chunks into final output
+hadd ${BASE}_sum.root ${BASE}_chunk*.root >& runHADD_MC_OUT.txt
+echo "Done: ${BASE}_sum.root"
+
+# Cleanup chunks
+rm ${BASE}_chunk*.root

@@ -1,0 +1,15 @@
+#!/bin/tcsh -f
+
+if ($#argv < 4) then
+    echo "Usage: runHADD <minrun> <maxrun> <directory> <basename>"
+    echo "Example: runHADD 40856 42559 <directrory containing trees>/ tree_pipkslamb__B4_M16_M18"
+    exit 1
+endif
+
+set MINRUN = $1
+set MAXRUN = $2
+set DIR    = $3
+set BASE   = $4
+
+cd /work/halld/home/dbarton/gluex/scripts
+python3 /work/halld/home/dbarton/gluex/scripts/hadd_rcdb_mc.py $MINRUN $MAXRUN $DIR $BASE >& $DIR/runHADD_OUT.txt

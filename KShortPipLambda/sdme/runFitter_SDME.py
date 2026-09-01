@@ -4,7 +4,7 @@ import os
 from subprocess import call
 from datetime import datetime
 
-workflow      = "FIT_pipkslamb_TwoPiAngles_500Mx3_MC"
+workflow      = "FIT_pipkslamb_SDME"
 timestamp     = datetime.today().strftime("%Y%m%d_%H%M%S")  # e.g. 20260601_143022
 
 baseDir       = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/"
@@ -16,7 +16,7 @@ num_fits      = 5
 account       = "halld"
 partition     = "production"
 disk_space    = 6
-mem_requested = 1
+mem_requested = 3
 time_limit    = 5
 NCORES        = "1" # change to 4 (or higher?) if script uses multi-threading.
 
