@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+set -e
+
+# ----- USER INPUT -----
+if [ -z "$1" ]; then
+	echo "Usage:"
+	echo "  makeFitPlots path/to/fitFolder1/ [path/to/fitFolder2/ ...]"
+	exit 1
+fi
+
+# Resolve positional folder args to absolute paths against your real cwd,
+# so relative names work regardless of where the container cd's to.
+resolved=()
+for a in "$@"; do
+  if [[ "$a" == -* ]]; then
+    resolved+=("$a")
+  else
+    resolved+=("$(readlink -f -- "$a")")
+  fi
+done
+set -- "${resolved[@]}"
+
+SIF="/work/halld/home/dbarton/software/PyAmpTools/pyamptools.sif"
+BIND="/volatile/halld/home/dbarton,/cache/halld/home/dbarton,/work/halld/home/dbarton/gluex,/w/halld-scshelf2101/home/dbarton/gluex,/scratch"
+WORKDIR="/work/halld/home/dbarton/gluex/KShortPipLambda/sdme"
+# Output PDF is fixed (matches plot_sdme_fits.py default)
+PDF="/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/plots/sdme_fit_plots.pdf"
+
+apptainer exec --contain --writable-tmpfs -B "$BIND" --env BASH_ENV=/dev/null "$SIF" \
+  bash -lc "cd '$WORKDIR'; source /etc/bash.bashrc; python3 plot_sdme_fits.py $(printf '%q ' "$@"); sync; sleep 0.1"
+
+# # Open the PDF on the host, fully detached
+# ( command -v xdg-open >/dev/null && nohup xdg-open "$PDF" >/dev/null 2>&1 ) \
+#  || ( command -v gio >/dev/null && nohup gio open "$PDF" >/dev/null 2>&1 ) \
+#  || nohup evince "$PDF" >/dev/null 2>&1 &
+
+
+# exit 0
+
+# Open PDF after container exits
+if [[ -f "$PDF" ]]; then
+  # If running inside VS Code terminal, open in VS Code UI
+  if [[ "${TERM_PROGRAM:-}" == "vscode" ]] && command -v code >/dev/null 2>&1; then
+    code -r "$PDF" >/dev/null 2>&1 || true
+  # Otherwise try OS openers
+  elif command -v xdg-open >/dev/null 2>&1; then
+    xdg-open "$PDF" >/dev/null 2>&1 &
+  elif command -v open >/dev/null 2>&1; then
+    open "$PDF" &
+  else
+    echo "PDF created at: $PDF"
+  fi
+else
+  echo "ERROR: PDF not found: $PDF"
+  exit 1
+fi
