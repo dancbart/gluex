@@ -18,7 +18,7 @@ FITFILE=$(realpath "$FITFILE")
 baseDir="/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees"
 outDir="${baseDir}/${OUTFOLDER}"
 
-PLOTTER="/work/halld/home/dbarton/software/halld_sim/src/.Linux_Alma9-x86_64-gcc11.5.0/programs/AmplitudeAnalysis/TwoPsPlotter/TwoPsPlotter"
+PLOTTER="TwoPsPlotter"
 
 echo "Creating output directory:"
 echo "  $outDir"

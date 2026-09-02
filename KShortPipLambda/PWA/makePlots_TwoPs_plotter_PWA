@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-SIF="/w/halld-scshelf2101/lng/WORK/PyAmpTools9/pyamptools.sif"
+# SIF="/w/halld-scshelf2101/lng/WORK/PyAmpTools9/pyamptools.sif"
+SIF="/work/halld/home/dbarton/software/PyAmpTools/pyamptools.sif"
 BIND="/volatile/halld/home/dbarton,/cache/halld/home/dbarton,/work/halld/home/dbarton/gluex,/scratch"
 WORKDIR="/work/halld/home/dbarton/gluex/KShortPipLambda/PWA"
 PDF="$WORKDIR/plots/PWA_plots.pdf"

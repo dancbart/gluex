@@ -39,7 +39,7 @@ for fitNumber in range(1, num_fits + 1):
         f.write('echo "Start time: $(date +\'%Y-%m-%d %H:%M:%S\')"\n')
         f.write("echo \"\"\n\n")
         f.write("cd %s\n\n" % outputDir)
-        f.write("/work/halld/home/dbarton/software/halld_sim/src/.Linux_Alma9-x86_64-gcc11.5.0/programs/AmplitudeAnalysis/fit/fit -r %d -c %s\n\n" % (fitNumber, configFile))
+        f.write("fit -r %d -c %s\n\n" % (fitNumber, configFile))
         f.write("echo \"\"\n")
         f.write('echo "End time:   $(date +\'%Y-%m-%d %H:%M:%S\')"\n')
         f.write("echo \"=== Fit %d complete ===\"\n" % fitNumber)

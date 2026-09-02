@@ -14,7 +14,7 @@ fi
 baseDir="/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees"
 outDir="${baseDir}/${OUTFOLDER}"
 
-PLOTTER="/work/halld/home/dbarton/software/halld_sim/src/.Linux_Alma9-x86_64-gcc11.5.0/programs/AmplitudeAnalysis/kpi_plotter/kpi_plotter"
+PLOTTER="kpi_plotter"
 
 echo "Creating output directory:"
 echo "  $outDir"
