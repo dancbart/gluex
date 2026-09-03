@@ -40,17 +40,6 @@ ROOT.gROOT.SetBatch(True)
 # Parameter names follow rho<m><m'><alpha>.
 #   (param name, y-axis LaTeX label, SCHC+NPE line, paper ymin, paper ymax)
 # -----------------------------------------------------------------------------
-# SDME_PANELS = [
-#     ("rho000",  "#rho^{0}_{00}",     0.0,  -0.12,  0.13),
-#     ("rho100",  "Re#rho^{0}_{10}",   0.0,  -0.12,  0.13),
-#     ("rho1m10", "#rho^{0}_{1-1}",    0.0,  -0.12,  0.13),
-#     ("rho111",  "#rho^{1}_{11}",     0.0,  -0.12,  0.13),
-#     ("rho001",  "#rho^{1}_{00}",     0.0,  -0.12,  0.13),
-#     ("rho101",  "Re#rho^{1}_{10}",   0.0,  -0.12,  0.13),
-#     ("rho1m11", "#rho^{1}_{1-1}",    0.5,   0.33,  0.58),
-#     ("rho102",  "Im#rho^{2}_{10}",   0.0,  -0.12,  0.13),
-#     ("rho1m12", "Im#rho^{2}_{1-1}", -0.5,  -0.57,  0.37),
-# ]
 
 SDME_PANELS = [
     ("rho000",  "#rho^{0}_{00}",     0.0,  -1.00,  1.00),
@@ -86,63 +75,6 @@ def load_amptools():
             "ROOT.FitResults is not available. Load the AmpTools libraries first "
             "(e.g. via 'source setup_gluex.csh' and atiSetup)."
         )
-
-
-# def gluex_style():
-#     style = ROOT.TStyle("GlueX_SDME", "GlueX SDME style")
-#     style.SetCanvasColor(0)
-#     style.SetPadColor(0)
-#     style.SetOptStat(0)
-#     style.SetOptTitle(0)
-#     style.SetLabelFont(42, "xyz")
-#     style.SetTitleFont(42, "xyz")
-#     style.SetHistLineWidth(2)
-#     ROOT.gROOT.SetStyle("GlueX_SDME")
-#     ROOT.gROOT.ForceStyle()
-
-def gluex_style():
-    style = ROOT.TStyle("GlueX_SDME", "GlueX SDME style")
-
-    style.SetCanvasBorderMode(0)
-    style.SetPadBorderMode(0)
-    style.SetPadColor(0)
-    style.SetCanvasColor(0)
-    style.SetTitleColor(0)
-    style.SetStatColor(0)
-
-    style.SetCanvasDefW(900)
-    style.SetCanvasDefH(800)
-
-    style.SetPadBottomMargin(0.16)
-    style.SetPadLeftMargin(0.16)
-    style.SetPadTopMargin(0.05)
-    style.SetPadRightMargin(0.06)
-
-    style.SetStripDecimals(0)
-    style.SetLabelSize(0.045, "xyz")
-    style.SetTitleSize(0.055, "xyz")
-    style.SetTitleFont(42, "xyz")
-    style.SetLabelFont(42, "xyz")
-    style.SetTitleOffset(1.25, "y")
-    style.SetTitleOffset(1.05, "x")
-
-    # style.SetGridColor(ROOT.kGray)      # or kGray+1 for slightly darker
-    # style.SetGridStyle(1)               # solid; use 3 for dotted
-    # style.SetGridWidth(1)
-    # style.SetPadGridX(True)
-    # style.SetPadGridY(True)
-
-    style.SetEndErrorSize(4)   # error-bar end-cap length (px); default ~2 is barely visible
-
-    style.SetOptStat(0)
-    style.SetOptTitle(0)
-    style.SetHistLineWidth(1)
-    style.SetFrameLineWidth(1)   # the box around each pad; default is often 2-3
-    style.SetHistFillColor(920)
-    style.SetPalette(ROOT.kViridis)
-
-    ROOT.gROOT.SetStyle("GlueX_SDME")
-    ROOT.gROOT.ForceStyle()
 
 # helper function to draw a grid of lines at the given x and y ticks, since ROOT's built-in grid doesn't work.
 def draw_grid(pad, tmin, tmax, ymin, ymax, xticks, yticks):
@@ -251,6 +183,8 @@ def sdme_vs_t_plots(fit_bins, out_path="plots/sdme_fit_plots.pdf",
 
     par_names = [p[0] for p in SDME_PANELS]
 
+    ROOT.gStyle.SetEndErrorSize(2)   # error-bar end-cap length; 0 = no caps
+
     t_centers, t_halfwidths = [], []
     values = {name: [] for name in par_names}
     errors = {name: [] for name in par_names}
@@ -266,7 +200,7 @@ def sdme_vs_t_plots(fit_bins, out_path="plots/sdme_fit_plots.pdf",
     if n == 0:
         raise ValueError("No fit bins to plot.")
 
-    c = ROOT.TCanvas("c_sdme_vs_t", "SDME vs -t", 1100, 920)  # was 850; taller for the legend strip
+    c = ROOT.TCanvas("c_sdme_vs_t", "SDME vs -t", 1300, 920)
 
     # Top strip for the legend (top 8% of the canvas)
     leg_pad = ROOT.TPad("leg_pad", "leg_pad", 0.0, 0.92, 1.0, 1.0)
@@ -286,20 +220,6 @@ def sdme_vs_t_plots(fit_bins, out_path="plots/sdme_fit_plots.pdf",
         pad.SetRightMargin(0.04)
         pad.SetBottomMargin(0.14)
         pad.SetTopMargin(0.13)
-        # pad.SetGridx(True)
-        # pad.SetGridy(True)
-        # pad.SetGridColor(ROOT.kGray)
-        # pad.SetGridStyle(1)   # 1 = solid
-        # pad.SetGridWidth(1)
-
-        # use to let y-axis auto-range to your data, but then the panels don't line up like the reference figure
-        # if fixed_ranges:
-        #     ymin, ymax = pymin, pymax
-        # else:
-        #     lo = min(min(v - e for v, e in zip(values[name], errors[name])), schc)
-        #     hi = max(max(v + e for v, e in zip(values[name], errors[name])), schc)
-        #     pad_y = max(0.15 * (hi - lo), 0.02)
-        #     ymin, ymax = lo - pad_y, hi + pad_y
 
         ymin, ymax = -1.0, 1.0
 
@@ -325,16 +245,6 @@ def sdme_vs_t_plots(fit_bins, out_path="plots/sdme_fit_plots.pdf",
         frame.GetXaxis().ChangeLabel(1,  -1,-1,-1,-1,-1, " ")
         frame.GetXaxis().ChangeLabel(-1, -1,-1,-1,-1,-1, " ")
 
-        # pad.Update()
-        # xmid = tmin + 0.5 * (tmax - tmin)
-        # ytop = ymax - 0.08 * (ymax - ymin)
-        # lab = ROOT.TLatex(xmid, ytop, ylabel)
-        # lab.SetTextFont(42)
-        # lab.SetTextSize(0.075)
-        # lab.SetTextAlign(23)   # horizontally centered, top-aligned
-        # lab.Draw()
-        # _KEEP.append(lab)
-
         lab = ROOT.TLatex()
         lab.SetNDC(True)                 # coordinates are now 0-1 across the pad
         lab.SetTextFont(42)
@@ -359,23 +269,13 @@ def sdme_vs_t_plots(fit_bins, out_path="plots/sdme_fit_plots.pdf",
         gr.SetMarkerSize(1.0)
         gr.SetMarkerColor(ROOT.kBlack)
         gr.SetLineColor(ROOT.kBlack)
-        gr.SetLineWidth(2)
+        gr.SetLineWidth(1)
         gr.Draw("P same")
 
         # pad.SetFrameLineWidth(1)
         pad.RedrawAxis()   # redraw the frame box/ticks on top of the grid
 
         _KEEP.extend([frame, line, gr])
-
-        # if i == 2:  # legend in the top-right panel, like the reference figure
-        #     leg = ROOT.TLegend(0.42, 0.70, 0.94, 0.94)
-        #     leg.SetBorderSize(1)
-        #     leg.SetFillStyle(0)
-        #     leg.SetTextSize(0.055)
-        #     leg.AddEntry(gr, "GlueX", "pe")
-        #     # leg.AddEntry(line, "SCHC + NPE", "l")
-        #     leg.Draw()
-        #     _KEEP.append(leg)
 
     leg_pad.cd()
     leg = ROOT.TLegend(0.30, 0.05, 0.70, 0.95)  # fills the strip vertically
@@ -427,7 +327,6 @@ def main():
             sys.exit(f"ERROR: not a directory: {d}")
 
     load_amptools()
-    # gluex_style()
 
     t_override = tuple(args.t_range) if args.t_range else None
     bins, skipped = [], []
