@@ -59,9 +59,9 @@ SDME_PANELS = [
     ("rho111",  "#rho^{1}_{11}",     0.0,  -1.00,  1.00),
     ("rho001",  "#rho^{1}_{00}",     0.0,  -1.00,  1.00),
     ("rho101",  "Re#rho^{1}_{10}",   0.0,  -1.00,  1.00),
-    ("rho1m11", "#rho^{1}_{1-1}",    0.5,  -1.00,  1.00),
+    ("rho1m11", "#rho^{1}_{1-1}",    0.0,  -1.00,  1.00),
     ("rho102",  "Im#rho^{2}_{10}",   0.0,  -1.00,  1.00),
-    ("rho1m12", "Im#rho^{2}_{1-1}", -0.5,  -1.00,  1.00),
+    ("rho1m12", "Im#rho^{2}_{1-1}",  0.0,  -1.00,  1.00),
 ]
 
 # filename token: t<2 digits><2 digits>, each read as tenths of GeV^2
@@ -126,14 +126,35 @@ def gluex_style():
     style.SetTitleOffset(1.25, "y")
     style.SetTitleOffset(1.05, "x")
 
+    # style.SetGridColor(ROOT.kGray)      # or kGray+1 for slightly darker
+    # style.SetGridStyle(1)               # solid; use 3 for dotted
+    # style.SetGridWidth(1)
+    # style.SetPadGridX(True)
+    # style.SetPadGridY(True)
+
+    style.SetEndErrorSize(4)   # error-bar end-cap length (px); default ~2 is barely visible
+
     style.SetOptStat(0)
     style.SetOptTitle(0)
-    style.SetHistLineWidth(2)
+    style.SetHistLineWidth(1)
+    style.SetFrameLineWidth(1)   # the box around each pad; default is often 2-3
     style.SetHistFillColor(920)
     style.SetPalette(ROOT.kViridis)
 
     ROOT.gROOT.SetStyle("GlueX_SDME")
     ROOT.gROOT.ForceStyle()
+
+# helper function to draw a grid of lines at the given x and y ticks, since ROOT's built-in grid doesn't work.
+def draw_grid(pad, tmin, tmax, ymin, ymax, xticks, yticks):
+    pad.cd()
+    for x in xticks:
+        l = ROOT.TLine(x, ymin, x, ymax)
+        l.SetLineColor(ROOT.kGray); l.SetLineStyle(1); l.SetLineWidth(1)
+        l.Draw(); _KEEP.append(l)
+    for y in yticks:
+        l = ROOT.TLine(tmin, y, tmax, y)
+        l.SetLineColor(ROOT.kGray); l.SetLineStyle(1); l.SetLineWidth(1)
+        l.Draw(); _KEEP.append(l)
 
 
 # -----------------------------------------------------------------------------
@@ -217,7 +238,7 @@ def read_sdmes_from_fit(fit_path, par_names):
 # Plotting
 # -----------------------------------------------------------------------------
 def sdme_vs_t_plots(fit_bins, out_path="plots/sdme_fit_plots.pdf",
-                    tmin=0.0, tmax=2.2, fixed_ranges=False):
+                    tmin=0.0, tmax=2.5, fixed_ranges=False):
     """
     fit_bins: list of (fit_path, t_low, t_high). Point drawn at bin center with
               a horizontal bar over [t_low, t_high].
@@ -245,37 +266,88 @@ def sdme_vs_t_plots(fit_bins, out_path="plots/sdme_fit_plots.pdf",
     if n == 0:
         raise ValueError("No fit bins to plot.")
 
-    c = ROOT.TCanvas("c_sdme_vs_t", "SDME vs -t", 1500, 1400)
-    c.Divide(3, 3, 0.001, 0.001)
+    c = ROOT.TCanvas("c_sdme_vs_t", "SDME vs -t", 1100, 920)  # was 850; taller for the legend strip
+
+    # Top strip for the legend (top 8% of the canvas)
+    leg_pad = ROOT.TPad("leg_pad", "leg_pad", 0.0, 0.92, 1.0, 1.0)
+    leg_pad.SetFillStyle(0); leg_pad.SetBorderMode(0)
+    leg_pad.Draw()
+
+    # Bottom pad holds the 3x3 grid (lower 92%)
+    grid_pad = ROOT.TPad("grid_pad", "grid_pad", 0.0, 0.0, 1.0, 0.92)
+    grid_pad.SetFillStyle(0); grid_pad.SetBorderMode(0)
+    grid_pad.Draw()
+    grid_pad.Divide(3, 3, 0.001, 0.001)
+    _KEEP.extend([leg_pad, grid_pad])
 
     for i, (name, ylabel, schc, pymin, pymax) in enumerate(SDME_PANELS):
-        pad = c.cd(i + 1)
+        pad = grid_pad.cd(i + 1)   # was c.cd(i + 1)
         pad.SetLeftMargin(0.17)
         pad.SetRightMargin(0.04)
         pad.SetBottomMargin(0.14)
-        pad.SetTopMargin(0.04)
+        pad.SetTopMargin(0.13)
+        # pad.SetGridx(True)
+        # pad.SetGridy(True)
+        # pad.SetGridColor(ROOT.kGray)
+        # pad.SetGridStyle(1)   # 1 = solid
+        # pad.SetGridWidth(1)
 
-        if fixed_ranges:
-            ymin, ymax = pymin, pymax
-        else:
-            lo = min(min(v - e for v, e in zip(values[name], errors[name])), schc)
-            hi = max(max(v + e for v, e in zip(values[name], errors[name])), schc)
-            pad_y = max(0.15 * (hi - lo), 0.02)
-            ymin, ymax = lo - pad_y, hi + pad_y
+        # use to let y-axis auto-range to your data, but then the panels don't line up like the reference figure
+        # if fixed_ranges:
+        #     ymin, ymax = pymin, pymax
+        # else:
+        #     lo = min(min(v - e for v, e in zip(values[name], errors[name])), schc)
+        #     hi = max(max(v + e for v, e in zip(values[name], errors[name])), schc)
+        #     pad_y = max(0.15 * (hi - lo), 0.02)
+        #     ymin, ymax = lo - pad_y, hi + pad_y
+
+        ymin, ymax = -1.0, 1.0
 
         frame = pad.DrawFrame(tmin, ymin, tmax, ymax)
-        frame.GetXaxis().SetTitle("#minus t (GeV^{2}/#it{c}^{2})")
-        frame.GetYaxis().SetTitle(ylabel)
+        frame.SetLineWidth(1)
+        frame.GetXaxis().SetTitle("#minus t (GeV^{2})")
+        frame.GetYaxis().SetTitle("") # was SetTitle(ylabel)
         frame.GetXaxis().SetTitleSize(0.06)
         frame.GetYaxis().SetTitleSize(0.06)
         frame.GetXaxis().SetLabelSize(0.05)
         frame.GetYaxis().SetLabelSize(0.05)
         frame.GetYaxis().SetTitleOffset(1.25)
+        frame.GetYaxis().SetNdivisions(-4)   # negative = "optimize off", use exactly N
+        frame.GetXaxis().SetNdivisions(408)
         frame.GetXaxis().SetTitleOffset(1.00)
-        frame.GetXaxis().SetNdivisions(510)
+        draw_grid(pad, tmin, tmax, ymin, ymax,
+                  xticks=[0.5, 1.0, 1.5, 2.0],
+                  yticks=[-0.5, 0.0, 0.5])
 
+        # to drop the outer tick labels, but keep the ticks.
+        frame.GetYaxis().ChangeLabel(1,  -1,-1,-1,-1,-1, " ")
+        frame.GetYaxis().ChangeLabel(-1, -1,-1,-1,-1,-1, " ")
+        frame.GetXaxis().ChangeLabel(1,  -1,-1,-1,-1,-1, " ")
+        frame.GetXaxis().ChangeLabel(-1, -1,-1,-1,-1,-1, " ")
+
+        # pad.Update()
+        # xmid = tmin + 0.5 * (tmax - tmin)
+        # ytop = ymax - 0.08 * (ymax - ymin)
+        # lab = ROOT.TLatex(xmid, ytop, ylabel)
+        # lab.SetTextFont(42)
+        # lab.SetTextSize(0.075)
+        # lab.SetTextAlign(23)   # horizontally centered, top-aligned
+        # lab.Draw()
+        # _KEEP.append(lab)
+
+        lab = ROOT.TLatex()
+        lab.SetNDC(True)                 # coordinates are now 0-1 across the pad
+        lab.SetTextFont(42)
+        lab.SetTextSize(0.075)
+        lab.SetTextAlign(23)             # centered horizontally, top-aligned
+        # x = center of the plotting area (between the L/R margins); y just above the frame
+        xmid = 0.17 + 0.5 * (1.0 - 0.17 - 0.04)
+        lab.DrawLatex(xmid, 0.985, ylabel)
+        _KEEP.append(lab)
+
+        # Draw reference line (currently at 0, but could be nonzero for rho^1_{1-1} and Im rho^2_{1-1} if SCHC is valid for K*, as it is for rho(770))
         line = ROOT.TLine(tmin, schc, tmax, schc)
-        line.SetLineColor(ROOT.kBlack)
+        line.SetLineColor(ROOT.kGray + 2)
         line.SetLineWidth(1)
         line.Draw()
 
@@ -285,28 +357,41 @@ def sdme_vs_t_plots(fit_bins, out_path="plots/sdme_fit_plots.pdf",
             gr.SetPointError(j, t_halfwidths[j], errors[name][j])
         gr.SetMarkerStyle(20)
         gr.SetMarkerSize(1.0)
-        gr.SetMarkerColor(ROOT.kRed + 1)
-        gr.SetLineColor(ROOT.kRed + 1)
+        gr.SetMarkerColor(ROOT.kBlack)
+        gr.SetLineColor(ROOT.kBlack)
         gr.SetLineWidth(2)
         gr.Draw("P same")
 
+        # pad.SetFrameLineWidth(1)
+        pad.RedrawAxis()   # redraw the frame box/ticks on top of the grid
+
         _KEEP.extend([frame, line, gr])
 
-        if i == 2:  # legend in the top-right panel, like the reference figure
-            leg = ROOT.TLegend(0.42, 0.70, 0.94, 0.94)
-            leg.SetBorderSize(1)
-            leg.SetFillStyle(0)
-            leg.SetTextSize(0.055)
-            leg.AddEntry(gr, "GlueX", "pe")
-            leg.AddEntry(line, "SCHC + NPE", "l")
-            leg.Draw()
-            _KEEP.append(leg)
+        # if i == 2:  # legend in the top-right panel, like the reference figure
+        #     leg = ROOT.TLegend(0.42, 0.70, 0.94, 0.94)
+        #     leg.SetBorderSize(1)
+        #     leg.SetFillStyle(0)
+        #     leg.SetTextSize(0.055)
+        #     leg.AddEntry(gr, "GlueX", "pe")
+        #     # leg.AddEntry(line, "SCHC + NPE", "l")
+        #     leg.Draw()
+        #     _KEEP.append(leg)
+
+    leg_pad.cd()
+    leg = ROOT.TLegend(0.30, 0.05, 0.70, 0.95)  # fills the strip vertically
+    leg.SetBorderSize(0)
+    leg.SetFillStyle(0)
+    leg.SetTextSize(0.3)          # strip is short, so text size is large in its NDC
+    leg.AddEntry(gr, "Schilling SDME fit", "pe")
+    leg.Draw()
+    _KEEP.append(leg)
+
+    c.Update()
 
     c.Update()
     c.Print(out_path)
     if out_path.lower().endswith(".pdf"):
-        c.Print(out_path[:-4])
-        # c.Print(out_path[:-4] + ".png")
+        c.Print(out_path)
     _KEEP.append(c)
     return c
 
@@ -342,7 +427,7 @@ def main():
             sys.exit(f"ERROR: not a directory: {d}")
 
     load_amptools()
-    gluex_style()
+    # gluex_style()
 
     t_override = tuple(args.t_range) if args.t_range else None
     bins, skipped = [], []
