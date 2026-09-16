@@ -55,19 +55,18 @@ PiPlus1        = "3"
 # =========================================================
 
 EVENT_SELECTION_T_BINS = [
-    ("tEvSel_0120", "tRange_evSel_0120", "tRangeTHROWN_evSel_0120", 0.1, 2.0),
+    ("tEvSel_0125", "tRange_evSel_0125", "tRangeTHROWN_evSel_0125", 0.1, 2.5),
     ("tEvSel_0110", "tRange_evSel_0110", "tRangeTHROWN_evSel_0110", 0.1, 1.0),
 ]
 
 ALL_T_BINS = [
-    ("t0120", "tRange0120", "tRangeTHROWN0120", 0.1, 2.0),
+    ("t0125", "tRange0125", "tRangeTHROWN0125", 0.1, 2.5),
     ("t0103", "tRange0103", "tRangeTHROWN0103", 0.1, 0.3),
     ("t0305", "tRange0305", "tRangeTHROWN0305", 0.3, 0.5),
     ("t0507", "tRange0507", "tRangeTHROWN0507", 0.5, 0.7),
     ("t0710", "tRange0710", "tRangeTHROWN0710", 0.7, 1.0),
-    ("t1013", "tRange1013", "tRangeTHROWN1013", 1.0, 1.3),
-    ("t1316", "tRange1316", "tRangeTHROWN1316", 1.3, 1.6),
-    ("t1620", "tRange1620", "tRangeTHROWN1620", 1.6, 2.0),
+    ("t1015", "tRange1015", "tRangeTHROWN1015", 1.0, 1.5),
+    ("t1525", "tRange1525", "tRangeTHROWN1525", 1.5, 2.5),
 ]
 
 
@@ -104,33 +103,33 @@ def setup(t_bins, event_selection_t_bins):
             f"abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))<{hi}")
 
     # --- all other cuts ---
-    ROOT.FSCut.defineCut("rf", "abs(RFDeltaT)>2.0", "abs(RFDeltaT)>6.0", 0.1667)
+    ROOT.FSCut.defineCut("rf", "abs(RFDeltaT)>2.004", "abs(RFDeltaT)>6.0", 0.1667)
     ROOT.FSCut.defineCut("chi2DOF", "Chi2DOF<5.0")
     ROOT.FSCut.defineCut("unusedE", "EnUnusedSh<0.1")
-    ROOT.FSCut.defineCut("unusedTracks", "NumUnusedTracks<1")
+    ROOT.FSCut.defineCut("unusedTracks", "NumUnusedTracks < 1")
     # Spring 2017 - Fall 2018: runs 30,000 - 59,999.  Spring 2020 - Spring 2023: runs 70,000 - 122,000. Spring 2025: runs 130,000 - 139,999
     ROOT.FSCut.defineCut(
         "coherentPeak",
         "("
-        "(Run>=30000 && Run<=59999 && EnPB>8.2 && EnPB<8.8) ||"
+        "(Run>=30000 && Run<70000 && EnPB>8.2 && EnPB<8.8) ||"
         "(Run>=70000 && Run<=122000 && EnPB>8.0 && EnPB<8.6) ||"
         "(Run>=130000 && Run<=139999 && EnPB>8.3 && EnPB<8.9)"
         ")")
     ROOT.FSCut.defineCut("flightLengthLambda", "VeeLP1>2.0")
     ROOT.FSCut.defineCut("flightLengthKShort", "VeeLP2>2.0")
-    ROOT.FSCut.defineCut("targetZ", "ProdVz>52.0 && ProdVz<78.0")
+    ROOT.FSCut.defineCut("targetZ", "ProdVz>51.2 && ProdVz<78.8")
     ROOT.FSCut.defineCut("KShort",
         f"abs(MASS({DecayingKShort})-0.4976)<0.03",
         f"(abs(MASS({DecayingKShort})-0.4976+0.0974)<0.015 || abs(MASS({DecayingKShort})-0.4976-0.1226)<0.015)",
         1.0)
     ROOT.FSCut.defineCut("Lambda",
-        f"abs(MASS({DecayingLambda})-1.119)<0.01375",
-        f"(abs(MASS({DecayingLambda})-1.119+0.032875)<0.006875 || abs(MASS({DecayingLambda})-1.119-0.032125)<0.006875)",
+        f"abs(MASS({DecayingLambda})-1.115) < 0.010",
+        f"(abs(MASS({DecayingLambda})-1.115 + 0.032875)<0.006875 || abs(MASS({DecayingLambda})-1.115 - 0.032125)<0.006875)",
         1.0)
     ROOT.FSCut.defineCut("selectKSTAR892",
         f"MASS({DecayingKShort},{PiPlus1})>0.80 && MASS({DecayingKShort},{PiPlus1})<1.00")
     ROOT.FSCut.defineCut("rejectSigma1385",
-        f"MASS({DecayingLambda},{PiPlus1})>2.00 && MASS({DecayingLambda},{PiPlus1})<4.0")
+        f"MASS({DecayingLambda},{PiPlus1})>2.00")
     # Outside Lambda window — used to check for non-Lambda K*'s and understand K* background
     ROOT.FSCut.defineCut("nonLambda", "MASS(1a,1b)>1.14 && MASS(1a,1b)<1.675")
 
@@ -187,7 +186,7 @@ thrownCuts_eventSelection  = "CUT(coherentPeakTHROWN,selectKSTAR892THROWN)"
 
 # ---------- USE FOR ROOFIT FITTING ONLY ---------- #
 # Usage: KPiSystemCuts.format(t_cut_name=t_cut_name)
-KPiSystemCuts         = "CUT(chi2DOF,unusedTracks,coherentPeak,targetZ,flightLengthKShort,flightLengthLambda,rejectSigma1385)"
+KPiSystemCuts         = "CUT(tRange0103,chi2DOF,unusedTracks,coherentPeak,targetZ,flightLengthKShort,flightLengthLambda,rejectSigma1385)"
 KPiSystemCuts_weights = "CUTWT(rf,KShort,Lambda)"
 
 # ----------- USE FOR AMPTOOLS FITTING ------------ #
