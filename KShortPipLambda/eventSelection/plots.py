@@ -725,6 +725,21 @@ def tRange(pdf_path):
     p["plot"].Modified()
     p["plot"].Update()                    # finalize range BEFORE the lines read it
 
+
+    # --- fit DATA t-slope (straight line on log-y == exponential) ---
+    t_fit_lo, t_fit_hi = 0.5, 2.5
+    fit_slope = ROOT.TF1("fit_tslope", "expo", t_fit_lo, t_fit_hi)
+    h1.Fit(fit_slope, "R0")          # R = use function range, 0 = don't auto-draw
+    keep(fit_slope)
+
+    fit_slope.SetLineColor(ROOT.kRed)
+    fit_slope.SetLineWidth(2)
+    fit_slope.Draw("same")
+
+    b_slope = fit_slope.GetParameter(1)      # exp([0] + [1]*x); [1] is the slope
+    b_err   = fit_slope.GetParError(1)
+
+
     draw_vertical_lines(h1, [0.1, 0.3, 0.5, 0.7, 1.0, 1.5, 2.5], color=ROOT.kGray + 1)
 
     if bggen:
@@ -740,8 +755,9 @@ def tRange(pdf_path):
         "#bf{t-bins used in analysis:}",
         legend_items=[
             (h1, f"Data (integral: {integral_data:.0f})", "pE1"),
-            (h2, f"MC (integral: {integral_MC:.0f}) --> {integral_MC_scaled:.0f} (scaled)", "f")
-            ],
+            (h2, f"MC (integral: {integral_MC:.0f}) --> {integral_MC_scaled:.0f} (scaled)", "f"),
+            (fit_slope, f"Data fit: slope = {b_slope:.2f} #pm {b_err:.2f}", "l"),
+        ],
         notes=[" 0.1 < -t < 0.3",
                " 0.3 < -t < 0.5",
                " 0.5 < -t < 0.7",
@@ -1421,7 +1437,7 @@ def massPlots_KShort_cutComparisons(pdf_path):
     # Styling
     # ------------------------------------------------------------
     hKShort0.SetXTitle("M(#pi^{+}#pi^{-}) [GeV/c^{2}]")
-    hKShort0.SetYTitle("Counts / 5 MeV")
+    hKShort0.SetYTitle("combos / 5 MeV")
     hKShort0.SetMinimum(0.0)
     hKShort0.SetLineColor(ROOT.kBlack)
     hKShort0.SetLineWidth(2)
@@ -1575,7 +1591,7 @@ def massPlots_KShort_flightLength(pdf_path):
     hData_FLon.SetFillColor(ROOT.kBlue -5)
     hData_FLoff.SetLineColor(ROOT.kBlack)
     hData_FLoff.SetXTitle("M(#pi^{+}#pi^{-}) [GeV/c^{2}]")
-    hData_FLoff.SetYTitle("Counts / 5 MeV")
+    hData_FLoff.SetYTitle("combos / 5 MeV")
     hData_FLoff.Draw("pE")
     hData_FLon.Draw("hist same")
 
@@ -1705,7 +1721,7 @@ def massPlots_KShort_flightLength(pdf_path):
 #     )
 
 #     hData_FLoff.SetXTitle("M(#pi^{+}#pi^{-}) [GeV/c^{2}]")
-#     hData_FLoff.SetYTitle("Counts / 5 MeV")
+#     hData_FLoff.SetYTitle("combos / 5 MeV")
 #     hData_FLoff.SetLineColor(ROOT.kBlack)
 
 #     hData_FLon.SetLineColor(ROOT.kBlack)
@@ -1793,7 +1809,7 @@ def massPlots_KShort_sideBands(pdf_path):
     hBkgNegative.Scale(-1.0)
 
     hData.SetXTitle("M(#pi^{+}#pi^{-}) [GeV/c^{2}]")
-    hData.SetYTitle("Counts / 5 MeV")
+    hData.SetYTitle("combos / 5 MeV")
     hData.SetMinimum(-1.2 * abs(hBkgNegative.GetMinimum()))
 
     hData.SetLineColor(ROOT.kBlue)
@@ -1895,7 +1911,7 @@ def massPlots_KShort_missingMass(pdf_path):
     hBkgNegative.Scale(-1.0)
 
     hData.SetXTitle("MM(#Lambda#pi^{+}) [GeV/c^{2}]")
-    hData.SetYTitle("Counts / 5 MeV")
+    hData.SetYTitle("combos / 5 MeV")
     hData.SetMinimum(-1.2 * abs(hBkgNegative.GetMinimum()))
 
     hData.SetLineColor(ROOT.kBlue)
@@ -1974,7 +1990,7 @@ def massPlots_KShort_FINAL_SELECTION(pdf_path):
     )
 
     hData.SetXTitle("M(#pi^{+}#pi^{-}) [GeV/c^{2}]")
-    hData.SetYTitle("Counts / 5 MeV")
+    hData.SetYTitle("combos / 5 MeV")
 
     hData.SetLineColor(ROOT.kBlue)
     hData.SetFillColor(ROOT.kBlue - 5)
@@ -2090,7 +2106,7 @@ def massPlots_Lambda_flightLength(pdf_path):
     hData_FLon.SetFillColor(ROOT.kBlue -5)
     hData_FLoff.SetLineColor(ROOT.kBlack)
     hData_FLoff.SetXTitle("M(p #pi^{-}) [GeV/c^{2}]")
-    hData_FLoff.SetYTitle("Counts / 2 MeV")
+    hData_FLoff.SetYTitle("combos / 2 MeV")
     hData_FLoff.Draw("pE")
     hData_FLon.Draw("hist same")
 
@@ -2233,7 +2249,7 @@ def massPlots_Lambda_sideBands(pdf_path):
     hBkgNegative.Scale(-1.0)
 
     hData.SetXTitle("M(p#pi^{-}) [GeV/c^{2}]")
-    hData.SetYTitle("Counts / 1 MeV")
+    hData.SetYTitle("combos / 1 MeV")
     hData.SetMinimum(-1.2 * abs(hBkgNegative.GetMinimum()))
 
     hData.SetLineColor(ROOT.kBlue)
@@ -2332,7 +2348,7 @@ def massPlots_Lambda_missingMass(pdf_path):
     hBkgNegative.Scale(-1.0)
 
     hData.SetXTitle("MM(K_{S}#pi^{+}) [GeV/c^{2}]")
-    hData.SetYTitle("Counts / 2 MeV")
+    hData.SetYTitle("combos / 2 MeV")
     hData.SetMinimum(-1.2 * abs(hBkgNegative.GetMinimum()))
 
     hData.SetLineColor(ROOT.kBlue)
@@ -2410,7 +2426,7 @@ def massPlots_Lambda_FINAL_SELECTION(pdf_path):
     )
 
     hData.SetXTitle("M(p #pi^{+}) [GeV/c^{2}]")
-    hData.SetYTitle("Counts / 1 MeV")
+    hData.SetYTitle("combos / 1 MeV")
 
     hData.SetLineColor(ROOT.kBlue)
     hData.SetFillColor(ROOT.kBlue - 5)
@@ -2506,7 +2522,7 @@ def deltaMassPlots_KShort(pdf_path):
     hBkgNegative.Scale(-1.0)
 
     hData.SetXTitle("M(K_{S}) - MM(#Lambda#pi^{+}) [GeV/c^{2}]")
-    hData.SetYTitle("Counts / 2.5 MeV")
+    hData.SetYTitle("combos / 2.5 MeV")
     hData.SetMinimum(-1.2 * abs(hBkgNegative.GetMinimum()))
     hData.GetXaxis().SetNdivisions(5, 5, 0, ROOT.kTRUE)
 
@@ -2604,7 +2620,7 @@ def deltaMassPlots_Lambda(pdf_path):
     hBkgNegative.Scale(-1.0)
 
     hData.SetXTitle("M(#Lambda) - MM(K_{S}#pi^{+}) [GeV/c^{2}]")
-    hData.SetYTitle("Counts / 2.5 MeV")
+    hData.SetYTitle("combos / 2.5 MeV")
     hData.SetMinimum(-1.2 * abs(hBkgNegative.GetMinimum()))
     hData.GetXaxis().SetNdivisions(5, 5, 0, ROOT.kTRUE)
 
@@ -2692,7 +2708,7 @@ def massPlots_lambdaPiBackground2D(pdf_path):
     yhi = h2.GetYaxis().GetXmax()
     xcut = 2.0
     cutLine = ROOT.TLine(xcut, ylo, xcut, yhi)
-    cutLine.SetLineColor(ROOT.kBlue)
+    cutLine.SetLineColor(ROOT.kRed)
     cutLine.SetLineWidth(2)
     cutLine.Draw("same")
     keep(cutLine)
@@ -2744,7 +2760,7 @@ def massPlots_lambdaPiBackground1D(pdf_path):
         f"CUT(tRange0103,flightLengthKShort,flightLengthLambda)*CUTWT({sidebandCuts})"
     )
     h1.SetXTitle("M(#Lambda#pi^{+}) [GeV/c^{2}]")
-    h1.SetYTitle("Counts")
+    h1.SetYTitle("combos")
     h1.SetMinimum(0.0)
     h1.SetLineColor(ROOT.kBlack)
     h1.Draw("pE")
@@ -2823,7 +2839,7 @@ def massPlots_KStar_flightLength(pdf_path):
 
 
     hSig1.SetXTitle("M(K_{S}#pi^{+}) [GeV/c^{2}]")
-    hSig1.SetYTitle("Counts / 40 MeV")
+    hSig1.SetYTitle("combos / 40 MeV")
 
     hSig1.SetLineColor(ROOT.kGray + 3)
     hSig1.SetFillColor(ROOT.kGray + 2)
@@ -3063,7 +3079,7 @@ def massPlots_KStar_unusedEnergyStudy(pdf_path):
     
 
     hSig1.SetXTitle("M(K_{S}#pi^{+}) [GeV/c^{2}]")
-    hSig1.SetYTitle("Counts / 40 MeV")
+    hSig1.SetYTitle("combos / 40 MeV")
 
     hSig1.SetLineColor(ROOT.kBlue)
     hSig1.SetFillColor(ROOT.kBlue -5)
@@ -3240,7 +3256,7 @@ def missingMassPlots_KStar_sidebands(pdf_path):
     hBkgNegative.Scale(-1.0)
 
     hData.SetXTitle("MM(#Lambda) [GeV/c^{2}]")
-    hData.SetYTitle("Counts / 40 MeV")
+    hData.SetYTitle("combos / 40 MeV")
     hData.SetMinimum(-1.2 * abs(hBkgNegative.GetMinimum()))
 
     hData.SetLineColor(ROOT.kBlue)
@@ -3330,7 +3346,7 @@ def massPlots_KStar_FINAL_SELECTION(pdf_path):
     hBkgNegative.Scale(-1.0)
 
     hData.SetXTitle("M(K_{S}#pi^{+}) [GeV/c^{2}]")
-    hData.SetYTitle("Counts / 25 MeV")
+    hData.SetYTitle("combos / 25 MeV")
     hData.SetMinimum(-1.2 * abs(hBkgNegative.GetMinimum()))
 
     hData.SetLineColor(ROOT.kBlue)
@@ -3409,7 +3425,7 @@ def massPlots_KStar_nonRelFIT(pdf_path):
     )
 
     hSig.SetXTitle("M(K_{S}#pi^{+}) [GeV/c^{2}]")
-    hSig.SetYTitle("Counts / 25 MeV")
+    hSig.SetYTitle("combos / 25 MeV")
     hSig.SetLineColor(ROOT.kBlack)
     hSig.Draw("pE")
 
@@ -3542,7 +3558,7 @@ def massPlots_KStar_relROOFIT(pdf_path):
     keep(h_Pwave)
 
     h_Pwave.SetXTitle("M(K_{S}#pi^{+}) [GeV/c^{2}]")
-    h_Pwave.SetYTitle("Counts / 25 MeV")
+    h_Pwave.SetYTitle("combos / 25 MeV")
     h_Pwave.SetLineColor(ROOT.kBlack)
     h_Pwave.SetMinimum(-1.2 * abs(h_Pwave.GetMinimum()))
     h_Pwave.Draw("pE")
@@ -3748,7 +3764,7 @@ def massPlots_KStar_FIT_RESULTS(pdf_path):
     integral_MC = integral_between(hMC, 0.8, 1.0)
 
     hData.SetXTitle("M(K_{S}#pi^{+}) [GeV/c^{2}]")
-    hData.SetYTitle("Counts")
+    hData.SetYTitle("combos")
     hData.SetLineColor(ROOT.kBlack)
     hData.SetLineWidth(2)
     hData.SetMarkerStyle(20)

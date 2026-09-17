@@ -11,8 +11,14 @@ allPlots = "plots/PWA_plots.pdf"
 # -----------------------------
 # Files / globals
 # -----------------------------
-t_bin = "#bf{-t = (0.8 - 1.0) GeV^{2}}" # t_bin label for plots.  MUST match the t_bin used to create the ROOT file.
-FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_Zlm_20260804_110953/KsPipLamb_ALL.root"
+t_bin = "#bf{-t = (1.5 - 2.5) GeV^{2}}" # t_bin label for plots.  MUST match the t_bin used to create the ROOT file.
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_Zlm_20260804_110953/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_no_bkg_t0103_20260917_1019/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_no_bkg_t0305_20260917_1019/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_no_bkg_t0507_20260917_1019/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_no_bkg_t0710_20260917_1019/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_no_bkg_t1015_20260917_1019/KsPipLamb_ALL.root"
+FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_no_bkg_t1525_20260917_1019/KsPipLamb_ALL.root"
 
 NT = "ntFSGlueX_MODECODE"
 TREENAME = "ntFSGlueX_100000000_1100"
@@ -409,7 +415,7 @@ def cosTheta_plots(hist, pdf_path):
             f"{t_bin}",
             "Fit all Polarizations (0, 45, 90, 135)",
             f"Data int: {data_int:.0f}  acc+bkg: {(acc_int + bkg_int):.0f}",
-            "#bf{DATA:} sp18, fa18, sp20. #bf{MC:} sp18, fa18.",
+            "#bf{DATA} & #bf{MC:} sp18, fa18, sp20.",
         ],
     )
 
@@ -583,7 +589,7 @@ def phi_plots(hist, pdf_path):
             f"{t_bin}",
             "Fit all Polarizations (0, 45, 90, 135)",
             f"Data int: {h_data.Integral():.0f}  total fit: {h_total.Integral():.0f}",
-            "#bf{DATA:} sp18, fa18, sp20. #bf{MC:} sp18, fa18.",
+            "#bf{DATA} & #bf{MC:} sp18, fa18, sp20.",
         ],
     )
     keep(c1)
@@ -731,7 +737,7 @@ def bigPhi_plots(hist, pdf_path):
             f"{t_bin}",
             "Fit all Polarizations (0, 45, 90, 135)",
             f"Data int: {h_data.Integral():.0f}  total fit: {h_total.Integral():.0f}",
-            "#bf{DATA:} sp18, fa18, sp20. #bf{MC:} sp18, fa18.",
+            "#bf{DATA} #bf{MC:} sp18, fa18, sp20.",
         ],
     )
     keep(c1)
@@ -878,7 +884,7 @@ def phi_minus_bigPhi_plots(hist, pdf_path):
             f"{t_bin}",
             "Fit all Polarizations (0, 45, 90, 135)",
             f"Data int: {h_data.Integral():.0f}  total fit: {h_total.Integral():.0f}",
-            "#bf{DATA:} sp18, fa18, sp20. #bf{MC:} sp18, fa18.",
+            "#bf{DATA} & #bf{MC:} sp18, fa18, sp20.",
         ],
     )
     keep(c1)

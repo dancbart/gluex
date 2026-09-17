@@ -6,19 +6,19 @@ ROOT.gROOT.SetBatch(True)
 
 from pyamptools import atiSetup
 atiSetup.setup(globals(), use_fsroot=True)
-allPlots = "plots/sdme_plots.pdf"
+allPlots = "plots/sdme_plots_bkg.pdf"
 
 # -----------------------------
 # Files / globals
 # -----------------------------
-t_bin = "#bf{-t = (1.0 - 1.5) GeV^{2}}" # t_bin label for plots.  MUST match the t_bin used to create the ROOT file.
+t_bin = "#bf{-t = (1.5 - 2.5) GeV^{2}}" # t_bin label for plots.  MUST match the t_bin used to create the ROOT file.
 
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_SDME_no_bkg_t0103_20260917_0920/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_SDME_no_bkg_t0305_20260917_0920/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_SDME_no_bkg_t0507_20260917_0920/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_SDME_no_bkg_t0710_20260917_0920/KsPipLamb_ALL.root"
-FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_SDME_no_bkg_t1015_20260917_0920/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_SDME_no_bkg_t1525_20260917_0920/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_SDME_bkg_t0103_20260917_0930/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_SDME_bkg_t0305_20260917_0930/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_SDME_bkg_t0507_20260917_0930/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_SDME_bkg_t0710_20260917_0930/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_SDME_bkg_t1015_20260917_0930/KsPipLamb_ALL.root"
+FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_SDME_bkg_t1525_20260917_0930/KsPipLamb_ALL.root"
 
 NT = "ntFSGlueX_MODECODE"
 TREENAME = "ntFSGlueX_100000000_1100"
@@ -104,30 +104,30 @@ def load_histograms(filename):
         "cosThetaacc_sdme": get_hist_or_raise(f, "cosThetaacc_sdme"),
         "cosThetagen_sdme": get_hist_or_raise(f, "cosThetagen_sdme"),
         "cosThetabkg_sdme": get_hist_or_raise(f, "cosThetabkg_sdme"),
-        # "cosThetaacc_bernBkg": get_hist_or_raise(f, "cosThetaacc_bernBkg"),
+        "cosThetaacc_bernBkg": get_hist_or_raise(f, "cosThetaacc_bernBkg"),
 
         "phidat":      get_hist_or_raise(f, "phidat"),
         "phiacc_sdme": get_hist_or_raise(f, "phiacc_sdme"),
         "phigen_sdme": get_hist_or_raise(f, "phigen_sdme"),
         "phibkg_sdme": get_hist_or_raise(f, "phibkg_sdme"),
-        # "phiacc_bernBkg": get_hist_or_raise(f, "phiacc_bernBkg"),
+        "phiacc_bernBkg": get_hist_or_raise(f, "phiacc_bernBkg"),
 
         "Phidat":      get_hist_or_raise(f, "Phidat"),
         "Phiacc_sdme": get_hist_or_raise(f, "Phiacc_sdme"),
         "Phigen_sdme": get_hist_or_raise(f, "Phigen_sdme"),
         "Phibkg_sdme": get_hist_or_raise(f, "Phibkg_sdme"),
-        # "Phiacc_bernBkg": get_hist_or_raise(f, "Phiacc_bernBkg"),
+        "Phiacc_bernBkg": get_hist_or_raise(f, "Phiacc_bernBkg"),
 
         "psidat":      get_hist_or_raise(f, "psidat"),
         "psiacc_sdme": get_hist_or_raise(f, "psiacc_sdme"),
         "psigen_sdme": get_hist_or_raise(f, "psigen_sdme"),
         "psibkg_sdme": get_hist_or_raise(f, "psibkg_sdme"),
-        # "psiacc_bernBkg": get_hist_or_raise(f, "psiacc_bernBkg"),
+        "psiacc_bernBkg": get_hist_or_raise(f, "psiacc_bernBkg"),
 
         "MKpidat":         get_hist_or_raise(f, "MKpidat"),
         "MKpiacc_sdme":    get_hist_or_raise(f, "MKpiacc_sdme"),
         "MKpibkg_sdme":    get_hist_or_raise(f, "MKpibkg_sdme"),
-        # "MKpiacc_bernBkg": get_hist_or_raise(f, "MKpiacc_bernBkg"),
+        "MKpiacc_bernBkg": get_hist_or_raise(f, "MKpiacc_bernBkg"),
     }
 
     f.Close()
@@ -305,7 +305,7 @@ def cosTheta_plots(hist, pdf_path):
     cosThetaacc_sdme    = hist["cosThetaacc_sdme"]
     cosThetabkg_sdme    = hist["cosThetabkg_sdme"]
     cosThetagen_sdme    = hist["cosThetagen_sdme"]
-    # cosThetaacc_bernBkg = hist["cosThetaacc_bernBkg"]
+    cosThetaacc_bernBkg = hist["cosThetaacc_bernBkg"]
 
     # -----------------------------
     # CosineTheta of Ks in helicity frame
@@ -316,7 +316,7 @@ def cosTheta_plots(hist, pdf_path):
     h_data       = cosThetadat.Clone("h_data_cos")
     h_acc        = cosThetaacc_sdme.Clone("h_acc_cos")
     h_accidental = cosThetabkg_sdme.Clone("h_accidental_cos")
-    # h_bern       = cosThetaacc_bernBkg.Clone("h_bern_cos")
+    h_bern       = cosThetaacc_bernBkg.Clone("h_bern_cos")
 
     # Layer 1 (bottom): accidental sidebands only
     h_accidental.SetLineColor(ROOT.kRed - 3)
@@ -325,7 +325,7 @@ def cosTheta_plots(hist, pdf_path):
 
     # Layer 2 (middle): accidental + bernstein
     h_bkg_total = h_accidental.Clone("h_bkg_total_cos")
-    # h_bkg_total.Add(h_bern)
+    h_bkg_total.Add(h_bern)
     h_bkg_total.SetLineColor(ROOT.kBlue - 3)
     h_bkg_total.SetFillColorAlpha(ROOT.kBlue, 0.30)
     h_bkg_total.SetFillStyle(1001)
@@ -353,7 +353,7 @@ def cosTheta_plots(hist, pdf_path):
     h_data.Draw()
     h_total.Draw("hist E same")
     # h_acc.Draw("hist E same")
-    # h_bkg_total.Draw("hist E same")
+    h_bkg_total.Draw("hist E same")
     h_accidental.Draw("hist E same")
 
     data_int = integral_between(h_data, -1.0, 1.0)
@@ -367,7 +367,7 @@ def cosTheta_plots(hist, pdf_path):
             (h_data,       "data",                   "l"),
             (h_total,      "accmc + bkg",             "f"),
             # (h_acc,         "accmc",                   "f"),
-            # (h_bkg_total,  "accidental + poly",  "f"),
+            (h_bkg_total,  "accidental + poly",  "f"),
             (h_accidental, "3D SB bkg",     "f"),
         ],
         notes=[
@@ -387,7 +387,7 @@ def cosTheta_plots(hist, pdf_path):
     # Subtract both background components from data first
     h_data_bkgsub = h_data.Clone("h_data_bkgsub_cos")
     h_data_bkgsub.Add(h_accidental, -1)
-    # h_data_bkgsub.Add(h_bern, -1)
+    h_data_bkgsub.Add(h_bern, -1)
 
     h_corr = make_efficiency_corrected(
         h_data_bkgsub, cosThetaacc_sdme, cosThetagen_sdme, "cosTheta"
@@ -471,7 +471,7 @@ def phi_plots(hist, pdf_path):
     phiacc_sdme     = hist["phiacc_sdme"]
     phibkg_sdme     = hist["phibkg_sdme"]
     phigen_sdme     = hist["phigen_sdme"]
-    # phiacc_bernBkg  = hist["phiacc_bernBkg"]
+    phiacc_bernBkg  = hist["phiacc_bernBkg"]
 
     c1, pad_plot, pad_info = make_canvas_with_bottompad("c_phi", info_frac=0.22)
     pad_plot.cd()
@@ -479,7 +479,7 @@ def phi_plots(hist, pdf_path):
     h_data       = phidat.Clone("h_phi_data")
     h_acc        = phiacc_sdme.Clone("h_phi_acc")
     h_accidental = phibkg_sdme.Clone("h_phi_accidental")
-    # h_bern       = phiacc_bernBkg.Clone("h_phi_bern")
+    h_bern       = phiacc_bernBkg.Clone("h_phi_bern")
 
     # Layer 1 (bottom): accidental sidebands only
     h_accidental.SetLineColor(ROOT.kRed - 3)
@@ -488,7 +488,7 @@ def phi_plots(hist, pdf_path):
 
     # Layer 2 (middle): accidental + bernstein
     h_bkg_total = h_accidental.Clone("h_phi_bkg_total")
-    # h_bkg_total.Add(h_bern)
+    h_bkg_total.Add(h_bern)
     h_bkg_total.SetLineColor(ROOT.kBlue - 3)
     h_bkg_total.SetFillColorAlpha(ROOT.kBlue, 0.30)
     h_bkg_total.SetFillStyle(1001)
@@ -509,9 +509,9 @@ def phi_plots(hist, pdf_path):
     # h_data.GetYaxis().SetMaxDigits(1)
 
     h_data.Draw()
-    h_total.Draw("hist same")
-    h_bkg_total.Draw("hist same")
-    h_accidental.Draw("hist same")
+    h_total.Draw("hist E same")
+    h_bkg_total.Draw("hist E same")
+    h_accidental.Draw("hist E same")
 
     draw_bottom_info_pad(
         pad_info,
@@ -519,7 +519,7 @@ def phi_plots(hist, pdf_path):
         legend_items=[
             (h_data,       "data",                  "l"),
             (h_total,      "accmc + bkg",            "f"),
-            # (h_bkg_total,  "accidental + bernstein", "f"),
+            (h_bkg_total,  "accidental + bernstein", "f"),
             (h_accidental, "3D SB bkg",    "f"),
         ],
         notes=[
@@ -540,7 +540,7 @@ def phi_plots(hist, pdf_path):
 
     h_data_bkgsub = h_data.Clone("h_phi_data_bkgsub")
     h_data_bkgsub.Add(h_accidental, -1)
-    # h_data_bkgsub.Add(h_bern, -1)
+    h_data_bkgsub.Add(h_bern, -1)
 
     h_corr = make_efficiency_corrected(h_data_bkgsub, phiacc_sdme, phigen_sdme, "phi")
 
@@ -621,7 +621,7 @@ def bigPhi_plots(hist, pdf_path):
     Phiacc_sdme     = hist["Phiacc_sdme"]
     Phibkg_sdme     = hist["Phibkg_sdme"]
     Phigen_sdme     = hist["Phigen_sdme"]
-    # Phiacc_bernBkg  = hist["Phiacc_bernBkg"]
+    Phiacc_bernBkg  = hist["Phiacc_bernBkg"]
 
     c1, pad_plot, pad_info = make_canvas_with_bottompad("c_bigPhi", info_frac=0.22)
     pad_plot.cd()
@@ -629,14 +629,14 @@ def bigPhi_plots(hist, pdf_path):
     h_data       = Phidat.Clone("h_bigPhi_data")
     h_acc        = Phiacc_sdme.Clone("h_bigPhi_acc")
     h_accidental = Phibkg_sdme.Clone("h_bigPhi_accidental")
-    # h_bern       = Phiacc_bernBkg.Clone("h_bigPhi_bern")
+    h_bern       = Phiacc_bernBkg.Clone("h_bigPhi_bern")
 
     h_accidental.SetLineColor(ROOT.kRed - 3)
     h_accidental.SetFillColorAlpha(ROOT.kRed - 4, 0.60)
     h_accidental.SetFillStyle(1001)
 
     h_bkg_total = h_accidental.Clone("h_bigPhi_bkg_total")
-    # h_bkg_total.Add(h_bern)
+    h_bkg_total.Add(h_bern)
     h_bkg_total.SetLineColor(ROOT.kBlue - 3)
     h_bkg_total.SetFillColorAlpha(ROOT.kBlue, 0.30)
     h_bkg_total.SetFillStyle(1001)
@@ -656,9 +656,9 @@ def bigPhi_plots(hist, pdf_path):
     # h_data.GetYaxis().SetMaxDigits(1)
 
     h_data.Draw()
-    h_total.Draw("hist same")
-    h_bkg_total.Draw("hist same")
-    h_accidental.Draw("hist same")
+    h_total.Draw("hist E same")
+    h_bkg_total.Draw("hist E same")
+    h_accidental.Draw("hist E same")
 
     draw_bottom_info_pad(
         pad_info,
@@ -666,7 +666,7 @@ def bigPhi_plots(hist, pdf_path):
         legend_items=[
             (h_data,       "data",                  "l"),
             (h_total,      "accmc + bkg",            "f"),
-            # (h_bkg_total,  "accidental + bernstein", "f"),
+            (h_bkg_total,  "accidental + bernstein", "f"),
             (h_accidental, "3D SB bkg",    "f"),
         ],
         notes=[
@@ -687,7 +687,7 @@ def bigPhi_plots(hist, pdf_path):
 
     h_data_bkgsub = h_data.Clone("h_bigPhi_data_bkgsub")
     h_data_bkgsub.Add(h_accidental, -1)
-    # h_data_bkgsub.Add(h_bern, -1)
+    h_data_bkgsub.Add(h_bern, -1)
 
     h_corr = make_efficiency_corrected(h_data_bkgsub, Phiacc_sdme, Phigen_sdme, "Phi")
 
@@ -768,7 +768,7 @@ def phi_minus_bigPhi_plots(hist, pdf_path):
     psiacc_sdme     = hist["psiacc_sdme"]
     psibkg_sdme     = hist["psibkg_sdme"]
     psigen_sdme     = hist["psigen_sdme"]
-    # psiacc_bernBkg  = hist["psiacc_bernBkg"]
+    psiacc_bernBkg  = hist["psiacc_bernBkg"]
 
     c, pad_plot, pad_info = make_canvas_with_bottompad("c_psi", info_frac=0.22)
     pad_plot.cd()
@@ -776,14 +776,14 @@ def phi_minus_bigPhi_plots(hist, pdf_path):
     h_data       = psidat.Clone("h_psi_data")
     h_acc        = psiacc_sdme.Clone("h_psi_acc")
     h_accidental = psibkg_sdme.Clone("h_psi_accidental")
-    # h_bern       = psiacc_bernBkg.Clone("h_psi_bern")
+    h_bern       = psiacc_bernBkg.Clone("h_psi_bern")
 
     h_accidental.SetLineColor(ROOT.kRed - 3)
     h_accidental.SetFillColorAlpha(ROOT.kRed - 4, 0.60)
     h_accidental.SetFillStyle(1001)
 
     h_bkg_total = h_accidental.Clone("h_psi_bkg_total")
-    # h_bkg_total.Add(h_bern)
+    h_bkg_total.Add(h_bern)
     h_bkg_total.SetLineColor(ROOT.kBlue - 3)
     h_bkg_total.SetFillColorAlpha(ROOT.kBlue, 0.30)
     h_bkg_total.SetFillStyle(1001)
@@ -803,9 +803,9 @@ def phi_minus_bigPhi_plots(hist, pdf_path):
     # h_data.GetYaxis().SetMaxDigits(1)
 
     h_data.Draw()
-    h_total.Draw("hist same")
-    h_bkg_total.Draw("hist same")
-    h_accidental.Draw("hist same")
+    h_total.Draw("hist E same")
+    h_bkg_total.Draw("hist E same")
+    h_accidental.Draw("hist E same")
 
     draw_bottom_info_pad(
         pad_info,
@@ -813,7 +813,7 @@ def phi_minus_bigPhi_plots(hist, pdf_path):
         legend_items=[
             (h_data,       "data",                  "l"),
             (h_total,      "accmc + bkg",            "f"),
-            # (h_bkg_total,  "accidental + bernstein", "f"),
+            (h_bkg_total,  "accidental + bernstein", "f"),
             (h_accidental, "3D SB bkg",    "f"),
         ],
         notes=[
@@ -834,7 +834,7 @@ def phi_minus_bigPhi_plots(hist, pdf_path):
 
     h_data_bkgsub = h_data.Clone("h_psi_data_bkgsub")
     h_data_bkgsub.Add(h_accidental, -1)
-    # h_data_bkgsub.Add(h_bern, -1)
+    h_data_bkgsub.Add(h_bern, -1)
 
     h_corr = make_efficiency_corrected(h_data_bkgsub, psiacc_sdme, psigen_sdme, "psi")
 
@@ -868,14 +868,14 @@ def MKpi_plots(hist, pdf_path):
     MKpidat         = hist["MKpidat"]
     MKpiacc_sdme    = hist["MKpiacc_sdme"]
     MKpibkg_sdme    = hist["MKpibkg_sdme"]
-    # MKpiacc_bernBkg = hist["MKpiacc_bernBkg"]
+    MKpiacc_bernBkg = hist["MKpiacc_bernBkg"]
 
     c, pad_plot, pad_info = make_canvas_with_bottompad("c_MKpi", info_frac=0.22)
     pad_plot.cd()
 
     h_data        = MKpidat.Clone("h_MKpi_data")
     h_3Dsidebands = MKpibkg_sdme.Clone("h_MKpi_3D_SB")
-    # h_bern       = MKpiacc_bernBkg.Clone("h_MKpi_bern")
+    h_bern       = MKpiacc_bernBkg.Clone("h_MKpi_bern")
     h_acc         = MKpiacc_sdme.Clone("h_MKpi_acc")
 
     # Layer 1 (data)
@@ -888,7 +888,7 @@ def MKpi_plots(hist, pdf_path):
 
     # Layer 3 (middle): accidental + bernstein
     h_bkg_total = h_3Dsidebands.Clone("h_MKpi_bkg_total")
-    # h_bkg_total.Add(h_bern)
+    h_bkg_total.Add(h_bern)
     h_bkg_total.SetLineColor(ROOT.kBlue - 3)
     h_bkg_total.SetFillColorAlpha(ROOT.kBlue, 0.30)
     h_bkg_total.SetFillStyle(1001)
@@ -906,10 +906,10 @@ def MKpi_plots(hist, pdf_path):
     h_acc_MC.SetFillStyle(1001)
 
     # Bernstein alone for display
-    # h_bern_only = h_bern.Clone("h_MKpi_bern_only")
-    # h_bern_only.SetLineColor(ROOT.kViolet - 3)
-    # h_bern_only.SetFillColorAlpha(ROOT.kViolet - 2, 0.50)
-    # h_bern_only.SetFillStyle(1001)
+    h_bern_only = h_bern.Clone("h_MKpi_bern_only")
+    h_bern_only.SetLineColor(ROOT.kViolet - 3)
+    h_bern_only.SetFillColorAlpha(ROOT.kViolet - 2, 0.50)
+    h_bern_only.SetFillStyle(1001)
 
     h_total.SetTitle("")
     h_total.SetXTitle("M(Ks #pi^{+}) [GeV/c^{2}]")
@@ -917,12 +917,12 @@ def MKpi_plots(hist, pdf_path):
     h_total.SetMinimum(0)
 
     # Draw largest first so smaller layers appear on top
-    h_total.Draw("hist")
-    h_acc_MC.Draw("hist same")
+    h_total.Draw("hist E")
+    h_acc_MC.Draw("hist E same")
     h_data.Draw("pE same")
-    # h_bkg_total.Draw("hist same")
-    # h_bern_only.Draw("hist same")
-    h_3Dsidebands.Draw("hist same")
+    h_bkg_total.Draw("hist E same")
+    h_bern_only.Draw("hist E same")
+    h_3Dsidebands.Draw("hist E same")
 
     draw_bottom_info_pad(
         pad_info,
@@ -930,7 +930,7 @@ def MKpi_plots(hist, pdf_path):
         legend_items=[
             (h_data, f"Data (Int: {h_data.Integral():.0f})", "pE"),
             (h_total, f"Total fit (Int: {h_total.Integral():.0f})", "f"),
-            # (h_bern_only,  "poly only", "f"),
+            (h_bern_only,  "poly only", "f"),
             (h_acc_MC, f"accmc (Int: {h_acc_MC.Integral():.0f})", "f"),
             (h_3Dsidebands, f"3D_SB (Int: {h_3Dsidebands.Integral():.0f})", "f"),
         ],
