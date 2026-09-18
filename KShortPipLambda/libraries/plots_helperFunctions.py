@@ -676,11 +676,46 @@ def integral_between(hist, xmin, xmax):
     bin2 = ax.FindBin(xmax)
     return hist.Integral(bin1, bin2)
 
+# def draw_vertical_lines(hist, xs, color=ROOT.kBlue, style=1, width=2):
+#     ymax = hist.GetMaximum()
+#     lines = []
+#     for x in xs:
+#         ln = ROOT.TLine(x, 0.0, x, ymax)
+#         ln.SetLineColor(color)
+#         ln.SetLineStyle(style)
+#         ln.SetLineWidth(width)
+#         ln.Draw("same")
+#         lines.append(keep(ln))
+#     return lines
+
+# frame-aware version of draw_vertical_lines, which uses the pad's y-range instead of the histogram's maximum
+# def draw_vertical_lines(hist, xs, color=ROOT.kBlue, style=1, width=2):
+#     pad = ROOT.gPad
+#     pad.Update()                      # ensure the frame range is computed
+#     ylo = pad.GetUymin()
+#     yhi = pad.GetUymax()
+#     lines = []
+#     for x in xs:
+#         ln = ROOT.TLine(x, ylo, x, yhi)
+#         ln.SetLineColor(color)
+#         ln.SetLineStyle(style)
+#         ln.SetLineWidth(width)
+#         ln.Draw("same")
+#         lines.append(keep(ln))
+#     return lines
+
+# frame-aware version, with log scale support
 def draw_vertical_lines(hist, xs, color=ROOT.kBlue, style=1, width=2):
-    ymax = hist.GetMaximum()
+    pad = ROOT.gPad
+    pad.Update()
+    ylo = pad.GetUymin()
+    yhi = pad.GetUymax()
+    if pad.GetLogy():                 # frame range is in log10 on a log pad
+        ylo = 10 ** ylo
+        yhi = 10 ** yhi
     lines = []
     for x in xs:
-        ln = ROOT.TLine(x, 0.0, x, ymax)
+        ln = ROOT.TLine(x, ylo, x, yhi)
         ln.SetLineColor(color)
         ln.SetLineStyle(style)
         ln.SetLineWidth(width)
