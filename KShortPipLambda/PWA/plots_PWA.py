@@ -11,14 +11,23 @@ allPlots = "plots/PWA_plots.pdf"
 # -----------------------------
 # Files / globals
 # -----------------------------
-t_bin = "#bf{-t = (1.5 - 2.5) GeV^{2}}" # t_bin label for plots.  MUST match the t_bin used to create the ROOT file.
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_Zlm_20260804_110953/KsPipLamb_ALL.root"
+t_bin = "#bf{-t = (1.5 - 2.5) GeV^{2}} w/BW" # t_bin label for plots.  MUST match the t_bin used to create the ROOT file.
+
+# NO BREIT-WIGNER
 # FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_no_bkg_t0103_20260917_1019/KsPipLamb_ALL.root"
 # FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_no_bkg_t0305_20260917_1019/KsPipLamb_ALL.root"
 # FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_no_bkg_t0507_20260917_1019/KsPipLamb_ALL.root"
 # FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_no_bkg_t0710_20260917_1019/KsPipLamb_ALL.root"
 # FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_no_bkg_t1015_20260917_1019/KsPipLamb_ALL.root"
-FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_no_bkg_t1525_20260917_1019/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_no_bkg_t1525_20260917_1019/KsPipLamb_ALL.root"
+
+# WITH BREIT-WIGNER
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_BW_no_bkg_t0103_20260917_1019/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/withBreitWigner/FIT_pipkslamb_PWA_BW_no_bkg_t0305_20260917_1019/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_BW_no_bkg_t0507_20260917_1019/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_BW_no_bkg_t0710_20260917_1019/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_BW_no_bkg_t1015_20260917_1019/KsPipLamb_ALL.root"
+FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_BW_no_bkg_t1525_20260917_1019/KsPipLamb_ALL.root"
 
 NT = "ntFSGlueX_MODECODE"
 TREENAME = "ntFSGlueX_100000000_1100"
@@ -978,6 +987,10 @@ def MKpi_plots(hist, pdf_path):
     h_bkg.SetFillColorAlpha(ROOT.kRed - 4, 0.60)
     h_bkg.SetFillStyle(1001)
 
+    h_acc_all.SetLineColor(ROOT.kBlue - 3)
+    h_acc_all.SetFillColorAlpha(ROOT.kBlue, 0.30)
+    h_acc_all.SetFillStyle(1001)
+
     h_total = h_bkg.Clone("h_MKpi_total")
     h_total.Add(h_acc_all)
     h_total.SetLineColor(ROOT.kGreen - 6)
@@ -1009,8 +1022,9 @@ def MKpi_plots(hist, pdf_path):
 
     # Draw largest first so smaller layers appear on top
     h_data.Draw()
-    h_total.Draw("hist same")
-    h_bkg.Draw("hist same")
+    h_total.Draw("hist E same")
+    h_acc_all.Draw("hist E same")
+    h_bkg.Draw("hist E same")
     h_acc_0S.Draw("LP same")
     h_acc_P_plus1.Draw("LP same")
     h_acc_P_plus0.Draw("LP same")
@@ -1022,6 +1036,7 @@ def MKpi_plots(hist, pdf_path):
         label_text="M(K_{S} #pi^{+}) PWA fit",
         legend_items=[
             (h_data,         "data",        "l"),
+            (h_acc_all,      "accmc",       "f"),
             (h_total,        "bkg + accmc", "f"),
             (h_bkg,          "background",  "f"),
             (h_acc_0S,       "0S wave",     "l"),
