@@ -103,7 +103,7 @@ def setup(t_bins, event_selection_t_bins):
             f"abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))<{hi}")
 
     # --- all other cuts ---
-    ROOT.FSCut.defineCut("rf", "abs(RFDeltaT)>2.004", "abs(RFDeltaT)>6.0", 0.1667)
+    ROOT.FSCut.defineCut("rf", "abs(RFDeltaT)<2.004", "abs(RFDeltaT)>6.0", 0.1667)
     ROOT.FSCut.defineCut("chi2DOF", "Chi2DOF<5.0")
     ROOT.FSCut.defineCut("unusedE", "EnUnusedSh<0.1")
     ROOT.FSCut.defineCut("unusedTracks", "NumUnusedTracks < 1")
