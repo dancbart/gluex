@@ -139,6 +139,7 @@ MC_PERIODS_GENERAL = [
 # ---------------------------------------------------------
 def skim_DATA_EVENT_SELECTION_SKIMS():
     setup(T_BINS, T_BIN_EVENT_SELECTION)
+    ROOT.FSTree.addFriendTree("HybridChi2Rank")
     ROOT.FSModeTree.skimTree(FND0,   NT, "", FND0_eventSelectionCuts,   generalCuts_eventSelection)
     ROOT.FSModeTree.skimTree(FND45,  NT, "", FND45_eventSelectionCuts,  generalCuts_eventSelection)
     ROOT.FSModeTree.skimTree(FND90,  NT, "", FND90_eventSelectionCuts,  generalCuts_eventSelection)
@@ -154,6 +155,7 @@ def skim_DATA_EVENT_SELECTION_SKIMS():
 
 def skim_MONTE_CARLO_EVENT_SELECTION_SKIMS():
     setup(T_BINS, T_BIN_EVENT_SELECTION)
+    ROOT.FSTree.addFriendTree("HybridChi2Rank")
     ROOT.FSModeTree.skimTree(FND_MC_sp18, NT, "", FND_eventSelectionCuts_MC_sp18, generalCuts_eventSelection)
     ROOT.FSModeTree.skimTree(FND_MC_fa18, NT, "", FND_eventSelectionCuts_MC_fa18, generalCuts_eventSelection)
     ROOT.FSModeTree.skimTree(FND_MC_sp20, NT, "", FND_eventSelectionCuts_MC_sp20, generalCuts_eventSelection)
@@ -182,6 +184,7 @@ def skim_THROWN_MC_EVENT_SELECTION_SKIMS():
 
 def skim_DATA_KPI_SYSTEM_SKIMS():
     setup(T_BINS, T_BIN_EVENT_SELECTION)
+    ROOT.FSTree.addFriendTree("HybridChi2Rank")
     ROOT.FSModeTree.skimTree(FND_eventSelectionCuts_ALLpols, NT, "",
                              FND_eventSelectionCuts_KpiSystem_ALLpols, KPiSystemCuts)
     friendTreeContents = [(ROOT.TString("weight"), ROOT.TString(KPiSystemCuts_weights))]
@@ -197,6 +200,7 @@ def skim_DATA_KPI_SYSTEM_SKIMS():
 
 def skim_K892_data_GENERAL_SKIMS():
     setup(T_BINS, T_BIN_EVENT_SELECTION)
+    ROOT.FSTree.addFriendTree("HybridChi2Rank")
     for (pol_label, fnd_raw, general_out) in POLS_GENERAL:
         print(f"General-skimming data {pol_label}: {fnd_raw} --> {general_out}")
         ROOT.FSModeTree.skimTree(fnd_raw, NT, "", general_out, generalCuts_noT)
@@ -208,6 +212,7 @@ def skim_K892_accmc_GENERAL_SKIMS():
     combined file. The signal skim loop reads from the combined file.
     """
     setup(T_BINS, T_BIN_EVENT_SELECTION)
+    ROOT.FSTree.addFriendTree("HybridChi2Rank")
     period_files = []
     for (period_label, fnd_mc, _, general_out) in MC_PERIODS_GENERAL:
         print(f"General-skimming accmc {period_label}: {fnd_mc} --> {general_out}")
@@ -303,15 +308,15 @@ def skim_K892_genmc():
 
 
 def skim_K892():
-    skim_DATA_EVENT_SELECTION_SKIMS()
+    # skim_DATA_EVENT_SELECTION_SKIMS()
     skim_MONTE_CARLO_EVENT_SELECTION_SKIMS()
-    skim_THROWN_MC_EVENT_SELECTION_SKIMS()
-    skim_DATA_KPI_SYSTEM_SKIMS()
-    skim_K892_data_GENERAL_SKIMS()
+    # skim_THROWN_MC_EVENT_SELECTION_SKIMS()
+    # skim_DATA_KPI_SYSTEM_SKIMS()
+    # skim_K892_data_GENERAL_SKIMS()
     skim_K892_accmc_GENERAL_SKIMS()
-    skim_K892_data_SIG_BKGND_SKIMS()
+    # skim_K892_data_SIG_BKGND_SKIMS()
     skim_K892_accmc()
-    skim_K892_genmc()
+    # skim_K892_genmc()
 
 if __name__ == "__main__":
     skim_K892()

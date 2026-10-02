@@ -91,6 +91,9 @@ def setup(t_bins, event_selection_t_bins):
 
     ROOT.FSModeCollection.addModeInfo("100000000_1100").addCategory("m100000000_1100")
 
+    # --- Best Combo cut ---
+    ROOT.FSCut.defineCut("bestCombo", "HybridChi2Rank==1")
+
     # --- t-prime cuts (KShort) ---
     ROOT.FSCut.defineCut("tprimeKsLow",  "TPRIMEKS > 0.0 && TPRIMEKS < 0.2")
     ROOT.FSCut.defineCut("tprimeKsMid",  "TPRIMEKS > 0.2 && TPRIMEKS < 0.6")
@@ -103,7 +106,7 @@ def setup(t_bins, event_selection_t_bins):
             f"abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))<{hi}")
 
     # --- all other cuts ---
-    ROOT.FSCut.defineCut("rf", "abs(RFDeltaT)<2.004", "abs(RFDeltaT)>6.0", 0.1667)
+    ROOT.FSCut.defineCut("rf", "abs(RFDeltaT)<2.004", "abs(RFDeltaT)>6.0&&abs(RFDeltaT)<18.0", 1.0/6.0)
     ROOT.FSCut.defineCut("chi2DOF", "Chi2DOF<5.0")
     ROOT.FSCut.defineCut("unusedE", "EnUnusedSh<0.1")
     ROOT.FSCut.defineCut("unusedTracks", "NumUnusedTracks < 1")
@@ -181,12 +184,12 @@ def setup_genmc(t_bins, event_selection_t_bins):
 # =========================================================
 
 # ------ USE FOR EVENT SELECTION PLOTS ONLY ------- #
-generalCuts_eventSelection = "CUT(chi2DOF,unusedTracks,coherentPeak,targetZ)"
-thrownCuts_eventSelection  = "CUT(coherentPeakTHROWN,selectKSTAR892THROWN)"
+generalCuts_eventSelection = "CUT(bestCombo,chi2DOF,unusedTracks,coherentPeak,targetZ)"
+thrownCuts_eventSelection  = "CUT(coherentPeakTHROWN)"
 
 # ---------- USE FOR ROOFIT FITTING ONLY ---------- #
 # Usage: KPiSystemCuts.format(t_cut_name=t_cut_name)
-KPiSystemCuts         = "CUT(tRange0103,chi2DOF,unusedTracks,coherentPeak,targetZ,flightLengthKShort,flightLengthLambda,rejectSigma1385)"
+KPiSystemCuts         = "CUT(tRange0103,flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)"
 KPiSystemCuts_weights = "CUTWT(rf,KShort,Lambda)"
 
 # ----------- USE FOR AMPTOOLS FITTING ------------ #
@@ -195,8 +198,7 @@ KPiSystemCuts_weights = "CUTWT(rf,KShort,Lambda)"
 # These are intermediate files to speed up iteration on signal cuts.
 # Toggle off skim_K892_data_GENERAL_SKIMS() and skim_K892_accmc_GENERAL_SKIMS()
 # safely — t-bin cuts are applied downstream in the signal/sideband loop.
-generalCuts_noT = ("CUT(chi2DOF,unusedTracks,coherentPeak,targetZ,"
-                   "flightLengthKShort,flightLengthLambda,rejectSigma1385,selectKSTAR892)")
+generalCuts_noT = "CUT(bestCombo,chi2DOF,unusedTracks,coherentPeak,targetZ,flightLengthKShort,flightLengthLambda,rejectSigma1385,selectKSTAR892)"
 
 # Signal / sideband skims: t-bin cut strings built dynamically per bin inside loops.
 # Usage:  signalCuts_t = signalCuts.format(t_cut_name=t_cut_name)
@@ -204,11 +206,11 @@ signalCuts                 = "CUT({t_cut_name},rf,KShort,Lambda)"
 sidebandWeights            = "CUT({t_cut_name})*CUTSBWT(rf,KShort,Lambda)"
 sidebandWeights_friendTree = "CUTSBWT(rf,KShort,Lambda)"  # no t_cut_name needed here
 
-# MC signal skim (no RF cut for MC).
+# MC signal skim.
 # Usage:  MC_signalCuts_t = MC_signalCuts.format(t_cut_name=t_cut_name)
-MC_signalCuts               = "CUT({t_cut_name},KShort,Lambda)"
+MC_signalCuts               = "CUT({t_cut_name},rf,KShort,Lambda)"
 # MC background skim not used — MC sideband weights applied to signal file via friend tree instead.
-MC_signalWeights_friendTree = "CUTWT(KShort,Lambda)"  # no t_cut_name needed here
+MC_signalWeights_friendTree = "CUTWT(rf,KShort,Lambda)"  # no t_cut_name needed here
 
 # MC thrown skim (no RF cut, no signal-cleaning cuts — preserves full phase space for acceptance corrections).
 # Usage:  MC_thrownCuts_t = MC_thrownCuts.format(thrown_t_cut_name=thrown_t_cut_name)
@@ -219,7 +221,7 @@ MC_thrownCuts = "CUT({thrown_t_cut_name},coherentPeakTHROWN,selectKSTAR892THROWN
 # since event-selection skims are not pre-filtered by the general skim's selectKSTAR892 cut.
 # t-bin cut built dynamically: signalCuts_eventSelection.format(t_cut_name=t_cut_name)
 signalCuts_eventSelection    = "CUT({t_cut_name},rf,KShort,Lambda,selectKSTAR892)"
-MC_signalCuts_eventSelection = "CUT({t_cut_name},KShort,Lambda,selectKSTAR892)"
+MC_signalCuts_eventSelection = "CUT({t_cut_name},rf,KShort,Lambda,selectKSTAR892)"
 
 # ----------- FOR CUT-COMPARISON PLOTS ------------ #
 signalCuts_weights = "CUTWT(rf,KShort,Lambda)"
