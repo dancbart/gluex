@@ -13,19 +13,18 @@ configFile    = "/work/halld/home/dbarton/gluex/KShortPipLambda/simulation/confi
 # Spring 2018
 # runRangeLow   = 40856
 # runRangeHigh  = 42559
-# numEvents   = 4000000000
-
+# numEvents   = 100000000
 
 # Fall 2018
 # runRangeLow   = 50685
 # runRangeHigh  = 51768
-# numEvents   = 2600000000
+# numEvents   = 70000000
 
 
 # # Spring 2020
 runRangeLow   = 71350
 runRangeHigh  = 73266
-numEvents   = 8000000000
+numEvents   = 200000000
 
 batchMode = 2
 

@@ -19,13 +19,13 @@ FND45  = "/volatile/halld/home/dbarton/pipkslamb/data/sp18fa18sp20/tree_pipkslam
 FND90  = "/volatile/halld/home/dbarton/pipkslamb/data/sp18fa18sp20/tree_pipkslamb__B4_M16_M18_FSFlat_sum_PERP_90_sp18fa18sp20_40856_73266.root"
 FND135 = "/volatile/halld/home/dbarton/pipkslamb/data/sp18fa18sp20/tree_pipkslamb__B4_M16_M18_FSFlat_sum_PARA_135_sp18fa18sp20_40856_73266.root"
 
-FND_MC_sp18 = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS08192026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root"
-FND_MC_fa18 = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS08192026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root"
-FND_MC_sp20 = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS08192026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root"
+FND_MC_sp18 = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS10022026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root"
+FND_MC_fa18 = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS10022026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root"
+FND_MC_sp20 = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS10022026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root"
 
-FND_THROWN_sp18 = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS08192026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root"
-FND_THROWN_fa18 = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS08192026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root"
-FND_THROWN_sp20 = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS08192026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root"
+FND_THROWN_sp18 = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS10022026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root"
+FND_THROWN_fa18 = "/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS10022026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root"
+FND_THROWN_sp20 = "/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS10022026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root"
 
 
 # =========================================================
@@ -310,13 +310,13 @@ def skim_K892_genmc():
 def skim_K892():
     # skim_DATA_EVENT_SELECTION_SKIMS()
     skim_MONTE_CARLO_EVENT_SELECTION_SKIMS()
-    # skim_THROWN_MC_EVENT_SELECTION_SKIMS()
+    skim_THROWN_MC_EVENT_SELECTION_SKIMS()
     # skim_DATA_KPI_SYSTEM_SKIMS()
     # skim_K892_data_GENERAL_SKIMS()
     skim_K892_accmc_GENERAL_SKIMS()
     # skim_K892_data_SIG_BKGND_SKIMS()
     skim_K892_accmc()
-    # skim_K892_genmc()
+    skim_K892_genmc()
 
 if __name__ == "__main__":
     skim_K892()

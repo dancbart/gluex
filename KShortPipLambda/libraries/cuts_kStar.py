@@ -208,9 +208,9 @@ sidebandWeights_friendTree = "CUTSBWT(rf,KShort,Lambda)"  # no t_cut_name needed
 
 # MC signal skim.
 # Usage:  MC_signalCuts_t = MC_signalCuts.format(t_cut_name=t_cut_name)
-MC_signalCuts               = "CUT({t_cut_name},rf,KShort,Lambda)"
+MC_signalCuts               = "CUT({t_cut_name},KShort,Lambda)"
 # MC background skim not used — MC sideband weights applied to signal file via friend tree instead.
-MC_signalWeights_friendTree = "CUTWT(rf,KShort,Lambda)"  # no t_cut_name needed here
+MC_signalWeights_friendTree = "CUTWT(KShort,Lambda)"  # no t_cut_name needed here
 
 # MC thrown skim (no RF cut, no signal-cleaning cuts — preserves full phase space for acceptance corrections).
 # Usage:  MC_thrownCuts_t = MC_thrownCuts.format(thrown_t_cut_name=thrown_t_cut_name)
