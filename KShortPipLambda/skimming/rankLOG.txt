@@ -1,0 +1,440 @@
+==================================================
+runRANKS started: Sun Oct 18 17:39:31 EDT 2026
+Host: ifarm2401.jlab.org
+Working dir: /work/halld/home/dbarton/gluex/KShortPipLambda/skimming
+==================================================
+
+*******************
+Loading environment
+*******************
+
+PYAMPTOOLS_HOME was set to /app/PyAmpTools
+
+[LOADED ROOT] ROOT 6.28.06 was compiled with gcc 11.5.0 and python 3.9.22
+
+
+Destination Folder: /app/PyAmpTools/external/root/root-6.28.06-gcc11.5.0/include
+Re-Linking:
+   SRC:  /app/PyAmpTools/utility/gluex_style.h
+   DEST: /app/PyAmpTools/external/root/root-6.28.06-gcc11.5.0/include/gluex_style.h
+-- Added above modules to conda environment... ---
+
+*******************
+Loading environment
+*******************
+
+PYAMPTOOLS_HOME is already set. Will not attempt override. PYAMPTOOLS_HOME=/app/PyAmpTools
+
+[LOADED ROOT] ROOT 6.28.06 was compiled with gcc 11.5.0 and python 3.9.22
+
+
+Destination Folder: /app/PyAmpTools/external/root/root-6.28.06-gcc11.5.0/include
+Re-Linking:
+   SRC:  /app/PyAmpTools/utility/gluex_style.h
+   DEST: /app/PyAmpTools/external/root/root-6.28.06-gcc11.5.0/include/gluex_style.h
+-- Added above modules to conda environment... ---
+atiSetup| bash called python3
+
+------------------------------------------------
+atiSetup| MPI is disabled
+atiSetup| GPU is disabled
+------------------------------------------------
+
+
+atiSetup| Loading library libIUAmpTools.so ............  ON
+atiSetup| Loading library libAmpTools.so ..............  ON
+atiSetup| Loading library libAmpPlotter.so ............  ON
+atiSetup| Loading library libAmpsDataIO.so ............  ON
+atiSetup| Loading library libFSRoot.so ................  ON
+atiSetup| Loading library libAmpsGen.so ...............  OFF
+
+
+------------------------------------------------
+------------------------------------------------
+
+atiSetup| minor warning: Unable to alias omegapiAngles - doesn't exist under ROOT namespace
+atiSetup| minor warning: Unable to alias URtypes - doesn't exist under ROOT namespace
+atiSetup| minor warning: Unable to alias URConfig - doesn't exist under ROOT namespace
+atiSetup| minor warning: Unable to alias FSFitPrivate - doesn't exist under ROOT namespace
+atiSetup| minor warning: Unable to alias FSFitFunctions - doesn't exist under ROOT namespace
+atiSetup| bash called python3
+
+------------------------------------------------
+atiSetup| MPI is disabled
+atiSetup| GPU is disabled
+------------------------------------------------
+
+
+atiSetup| Loading library libIUAmpTools.so ............  ON
+atiSetup| Loading library libAmpTools.so ..............  ON
+atiSetup| Loading library libAmpPlotter.so ............  ON
+atiSetup| Loading library libAmpsDataIO.so ............  ON
+atiSetup| Loading library libFSRoot.so ................  ON
+atiSetup| Loading library libAmpsGen.so ...............  OFF
+
+
+------------------------------------------------
+------------------------------------------------
+
+atiSetup| Saved aliases found in /app/PyAmpTools/src/pyamptools/.aliases.txt, attempting to load...
+atiSetup| minor warning: Unable to alias omegapiAngles - doesn't exist under ROOT namespace
+atiSetup| minor warning: Unable to alias URtypes - doesn't exist under ROOT namespace
+atiSetup| minor warning: Unable to alias URConfig - doesn't exist under ROOT namespace
+atiSetup| minor warning: Unable to alias FSFitPrivate - doesn't exist under ROOT namespace
+atiSetup| minor warning: Unable to alias FSFitFunctions - doesn't exist under ROOT namespace
+
+[rank_accmc] sp18: /volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS10092026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root
+******************************************
+  BEGIN FSModeTree::createRankingTree
+******************************************
+  fileName    = /volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS10092026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root
+  ntName      = ntFSGlueX_100000000_1100
+  category    = m100000000_1100
+  rankVarName = HybridChi2Rank
+  rankVar     = 1000*Chi2
+  cuts        = 1==1
+  groupVar1   = Run
+  groupVar2   = Event
+  groupVar3   = EnPB*100000+RFDeltaT*100
+******************************************
+
+---------- STARTING FIRST LOOP ----------
+
+---------- FIRST LOOP OVER  Lambda  Ks  pi+  (1 FILE(S)) ----------
+ LOOP OVER ORIGINAL TREE WITH 2,193,757 ENTRIES
+  File = /volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS10092026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root
+	entry = 100,000
+	entry = 200,000
+	entry = 300,000
+	entry = 400,000
+	entry = 500,000
+	entry = 600,000
+	entry = 700,000
+	entry = 800,000
+	entry = 900,000
+	entry = 1,000,000
+	entry = 1,100,000
+	entry = 1,200,000
+	entry = 1,300,000
+	entry = 1,400,000
+	entry = 1,500,000
+	entry = 1,600,000
+	entry = 1,700,000
+	entry = 1,800,000
+	entry = 1,900,000
+	entry = 2,000,000
+	entry = 2,100,000
+
+---------- STARTING SECOND LOOP ----------
+
+---------- SECOND LOOP OVER  Lambda  Ks  pi+  (1 FILE(S)) ----------
+ LOOP OVER ORIGINAL TREE WITH 2,193,757 ENTRIES
+  File = /volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS10092026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root
+	entry = 100,000
+	entry = 200,000
+	entry = 300,000
+	entry = 400,000
+	entry = 500,000
+	entry = 600,000
+	entry = 700,000
+	entry = 800,000
+	entry = 900,000
+	entry = 1,000,000
+	entry = 1,100,000
+	entry = 1,200,000
+	entry = 1,300,000
+	entry = 1,400,000
+	entry = 1,500,000
+	entry = 1,600,000
+	entry = 1,700,000
+	entry = 1,800,000
+	entry = 1,900,000
+	entry = 2,000,000
+	entry = 2,100,000
+******************************************
+  END OF FILE FSModeTree::createRankingTree
+******************************************
+  new fileName      = /volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS10092026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root.HybridChi2Rank
+  new ntName        = ntFSGlueX_100000000_1100_HybridChi2Rank
+  most combos       = 17
+  skipped events    = 0
+  fraction skipped  = 0 percent
+******************************************
+
+[rank_accmc] fa18: /volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS10092026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root
+******************************************
+  BEGIN FSModeTree::createRankingTree
+******************************************
+  fileName    = /volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS10092026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root
+  ntName      = ntFSGlueX_100000000_1100
+  category    = m100000000_1100
+  rankVarName = HybridChi2Rank
+  rankVar     = 1000*Chi2
+  cuts        = 1==1
+  groupVar1   = Run
+  groupVar2   = Event
+  groupVar3   = EnPB*100000+RFDeltaT*100
+******************************************
+
+---------- STARTING FIRST LOOP ----------
+
+---------- FIRST LOOP OVER  Lambda  Ks  pi+  (1 FILE(S)) ----------
+ LOOP OVER ORIGINAL TREE WITH 2,312,160 ENTRIES
+  File = /volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS10092026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root
+	entry = 100,000
+	entry = 200,000
+	entry = 300,000
+	entry = 400,000
+	entry = 500,000
+	entry = 600,000
+	entry = 700,000
+	entry = 800,000
+	entry = 900,000
+	entry = 1,000,000
+	entry = 1,100,000
+	entry = 1,200,000
+	entry = 1,300,000
+	entry = 1,400,000
+	entry = 1,500,000
+	entry = 1,600,000
+	entry = 1,700,000
+	entry = 1,800,000
+	entry = 1,900,000
+	entry = 2,000,000
+	entry = 2,100,000
+	entry = 2,200,000
+	entry = 2,300,000
+
+---------- STARTING SECOND LOOP ----------
+
+---------- SECOND LOOP OVER  Lambda  Ks  pi+  (1 FILE(S)) ----------
+ LOOP OVER ORIGINAL TREE WITH 2,312,160 ENTRIES
+  File = /volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS10092026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root
+	entry = 100,000
+	entry = 200,000
+	entry = 300,000
+	entry = 400,000
+	entry = 500,000
+	entry = 600,000
+	entry = 700,000
+	entry = 800,000
+	entry = 900,000
+	entry = 1,000,000
+	entry = 1,100,000
+	entry = 1,200,000
+	entry = 1,300,000
+	entry = 1,400,000
+	entry = 1,500,000
+	entry = 1,600,000
+	entry = 1,700,000
+	entry = 1,800,000
+	entry = 1,900,000
+	entry = 2,000,000
+	entry = 2,100,000
+	entry = 2,200,000
+	entry = 2,300,000
+******************************************
+  END OF FILE FSModeTree::createRankingTree
+******************************************
+  new fileName      = /volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS10092026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root.HybridChi2Rank
+  new ntName        = ntFSGlueX_100000000_1100_HybridChi2Rank
+  most combos       = 14
+  skipped events    = 0
+  fraction skipped  = 0 percent
+******************************************
+
+[rank_accmc] sp20: /volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS10092026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root
+******************************************
+  BEGIN FSModeTree::createRankingTree
+******************************************
+  fileName    = /volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS10092026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root
+  ntName      = ntFSGlueX_100000000_1100
+  category    = m100000000_1100
+  rankVarName = HybridChi2Rank
+  rankVar     = 1000*Chi2
+  cuts        = 1==1
+  groupVar1   = Run
+  groupVar2   = Event
+  groupVar3   = EnPB*100000+RFDeltaT*100
+******************************************
+
+---------- STARTING FIRST LOOP ----------
+
+---------- FIRST LOOP OVER  Lambda  Ks  pi+  (1 FILE(S)) ----------
+ LOOP OVER ORIGINAL TREE WITH 7,834,251 ENTRIES
+  File = /volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS10092026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root
+	entry = 100,000
+	entry = 200,000
+	entry = 300,000
+	entry = 400,000
+	entry = 500,000
+	entry = 600,000
+	entry = 700,000
+	entry = 800,000
+	entry = 900,000
+	entry = 1,000,000
+	entry = 1,100,000
+	entry = 1,200,000
+	entry = 1,300,000
+	entry = 1,400,000
+	entry = 1,500,000
+	entry = 1,600,000
+	entry = 1,700,000
+	entry = 1,800,000
+	entry = 1,900,000
+	entry = 2,000,000
+	entry = 2,100,000
+	entry = 2,200,000
+	entry = 2,300,000
+	entry = 2,400,000
+	entry = 2,500,000
+	entry = 2,600,000
+	entry = 2,700,000
+	entry = 2,800,000
+	entry = 2,900,000
+	entry = 3,000,000
+	entry = 3,100,000
+	entry = 3,200,000
+	entry = 3,300,000
+	entry = 3,400,000
+	entry = 3,500,000
+	entry = 3,600,000
+	entry = 3,700,000
+	entry = 3,800,000
+	entry = 3,900,000
+	entry = 4,000,000
+	entry = 4,100,000
+	entry = 4,200,000
+	entry = 4,300,000
+	entry = 4,400,000
+	entry = 4,500,000
+	entry = 4,600,000
+	entry = 4,700,000
+	entry = 4,800,000
+	entry = 4,900,000
+	entry = 5,000,000
+	entry = 5,100,000
+	entry = 5,200,000
+	entry = 5,300,000
+	entry = 5,400,000
+	entry = 5,500,000
+	entry = 5,600,000
+	entry = 5,700,000
+	entry = 5,800,000
+	entry = 5,900,000
+	entry = 6,000,000
+	entry = 6,100,000
+	entry = 6,200,000
+	entry = 6,300,000
+	entry = 6,400,000
+	entry = 6,500,000
+	entry = 6,600,000
+	entry = 6,700,000
+	entry = 6,800,000
+	entry = 6,900,000
+	entry = 7,000,000
+	entry = 7,100,000
+	entry = 7,200,000
+	entry = 7,300,000
+	entry = 7,400,000
+	entry = 7,500,000
+	entry = 7,600,000
+	entry = 7,700,000
+	entry = 7,800,000
+
+---------- STARTING SECOND LOOP ----------
+
+---------- SECOND LOOP OVER  Lambda  Ks  pi+  (1 FILE(S)) ----------
+ LOOP OVER ORIGINAL TREE WITH 7,834,251 ENTRIES
+  File = /volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS10092026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root
+	entry = 100,000
+	entry = 200,000
+	entry = 300,000
+	entry = 400,000
+	entry = 500,000
+	entry = 600,000
+	entry = 700,000
+	entry = 800,000
+	entry = 900,000
+	entry = 1,000,000
+	entry = 1,100,000
+	entry = 1,200,000
+	entry = 1,300,000
+	entry = 1,400,000
+	entry = 1,500,000
+	entry = 1,600,000
+	entry = 1,700,000
+	entry = 1,800,000
+	entry = 1,900,000
+	entry = 2,000,000
+	entry = 2,100,000
+	entry = 2,200,000
+	entry = 2,300,000
+	entry = 2,400,000
+	entry = 2,500,000
+	entry = 2,600,000
+	entry = 2,700,000
+	entry = 2,800,000
+	entry = 2,900,000
+	entry = 3,000,000
+	entry = 3,100,000
+	entry = 3,200,000
+	entry = 3,300,000
+	entry = 3,400,000
+	entry = 3,500,000
+	entry = 3,600,000
+	entry = 3,700,000
+	entry = 3,800,000
+	entry = 3,900,000
+	entry = 4,000,000
+	entry = 4,100,000
+	entry = 4,200,000
+	entry = 4,300,000
+	entry = 4,400,000
+	entry = 4,500,000
+	entry = 4,600,000
+	entry = 4,700,000
+	entry = 4,800,000
+	entry = 4,900,000
+	entry = 5,000,000
+	entry = 5,100,000
+	entry = 5,200,000
+	entry = 5,300,000
+	entry = 5,400,000
+	entry = 5,500,000
+	entry = 5,600,000
+	entry = 5,700,000
+	entry = 5,800,000
+	entry = 5,900,000
+	entry = 6,000,000
+	entry = 6,100,000
+	entry = 6,200,000
+	entry = 6,300,000
+	entry = 6,400,000
+	entry = 6,500,000
+	entry = 6,600,000
+	entry = 6,700,000
+	entry = 6,800,000
+	entry = 6,900,000
+	entry = 7,000,000
+	entry = 7,100,000
+	entry = 7,200,000
+	entry = 7,300,000
+	entry = 7,400,000
+	entry = 7,500,000
+	entry = 7,600,000
+	entry = 7,700,000
+	entry = 7,800,000
+******************************************
+  END OF FILE FSModeTree::createRankingTree
+******************************************
+  new fileName      = /volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS10092026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root.HybridChi2Rank
+  new ntName        = ntFSGlueX_100000000_1100_HybridChi2Rank
+  most combos       = 15
+  skipped events    = 0
+  fraction skipped  = 0 percent
+******************************************
+==================================================
+runRANKS finished: Sun Oct 18 17:48:24 EDT 2026
+Exit status: 0
+==================================================

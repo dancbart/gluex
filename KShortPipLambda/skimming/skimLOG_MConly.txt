@@ -1,0 +1,1001 @@
+==================================================
+runSKIMS started: Sun Oct 18 17:57:53 EDT 2026
+Host: ifarm2401.jlab.org
+Working dir: /work/halld/home/dbarton/gluex/KShortPipLambda/skimming
+==================================================
+
+*******************
+Loading environment
+*******************
+
+PYAMPTOOLS_HOME was set to /app/PyAmpTools
+
+[LOADED ROOT] ROOT 6.28.06 was compiled with gcc 11.5.0 and python 3.9.22
+
+
+Destination Folder: /app/PyAmpTools/external/root/root-6.28.06-gcc11.5.0/include
+Re-Linking:
+   SRC:  /app/PyAmpTools/utility/gluex_style.h
+   DEST: /app/PyAmpTools/external/root/root-6.28.06-gcc11.5.0/include/gluex_style.h
+-- Added above modules to conda environment... ---
+
+*******************
+Loading environment
+*******************
+
+PYAMPTOOLS_HOME is already set. Will not attempt override. PYAMPTOOLS_HOME=/app/PyAmpTools
+
+[LOADED ROOT] ROOT 6.28.06 was compiled with gcc 11.5.0 and python 3.9.22
+
+
+Destination Folder: /app/PyAmpTools/external/root/root-6.28.06-gcc11.5.0/include
+Re-Linking:
+   SRC:  /app/PyAmpTools/utility/gluex_style.h
+   DEST: /app/PyAmpTools/external/root/root-6.28.06-gcc11.5.0/include/gluex_style.h
+-- Added above modules to conda environment... ---
+atiSetup| bash called python3
+
+------------------------------------------------
+atiSetup| MPI is disabled
+atiSetup| GPU is disabled
+------------------------------------------------
+
+
+atiSetup| Loading library libIUAmpTools.so ............  ON
+atiSetup| Loading library libAmpTools.so ..............  ON
+atiSetup| Loading library libAmpPlotter.so ............  ON
+atiSetup| Loading library libAmpsDataIO.so ............  ON
+atiSetup| Loading library libFSRoot.so ................  ON
+atiSetup| Loading library libAmpsGen.so ...............  OFF
+
+
+------------------------------------------------
+------------------------------------------------
+
+atiSetup| minor warning: Unable to alias omegapiAngles - doesn't exist under ROOT namespace
+atiSetup| minor warning: Unable to alias URtypes - doesn't exist under ROOT namespace
+atiSetup| minor warning: Unable to alias URConfig - doesn't exist under ROOT namespace
+atiSetup| minor warning: Unable to alias FSFitPrivate - doesn't exist under ROOT namespace
+atiSetup| minor warning: Unable to alias FSFitFunctions - doesn't exist under ROOT namespace
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS10092026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_MC_sp18.root
+
+Original selection criteria:
+	((HybridChi2Rank==1)&&(Chi2DOF<5.0)&&(((Run>=30000&&Run<70000&&EnPB>8.2&&EnPB<8.8)||(Run>=70000&&Run<=122000&&EnPB>8.0&&EnPB<8.6)||(Run>=130000&&Run<=139999&&EnPB>8.3&&EnPB<8.9)))&&(ProdVz>51.2&&ProdVz<78.8)&&(NumUnusedTracks<1))
+
+Modified selection criteria:
+	((HybridChi2Rank==1)&&(Chi2DOF<5.0)&&(((Run>=30000&&Run<70000&&EnPB>8.2&&EnPB<8.8)||(Run>=70000&&Run<=122000&&EnPB>8.0&&EnPB<8.6)||(Run>=130000&&Run<=139999&&EnPB>8.3&&EnPB<8.9)))&&(ProdVz>51.2&&ProdVz<78.8)&&(NumUnusedTracks<1))
+
+Number of entries to skim:
+	2,193,757
+
+Number of entries kept:
+	750,146
+
+Skim Ratio:
+	0.341946
+
+Copying Friend: 
+	ntFSGlueX_100000000_1100_HybridChi2Rank
+To File: 
+	/volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_MC_sp18.root.HybridChi2Rank
+
+Number of entries kept:  
+	750,146
+
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS10092026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_MC_fa18.root
+
+Original selection criteria:
+	((HybridChi2Rank==1)&&(Chi2DOF<5.0)&&(((Run>=30000&&Run<70000&&EnPB>8.2&&EnPB<8.8)||(Run>=70000&&Run<=122000&&EnPB>8.0&&EnPB<8.6)||(Run>=130000&&Run<=139999&&EnPB>8.3&&EnPB<8.9)))&&(ProdVz>51.2&&ProdVz<78.8)&&(NumUnusedTracks<1))
+
+Modified selection criteria:
+	((HybridChi2Rank==1)&&(Chi2DOF<5.0)&&(((Run>=30000&&Run<70000&&EnPB>8.2&&EnPB<8.8)||(Run>=70000&&Run<=122000&&EnPB>8.0&&EnPB<8.6)||(Run>=130000&&Run<=139999&&EnPB>8.3&&EnPB<8.9)))&&(ProdVz>51.2&&ProdVz<78.8)&&(NumUnusedTracks<1))
+
+Number of entries to skim:
+	2,312,160
+
+Number of entries kept:
+	889,657
+
+Skim Ratio:
+	0.384773
+
+Copying Friend: 
+	ntFSGlueX_100000000_1100_HybridChi2Rank
+To File: 
+	/volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_MC_fa18.root.HybridChi2Rank
+
+Number of entries kept:  
+	889,657
+
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS10092026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_MC_sp20.root
+
+Original selection criteria:
+	((HybridChi2Rank==1)&&(Chi2DOF<5.0)&&(((Run>=30000&&Run<70000&&EnPB>8.2&&EnPB<8.8)||(Run>=70000&&Run<=122000&&EnPB>8.0&&EnPB<8.6)||(Run>=130000&&Run<=139999&&EnPB>8.3&&EnPB<8.9)))&&(ProdVz>51.2&&ProdVz<78.8)&&(NumUnusedTracks<1))
+
+Modified selection criteria:
+	((HybridChi2Rank==1)&&(Chi2DOF<5.0)&&(((Run>=30000&&Run<70000&&EnPB>8.2&&EnPB<8.8)||(Run>=70000&&Run<=122000&&EnPB>8.0&&EnPB<8.6)||(Run>=130000&&Run<=139999&&EnPB>8.3&&EnPB<8.9)))&&(ProdVz>51.2&&ProdVz<78.8)&&(NumUnusedTracks<1))
+
+Number of entries to skim:
+	7,834,251
+
+Number of entries kept:
+	2,919,482
+
+Skim Ratio:
+	0.372656
+
+Copying Friend: 
+	ntFSGlueX_100000000_1100_HybridChi2Rank
+To File: 
+	/volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_MC_sp20.root.HybridChi2Rank
+
+Number of entries kept:  
+	2,919,482
+
+Merging MC event-selection skim files:
+hadd -f /volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_MC_sp18fa18sp20.root /volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_MC_sp18.root /volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_MC_fa18.root /volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_MC_sp20.root
+hadd Target file: /volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_MC_sp18fa18sp20.root
+hadd compression setting for all output: 1
+hadd Source file 1: /volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_MC_sp18.root
+hadd Source file 2: /volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_MC_fa18.root
+hadd Source file 3: /volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_MC_sp20.root
+hadd Target path: /volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_MC_sp18fa18sp20.root:/
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_THROWN_MC_sp18.root
+
+Original selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6))
+
+Modified selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6))
+
+Number of entries to skim:
+	43,375,658
+
+Number of entries kept:
+	26,231,519
+
+Skim Ratio:
+	0.604752
+
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_THROWN_MC_fa18.root
+
+Original selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6))
+
+Modified selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6))
+
+Number of entries to skim:
+	30,472,734
+
+Number of entries kept:
+	18,549,433
+
+Skim Ratio:
+	0.608722
+
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_THROWN_MC_sp20.root
+
+Original selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6))
+
+Modified selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6))
+
+Number of entries to skim:
+	87,874,405
+
+Number of entries kept:
+	63,485,601
+
+Skim Ratio:
+	0.722458
+
+Merging THROWN event-selection skim files:
+hadd -f /volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_THROWN_MC_sp18fa18sp20.root /volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_THROWN_MC_sp18.root /volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_THROWN_MC_fa18.root /volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_THROWN_MC_sp20.root
+hadd Target file: /volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_THROWN_MC_sp18fa18sp20.root
+hadd compression setting for all output: 1
+hadd Source file 1: /volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_THROWN_MC_sp18.root
+hadd Source file 2: /volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_THROWN_MC_fa18.root
+hadd Source file 3: /volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_THROWN_MC_sp20.root
+hadd Target path: /volatile/halld/home/dbarton/pipkslamb/skims/tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_THROWN_MC_sp18fa18sp20.root:/
+General-skimming accmc sp18: /volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS10092026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root --> /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_sp18.root
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS10092026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_sp18.root
+
+Original selection criteria:
+	((HybridChi2Rank==1)&&(Chi2DOF<5.0)&&(((Run>=30000&&Run<70000&&EnPB>8.2&&EnPB<8.8)||(Run>=70000&&Run<=122000&&EnPB>8.0&&EnPB<8.6)||(Run>=130000&&Run<=139999&&EnPB>8.3&&EnPB<8.9)))&&(VeeLP2>2.0)&&(VeeLP1>2.0)&&(MASS(1,3)>2.00)&&(MASS(2,3)>0.80&&MASS(2,3)<1.00)&&(ProdVz>51.2&&ProdVz<78.8)&&(NumUnusedTracks<1))
+
+Modified selection criteria:
+	((HybridChi2Rank==1)&&(Chi2DOF<5.0)&&(((Run>=30000&&Run<70000&&EnPB>8.2&&EnPB<8.8)||(Run>=70000&&Run<=122000&&EnPB>8.0&&EnPB<8.6)||(Run>=130000&&Run<=139999&&EnPB>8.3&&EnPB<8.9)))&&(VeeLP2>2.0)&&(VeeLP1>2.0)&&((sqrt(pow(((EnP1+EnP3)),2)-pow(((PxP1+PxP3)),2)-pow(((PyP1+PyP3)),2)-pow(((PzP1+PzP3)),2)))>2.00)&&((sqrt(pow(((EnP2+EnP3)),2)-pow(((PxP2+PxP3)),2)-pow(((PyP2+PyP3)),2)-pow(((PzP2+PzP3)),2)))>0.80&&(sqrt(pow(((EnP2+EnP3)),2)-pow(((PxP2+PxP3)),2)-pow(((PyP2+PyP3)),2)-pow(((PzP2+PzP3)),2)))<1.00)&&(ProdVz>51.2&&ProdVz<78.8)&&(NumUnusedTracks<1))
+
+Number of entries to skim:
+	2,193,757
+
+Number of entries kept:
+	39,726
+
+Skim Ratio:
+	0.0181087
+
+Copying Friend: 
+	ntFSGlueX_100000000_1100_HybridChi2Rank
+To File: 
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_sp18.root.HybridChi2Rank
+
+Number of entries kept:  
+	39,726
+
+General-skimming accmc fa18: /volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS10092026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root --> /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_fa18.root
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS10092026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_fa18.root
+
+Original selection criteria:
+	((HybridChi2Rank==1)&&(Chi2DOF<5.0)&&(((Run>=30000&&Run<70000&&EnPB>8.2&&EnPB<8.8)||(Run>=70000&&Run<=122000&&EnPB>8.0&&EnPB<8.6)||(Run>=130000&&Run<=139999&&EnPB>8.3&&EnPB<8.9)))&&(VeeLP2>2.0)&&(VeeLP1>2.0)&&(MASS(1,3)>2.00)&&(MASS(2,3)>0.80&&MASS(2,3)<1.00)&&(ProdVz>51.2&&ProdVz<78.8)&&(NumUnusedTracks<1))
+
+Modified selection criteria:
+	((HybridChi2Rank==1)&&(Chi2DOF<5.0)&&(((Run>=30000&&Run<70000&&EnPB>8.2&&EnPB<8.8)||(Run>=70000&&Run<=122000&&EnPB>8.0&&EnPB<8.6)||(Run>=130000&&Run<=139999&&EnPB>8.3&&EnPB<8.9)))&&(VeeLP2>2.0)&&(VeeLP1>2.0)&&((sqrt(pow(((EnP1+EnP3)),2)-pow(((PxP1+PxP3)),2)-pow(((PyP1+PyP3)),2)-pow(((PzP1+PzP3)),2)))>2.00)&&((sqrt(pow(((EnP2+EnP3)),2)-pow(((PxP2+PxP3)),2)-pow(((PyP2+PyP3)),2)-pow(((PzP2+PzP3)),2)))>0.80&&(sqrt(pow(((EnP2+EnP3)),2)-pow(((PxP2+PxP3)),2)-pow(((PyP2+PyP3)),2)-pow(((PzP2+PzP3)),2)))<1.00)&&(ProdVz>51.2&&ProdVz<78.8)&&(NumUnusedTracks<1))
+
+Number of entries to skim:
+	2,312,160
+
+Number of entries kept:
+	48,473
+
+Skim Ratio:
+	0.0209644
+
+Copying Friend: 
+	ntFSGlueX_100000000_1100_HybridChi2Rank
+To File: 
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_fa18.root.HybridChi2Rank
+
+Number of entries kept:  
+	48,473
+
+General-skimming accmc sp20: /volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS10092026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root --> /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_sp20.root
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS10092026/root/trees/flatten/tree_pipkslamb__B4_M16_M18_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_sp20.root
+
+Original selection criteria:
+	((HybridChi2Rank==1)&&(Chi2DOF<5.0)&&(((Run>=30000&&Run<70000&&EnPB>8.2&&EnPB<8.8)||(Run>=70000&&Run<=122000&&EnPB>8.0&&EnPB<8.6)||(Run>=130000&&Run<=139999&&EnPB>8.3&&EnPB<8.9)))&&(VeeLP2>2.0)&&(VeeLP1>2.0)&&(MASS(1,3)>2.00)&&(MASS(2,3)>0.80&&MASS(2,3)<1.00)&&(ProdVz>51.2&&ProdVz<78.8)&&(NumUnusedTracks<1))
+
+Modified selection criteria:
+	((HybridChi2Rank==1)&&(Chi2DOF<5.0)&&(((Run>=30000&&Run<70000&&EnPB>8.2&&EnPB<8.8)||(Run>=70000&&Run<=122000&&EnPB>8.0&&EnPB<8.6)||(Run>=130000&&Run<=139999&&EnPB>8.3&&EnPB<8.9)))&&(VeeLP2>2.0)&&(VeeLP1>2.0)&&((sqrt(pow(((EnP1+EnP3)),2)-pow(((PxP1+PxP3)),2)-pow(((PyP1+PyP3)),2)-pow(((PzP1+PzP3)),2)))>2.00)&&((sqrt(pow(((EnP2+EnP3)),2)-pow(((PxP2+PxP3)),2)-pow(((PyP2+PyP3)),2)-pow(((PzP2+PzP3)),2)))>0.80&&(sqrt(pow(((EnP2+EnP3)),2)-pow(((PxP2+PxP3)),2)-pow(((PyP2+PyP3)),2)-pow(((PzP2+PzP3)),2)))<1.00)&&(ProdVz>51.2&&ProdVz<78.8)&&(NumUnusedTracks<1))
+
+Number of entries to skim:
+	7,834,251
+
+Number of entries kept:
+	167,627
+
+Skim Ratio:
+	0.0213967
+
+Copying Friend: 
+	ntFSGlueX_100000000_1100_HybridChi2Rank
+To File: 
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_sp20.root.HybridChi2Rank
+
+Number of entries kept:  
+	167,627
+
+Merging accmc general-skim files:
+hadd -f /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_sp18fa18sp20.root /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_sp18.root /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_fa18.root /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_sp20.root
+hadd Target file: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_sp18fa18sp20.root
+hadd compression setting for all output: 1
+hadd Source file 1: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_sp18.root
+hadd Source file 2: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_fa18.root
+hadd Source file 3: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_sp20.root
+hadd Target path: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_sp18fa18sp20.root:/
+
+Copying File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_sp18fa18sp20.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_MC_t0125.root
+
+Original selection criteria:
+	((abs(MASS(2)-0.4976)<0.03)&&(abs(MASS(1)-1.115)<0.010)&&(abs(-1*MASS2(-1,GLUEXTARGET))>0.1&&abs(-1*MASS2(-1,GLUEXTARGET))<2.5))
+
+Modified selection criteria:
+	((abs((sqrt(pow(((EnP2)),2)-pow(((PxP2)),2)-pow(((PyP2)),2)-pow(((PzP2)),2)))-0.4976)<0.03)&&(abs((sqrt(pow(((EnP1)),2)-pow(((PxP1)),2)-pow(((PyP1)),2)-pow(((PzP1)),2)))-1.115)<0.010)&&(abs(-1*(pow(((-EnP1+0.938272)),2)-pow(((-PxP1+0.0)),2)-pow(((-PyP1+0.0)),2)-pow(((-PzP1+0.0)),2)))>0.1&&abs(-1*(pow(((-EnP1+0.938272)),2)-pow(((-PxP1+0.0)),2)-pow(((-PyP1+0.0)),2)-pow(((-PzP1+0.0)),2)))<2.5))
+
+Number of entries to skim:
+	255,826
+
+Number of entries kept:
+	226,874
+
+Skim Ratio:
+	0.886829
+
+creating friend tree in file:   /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_MC_t0125.root.weight
+FSTree::createFriendTree: processing entry... 100000  (44.0773 percent)
+FSTree::createFriendTree: processing entry... 200000  (88.1547 percent)
+
+Copying File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_sp18fa18sp20.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_MC_t0103.root
+
+Original selection criteria:
+	((abs(MASS(2)-0.4976)<0.03)&&(abs(MASS(1)-1.115)<0.010)&&(abs(-1*MASS2(-1,GLUEXTARGET))>0.1&&abs(-1*MASS2(-1,GLUEXTARGET))<0.3))
+
+Modified selection criteria:
+	((abs((sqrt(pow(((EnP2)),2)-pow(((PxP2)),2)-pow(((PyP2)),2)-pow(((PzP2)),2)))-0.4976)<0.03)&&(abs((sqrt(pow(((EnP1)),2)-pow(((PxP1)),2)-pow(((PyP1)),2)-pow(((PzP1)),2)))-1.115)<0.010)&&(abs(-1*(pow(((-EnP1+0.938272)),2)-pow(((-PxP1+0.0)),2)-pow(((-PyP1+0.0)),2)-pow(((-PzP1+0.0)),2)))>0.1&&abs(-1*(pow(((-EnP1+0.938272)),2)-pow(((-PxP1+0.0)),2)-pow(((-PyP1+0.0)),2)-pow(((-PzP1+0.0)),2)))<0.3))
+
+Number of entries to skim:
+	255,826
+
+Number of entries kept:
+	27,727
+
+Skim Ratio:
+	0.108382
+
+creating friend tree in file:   /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_MC_t0103.root.weight
+
+Copying File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_sp18fa18sp20.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_MC_t0305.root
+
+Original selection criteria:
+	((abs(MASS(2)-0.4976)<0.03)&&(abs(MASS(1)-1.115)<0.010)&&(abs(-1*MASS2(-1,GLUEXTARGET))>0.3&&abs(-1*MASS2(-1,GLUEXTARGET))<0.5))
+
+Modified selection criteria:
+	((abs((sqrt(pow(((EnP2)),2)-pow(((PxP2)),2)-pow(((PyP2)),2)-pow(((PzP2)),2)))-0.4976)<0.03)&&(abs((sqrt(pow(((EnP1)),2)-pow(((PxP1)),2)-pow(((PyP1)),2)-pow(((PzP1)),2)))-1.115)<0.010)&&(abs(-1*(pow(((-EnP1+0.938272)),2)-pow(((-PxP1+0.0)),2)-pow(((-PyP1+0.0)),2)-pow(((-PzP1+0.0)),2)))>0.3&&abs(-1*(pow(((-EnP1+0.938272)),2)-pow(((-PxP1+0.0)),2)-pow(((-PyP1+0.0)),2)-pow(((-PzP1+0.0)),2)))<0.5))
+
+Number of entries to skim:
+	255,826
+
+Number of entries kept:
+	52,339
+
+Skim Ratio:
+	0.204588
+
+creating friend tree in file:   /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_MC_t0305.root.weight
+
+Copying File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_sp18fa18sp20.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_MC_t0507.root
+
+Original selection criteria:
+	((abs(MASS(2)-0.4976)<0.03)&&(abs(MASS(1)-1.115)<0.010)&&(abs(-1*MASS2(-1,GLUEXTARGET))>0.5&&abs(-1*MASS2(-1,GLUEXTARGET))<0.7))
+
+Modified selection criteria:
+	((abs((sqrt(pow(((EnP2)),2)-pow(((PxP2)),2)-pow(((PyP2)),2)-pow(((PzP2)),2)))-0.4976)<0.03)&&(abs((sqrt(pow(((EnP1)),2)-pow(((PxP1)),2)-pow(((PyP1)),2)-pow(((PzP1)),2)))-1.115)<0.010)&&(abs(-1*(pow(((-EnP1+0.938272)),2)-pow(((-PxP1+0.0)),2)-pow(((-PyP1+0.0)),2)-pow(((-PzP1+0.0)),2)))>0.5&&abs(-1*(pow(((-EnP1+0.938272)),2)-pow(((-PxP1+0.0)),2)-pow(((-PyP1+0.0)),2)-pow(((-PzP1+0.0)),2)))<0.7))
+
+Number of entries to skim:
+	255,826
+
+Number of entries kept:
+	47,408
+
+Skim Ratio:
+	0.185313
+
+creating friend tree in file:   /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_MC_t0507.root.weight
+
+Copying File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_sp18fa18sp20.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_MC_t0710.root
+
+Original selection criteria:
+	((abs(MASS(2)-0.4976)<0.03)&&(abs(MASS(1)-1.115)<0.010)&&(abs(-1*MASS2(-1,GLUEXTARGET))>0.7&&abs(-1*MASS2(-1,GLUEXTARGET))<1.0))
+
+Modified selection criteria:
+	((abs((sqrt(pow(((EnP2)),2)-pow(((PxP2)),2)-pow(((PyP2)),2)-pow(((PzP2)),2)))-0.4976)<0.03)&&(abs((sqrt(pow(((EnP1)),2)-pow(((PxP1)),2)-pow(((PyP1)),2)-pow(((PzP1)),2)))-1.115)<0.010)&&(abs(-1*(pow(((-EnP1+0.938272)),2)-pow(((-PxP1+0.0)),2)-pow(((-PyP1+0.0)),2)-pow(((-PzP1+0.0)),2)))>0.7&&abs(-1*(pow(((-EnP1+0.938272)),2)-pow(((-PxP1+0.0)),2)-pow(((-PyP1+0.0)),2)-pow(((-PzP1+0.0)),2)))<1.0))
+
+Number of entries to skim:
+	255,826
+
+Number of entries kept:
+	48,448
+
+Skim Ratio:
+	0.189379
+
+creating friend tree in file:   /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_MC_t0710.root.weight
+
+Copying File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_sp18fa18sp20.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_MC_t1015.root
+
+Original selection criteria:
+	((abs(MASS(2)-0.4976)<0.03)&&(abs(MASS(1)-1.115)<0.010)&&(abs(-1*MASS2(-1,GLUEXTARGET))>1.0&&abs(-1*MASS2(-1,GLUEXTARGET))<1.5))
+
+Modified selection criteria:
+	((abs((sqrt(pow(((EnP2)),2)-pow(((PxP2)),2)-pow(((PyP2)),2)-pow(((PzP2)),2)))-0.4976)<0.03)&&(abs((sqrt(pow(((EnP1)),2)-pow(((PxP1)),2)-pow(((PyP1)),2)-pow(((PzP1)),2)))-1.115)<0.010)&&(abs(-1*(pow(((-EnP1+0.938272)),2)-pow(((-PxP1+0.0)),2)-pow(((-PyP1+0.0)),2)-pow(((-PzP1+0.0)),2)))>1.0&&abs(-1*(pow(((-EnP1+0.938272)),2)-pow(((-PxP1+0.0)),2)-pow(((-PyP1+0.0)),2)-pow(((-PzP1+0.0)),2)))<1.5))
+
+Number of entries to skim:
+	255,826
+
+Number of entries kept:
+	36,412
+
+Skim Ratio:
+	0.142331
+
+creating friend tree in file:   /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_MC_t1015.root.weight
+
+Copying File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_GENERAL_SKIM_K892_MC_sp18fa18sp20.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_MC_t1525.root
+
+Original selection criteria:
+	((abs(MASS(2)-0.4976)<0.03)&&(abs(MASS(1)-1.115)<0.010)&&(abs(-1*MASS2(-1,GLUEXTARGET))>1.5&&abs(-1*MASS2(-1,GLUEXTARGET))<2.5))
+
+Modified selection criteria:
+	((abs((sqrt(pow(((EnP2)),2)-pow(((PxP2)),2)-pow(((PyP2)),2)-pow(((PzP2)),2)))-0.4976)<0.03)&&(abs((sqrt(pow(((EnP1)),2)-pow(((PxP1)),2)-pow(((PyP1)),2)-pow(((PzP1)),2)))-1.115)<0.010)&&(abs(-1*(pow(((-EnP1+0.938272)),2)-pow(((-PxP1+0.0)),2)-pow(((-PyP1+0.0)),2)-pow(((-PzP1+0.0)),2)))>1.5&&abs(-1*(pow(((-EnP1+0.938272)),2)-pow(((-PxP1+0.0)),2)-pow(((-PyP1+0.0)),2)-pow(((-PzP1+0.0)),2)))<2.5))
+
+Number of entries to skim:
+	255,826
+
+Number of entries kept:
+	14,540
+
+Skim Ratio:
+	0.0568355
+
+creating friend tree in file:   /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb__B4_M16_M18_SIGNAL_SKIM_K892_MC_t1525.root.weight
+Skimming genmc [t0125] sp18: /volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root --> /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0125_sp18.root
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0125_sp18.root
+
+Original selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&(MCMASS(2,3)>0.80&&MCMASS(2,3)<1.00)&&(abs(-1*MCMASS2(-1,GLUEXTARGET))>0.1&&abs(-1*MCMASS2(-1,GLUEXTARGET))<2.5))
+
+Modified selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&((sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))>0.80&&(sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))<1.00)&&(abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))>0.1&&abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))<2.5))
+
+Number of entries to skim:
+	43,375,658
+
+Number of entries kept:
+	2,323,649
+
+Skim Ratio:
+	0.0535703
+
+Skimming genmc [t0125] fa18: /volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root --> /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0125_fa18.root
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0125_fa18.root
+
+Original selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&(MCMASS(2,3)>0.80&&MCMASS(2,3)<1.00)&&(abs(-1*MCMASS2(-1,GLUEXTARGET))>0.1&&abs(-1*MCMASS2(-1,GLUEXTARGET))<2.5))
+
+Modified selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&((sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))>0.80&&(sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))<1.00)&&(abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))>0.1&&abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))<2.5))
+
+Number of entries to skim:
+	30,472,734
+
+Number of entries kept:
+	1,641,504
+
+Skim Ratio:
+	0.053868
+
+Skimming genmc [t0125] sp20: /volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root --> /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0125_sp20.root
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0125_sp20.root
+
+Original selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&(MCMASS(2,3)>0.80&&MCMASS(2,3)<1.00)&&(abs(-1*MCMASS2(-1,GLUEXTARGET))>0.1&&abs(-1*MCMASS2(-1,GLUEXTARGET))<2.5))
+
+Modified selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&((sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))>0.80&&(sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))<1.00)&&(abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))>0.1&&abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))<2.5))
+
+Number of entries to skim:
+	87,874,405
+
+Number of entries kept:
+	5,623,069
+
+Skim Ratio:
+	0.0639898
+
+Merging genmc skims for t0125:
+hadd -f /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_SIGNAL_SKIM_K892_THROWN_t0125_sp18fa18sp20.root /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0125_sp18.root /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0125_fa18.root /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0125_sp20.root
+hadd Target file: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_SIGNAL_SKIM_K892_THROWN_t0125_sp18fa18sp20.root
+hadd compression setting for all output: 1
+hadd Source file 1: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0125_sp18.root
+hadd Source file 2: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0125_fa18.root
+hadd Source file 3: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0125_sp20.root
+hadd Target path: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_SIGNAL_SKIM_K892_THROWN_t0125_sp18fa18sp20.root:/
+Skimming genmc [t0103] sp18: /volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root --> /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0103_sp18.root
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0103_sp18.root
+
+Original selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&(MCMASS(2,3)>0.80&&MCMASS(2,3)<1.00)&&(abs(-1*MCMASS2(-1,GLUEXTARGET))>0.1&&abs(-1*MCMASS2(-1,GLUEXTARGET))<0.3))
+
+Modified selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&((sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))>0.80&&(sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))<1.00)&&(abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))>0.1&&abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))<0.3))
+
+Number of entries to skim:
+	43,375,658
+
+Number of entries kept:
+	838,664
+
+Skim Ratio:
+	0.0193349
+
+Skimming genmc [t0103] fa18: /volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root --> /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0103_fa18.root
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0103_fa18.root
+
+Original selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&(MCMASS(2,3)>0.80&&MCMASS(2,3)<1.00)&&(abs(-1*MCMASS2(-1,GLUEXTARGET))>0.1&&abs(-1*MCMASS2(-1,GLUEXTARGET))<0.3))
+
+Modified selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&((sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))>0.80&&(sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))<1.00)&&(abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))>0.1&&abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))<0.3))
+
+Number of entries to skim:
+	30,472,734
+
+Number of entries kept:
+	592,174
+
+Skim Ratio:
+	0.0194329
+
+Skimming genmc [t0103] sp20: /volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root --> /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0103_sp20.root
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0103_sp20.root
+
+Original selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&(MCMASS(2,3)>0.80&&MCMASS(2,3)<1.00)&&(abs(-1*MCMASS2(-1,GLUEXTARGET))>0.1&&abs(-1*MCMASS2(-1,GLUEXTARGET))<0.3))
+
+Modified selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&((sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))>0.80&&(sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))<1.00)&&(abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))>0.1&&abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))<0.3))
+
+Number of entries to skim:
+	87,874,405
+
+Number of entries kept:
+	2,027,503
+
+Skim Ratio:
+	0.0230727
+
+Merging genmc skims for t0103:
+hadd -f /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_SIGNAL_SKIM_K892_THROWN_t0103_sp18fa18sp20.root /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0103_sp18.root /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0103_fa18.root /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0103_sp20.root
+hadd Target file: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_SIGNAL_SKIM_K892_THROWN_t0103_sp18fa18sp20.root
+hadd compression setting for all output: 1
+hadd Source file 1: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0103_sp18.root
+hadd Source file 2: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0103_fa18.root
+hadd Source file 3: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0103_sp20.root
+hadd Target path: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_SIGNAL_SKIM_K892_THROWN_t0103_sp18fa18sp20.root:/
+Skimming genmc [t0305] sp18: /volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root --> /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0305_sp18.root
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0305_sp18.root
+
+Original selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&(MCMASS(2,3)>0.80&&MCMASS(2,3)<1.00)&&(abs(-1*MCMASS2(-1,GLUEXTARGET))>0.3&&abs(-1*MCMASS2(-1,GLUEXTARGET))<0.5))
+
+Modified selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&((sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))>0.80&&(sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))<1.00)&&(abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))>0.3&&abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))<0.5))
+
+Number of entries to skim:
+	43,375,658
+
+Number of entries kept:
+	537,608
+
+Skim Ratio:
+	0.0123942
+
+Skimming genmc [t0305] fa18: /volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root --> /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0305_fa18.root
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0305_fa18.root
+
+Original selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&(MCMASS(2,3)>0.80&&MCMASS(2,3)<1.00)&&(abs(-1*MCMASS2(-1,GLUEXTARGET))>0.3&&abs(-1*MCMASS2(-1,GLUEXTARGET))<0.5))
+
+Modified selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&((sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))>0.80&&(sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))<1.00)&&(abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))>0.3&&abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))<0.5))
+
+Number of entries to skim:
+	30,472,734
+
+Number of entries kept:
+	379,534
+
+Skim Ratio:
+	0.0124549
+
+Skimming genmc [t0305] sp20: /volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root --> /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0305_sp20.root
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0305_sp20.root
+
+Original selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&(MCMASS(2,3)>0.80&&MCMASS(2,3)<1.00)&&(abs(-1*MCMASS2(-1,GLUEXTARGET))>0.3&&abs(-1*MCMASS2(-1,GLUEXTARGET))<0.5))
+
+Modified selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&((sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))>0.80&&(sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))<1.00)&&(abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))>0.3&&abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))<0.5))
+
+Number of entries to skim:
+	87,874,405
+
+Number of entries kept:
+	1,301,551
+
+Skim Ratio:
+	0.0148115
+
+Merging genmc skims for t0305:
+hadd -f /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_SIGNAL_SKIM_K892_THROWN_t0305_sp18fa18sp20.root /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0305_sp18.root /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0305_fa18.root /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0305_sp20.root
+hadd Target file: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_SIGNAL_SKIM_K892_THROWN_t0305_sp18fa18sp20.root
+hadd compression setting for all output: 1
+hadd Source file 1: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0305_sp18.root
+hadd Source file 2: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0305_fa18.root
+hadd Source file 3: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0305_sp20.root
+hadd Target path: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_SIGNAL_SKIM_K892_THROWN_t0305_sp18fa18sp20.root:/
+Skimming genmc [t0507] sp18: /volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root --> /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0507_sp18.root
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0507_sp18.root
+
+Original selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&(MCMASS(2,3)>0.80&&MCMASS(2,3)<1.00)&&(abs(-1*MCMASS2(-1,GLUEXTARGET))>0.5&&abs(-1*MCMASS2(-1,GLUEXTARGET))<0.7))
+
+Modified selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&((sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))>0.80&&(sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))<1.00)&&(abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))>0.5&&abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))<0.7))
+
+Number of entries to skim:
+	43,375,658
+
+Number of entries kept:
+	345,047
+
+Skim Ratio:
+	0.00795485
+
+Skimming genmc [t0507] fa18: /volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root --> /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0507_fa18.root
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0507_fa18.root
+
+Original selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&(MCMASS(2,3)>0.80&&MCMASS(2,3)<1.00)&&(abs(-1*MCMASS2(-1,GLUEXTARGET))>0.5&&abs(-1*MCMASS2(-1,GLUEXTARGET))<0.7))
+
+Modified selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&((sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))>0.80&&(sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))<1.00)&&(abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))>0.5&&abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))<0.7))
+
+Number of entries to skim:
+	30,472,734
+
+Number of entries kept:
+	243,472
+
+Skim Ratio:
+	0.00798983
+
+Skimming genmc [t0507] sp20: /volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root --> /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0507_sp20.root
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0507_sp20.root
+
+Original selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&(MCMASS(2,3)>0.80&&MCMASS(2,3)<1.00)&&(abs(-1*MCMASS2(-1,GLUEXTARGET))>0.5&&abs(-1*MCMASS2(-1,GLUEXTARGET))<0.7))
+
+Modified selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&((sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))>0.80&&(sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))<1.00)&&(abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))>0.5&&abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))<0.7))
+
+Number of entries to skim:
+	87,874,405
+
+Number of entries kept:
+	833,604
+
+Skim Ratio:
+	0.00948631
+
+Merging genmc skims for t0507:
+hadd -f /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_SIGNAL_SKIM_K892_THROWN_t0507_sp18fa18sp20.root /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0507_sp18.root /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0507_fa18.root /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0507_sp20.root
+hadd Target file: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_SIGNAL_SKIM_K892_THROWN_t0507_sp18fa18sp20.root
+hadd compression setting for all output: 1
+hadd Source file 1: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0507_sp18.root
+hadd Source file 2: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0507_fa18.root
+hadd Source file 3: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0507_sp20.root
+hadd Target path: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_SIGNAL_SKIM_K892_THROWN_t0507_sp18fa18sp20.root:/
+Skimming genmc [t0710] sp18: /volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root --> /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0710_sp18.root
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0710_sp18.root
+
+Original selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&(MCMASS(2,3)>0.80&&MCMASS(2,3)<1.00)&&(abs(-1*MCMASS2(-1,GLUEXTARGET))>0.7&&abs(-1*MCMASS2(-1,GLUEXTARGET))<1.0))
+
+Modified selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&((sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))>0.80&&(sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))<1.00)&&(abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))>0.7&&abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))<1.0))
+
+Number of entries to skim:
+	43,375,658
+
+Number of entries kept:
+	298,871
+
+Skim Ratio:
+	0.00689029
+
+Skimming genmc [t0710] fa18: /volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root --> /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0710_fa18.root
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0710_fa18.root
+
+Original selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&(MCMASS(2,3)>0.80&&MCMASS(2,3)<1.00)&&(abs(-1*MCMASS2(-1,GLUEXTARGET))>0.7&&abs(-1*MCMASS2(-1,GLUEXTARGET))<1.0))
+
+Modified selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&((sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))>0.80&&(sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))<1.00)&&(abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))>0.7&&abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))<1.0))
+
+Number of entries to skim:
+	30,472,734
+
+Number of entries kept:
+	211,588
+
+Skim Ratio:
+	0.00694352
+
+Skimming genmc [t0710] sp20: /volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root --> /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0710_sp20.root
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0710_sp20.root
+
+Original selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&(MCMASS(2,3)>0.80&&MCMASS(2,3)<1.00)&&(abs(-1*MCMASS2(-1,GLUEXTARGET))>0.7&&abs(-1*MCMASS2(-1,GLUEXTARGET))<1.0))
+
+Modified selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&((sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))>0.80&&(sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))<1.00)&&(abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))>0.7&&abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))<1.0))
+
+Number of entries to skim:
+	87,874,405
+
+Number of entries kept:
+	724,811
+
+Skim Ratio:
+	0.00824826
+
+Merging genmc skims for t0710:
+hadd -f /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_SIGNAL_SKIM_K892_THROWN_t0710_sp18fa18sp20.root /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0710_sp18.root /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0710_fa18.root /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0710_sp20.root
+hadd Target file: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_SIGNAL_SKIM_K892_THROWN_t0710_sp18fa18sp20.root
+hadd compression setting for all output: 1
+hadd Source file 1: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0710_sp18.root
+hadd Source file 2: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0710_fa18.root
+hadd Source file 3: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t0710_sp20.root
+hadd Target path: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_SIGNAL_SKIM_K892_THROWN_t0710_sp18fa18sp20.root:/
+Skimming genmc [t1015] sp18: /volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root --> /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t1015_sp18.root
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t1015_sp18.root
+
+Original selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&(MCMASS(2,3)>0.80&&MCMASS(2,3)<1.00)&&(abs(-1*MCMASS2(-1,GLUEXTARGET))>1.0&&abs(-1*MCMASS2(-1,GLUEXTARGET))<1.5))
+
+Modified selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&((sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))>0.80&&(sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))<1.00)&&(abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))>1.0&&abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))<1.5))
+
+Number of entries to skim:
+	43,375,658
+
+Number of entries kept:
+	211,461
+
+Skim Ratio:
+	0.00487511
+
+Skimming genmc [t1015] fa18: /volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root --> /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t1015_fa18.root
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t1015_fa18.root
+
+Original selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&(MCMASS(2,3)>0.80&&MCMASS(2,3)<1.00)&&(abs(-1*MCMASS2(-1,GLUEXTARGET))>1.0&&abs(-1*MCMASS2(-1,GLUEXTARGET))<1.5))
+
+Modified selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&((sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))>0.80&&(sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))<1.00)&&(abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))>1.0&&abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))<1.5))
+
+Number of entries to skim:
+	30,472,734
+
+Number of entries kept:
+	149,652
+
+Skim Ratio:
+	0.00491101
+
+Skimming genmc [t1015] sp20: /volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root --> /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t1015_sp20.root
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t1015_sp20.root
+
+Original selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&(MCMASS(2,3)>0.80&&MCMASS(2,3)<1.00)&&(abs(-1*MCMASS2(-1,GLUEXTARGET))>1.0&&abs(-1*MCMASS2(-1,GLUEXTARGET))<1.5))
+
+Modified selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&((sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))>0.80&&(sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))<1.00)&&(abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))>1.0&&abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))<1.5))
+
+Number of entries to skim:
+	87,874,405
+
+Number of entries kept:
+	511,684
+
+Skim Ratio:
+	0.0058229
+
+Merging genmc skims for t1015:
+hadd -f /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_SIGNAL_SKIM_K892_THROWN_t1015_sp18fa18sp20.root /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t1015_sp18.root /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t1015_fa18.root /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t1015_sp20.root
+hadd Target file: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_SIGNAL_SKIM_K892_THROWN_t1015_sp18fa18sp20.root
+hadd compression setting for all output: 1
+hadd Source file 1: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t1015_sp18.root
+hadd Source file 2: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t1015_fa18.root
+hadd Source file 3: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t1015_sp20.root
+hadd Target path: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_SIGNAL_SKIM_K892_THROWN_t1015_sp18fa18sp20.root:/
+Skimming genmc [t1525] sp18: /volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root --> /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t1525_sp18.root
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/spring2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t1525_sp18.root
+
+Original selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&(MCMASS(2,3)>0.80&&MCMASS(2,3)<1.00)&&(abs(-1*MCMASS2(-1,GLUEXTARGET))>1.5&&abs(-1*MCMASS2(-1,GLUEXTARGET))<2.5))
+
+Modified selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&((sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))>0.80&&(sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))<1.00)&&(abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))>1.5&&abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))<2.5))
+
+Number of entries to skim:
+	43,375,658
+
+Number of entries kept:
+	91,998
+
+Skim Ratio:
+	0.00212096
+
+Skimming genmc [t1525] fa18: /volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root --> /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t1525_fa18.root
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/fall2018/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t1525_fa18.root
+
+Original selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&(MCMASS(2,3)>0.80&&MCMASS(2,3)<1.00)&&(abs(-1*MCMASS2(-1,GLUEXTARGET))>1.5&&abs(-1*MCMASS2(-1,GLUEXTARGET))<2.5))
+
+Modified selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&((sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))>0.80&&(sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))<1.00)&&(abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))>1.5&&abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))<2.5))
+
+Number of entries to skim:
+	30,472,734
+
+Number of entries kept:
+	65,084
+
+Skim Ratio:
+	0.00213581
+
+Skimming genmc [t1525] sp20: /volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root --> /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t1525_sp20.root
+
+Copying File:
+	/volatile/halld/home/dbarton/pipkslamb/mc/spring2020/PS10092026/root/thrown/flatten/tree_thrown_gen_amp_V2_FSflat_sum.root (tree = ntFSGlueX_100000000_1100)
+To File:
+	/work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t1525_sp20.root
+
+Original selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&(MCMASS(2,3)>0.80&&MCMASS(2,3)<1.00)&&(abs(-1*MCMASS2(-1,GLUEXTARGET))>1.5&&abs(-1*MCMASS2(-1,GLUEXTARGET))<2.5))
+
+Modified selection criteria:
+	((MCEnPB>8.2&&MCEnPB<8.6)&&((sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))>0.80&&(sqrt(pow(((MCEnP2+MCEnP3)),2)-pow(((MCPxP2+MCPxP3)),2)-pow(((MCPyP2+MCPyP3)),2)-pow(((MCPzP2+MCPzP3)),2)))<1.00)&&(abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))>1.5&&abs(-1*(pow(((-MCEnP1+0.938272)),2)-pow(((-MCPxP1+0.0)),2)-pow(((-MCPyP1+0.0)),2)-pow(((-MCPzP1+0.0)),2)))<2.5))
+
+Number of entries to skim:
+	87,874,405
+
+Number of entries kept:
+	223,916
+
+Skim Ratio:
+	0.00254814
+
+Merging genmc skims for t1525:
+hadd -f /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_SIGNAL_SKIM_K892_THROWN_t1525_sp18fa18sp20.root /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t1525_sp18.root /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t1525_fa18.root /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t1525_sp20.root
+hadd Target file: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_SIGNAL_SKIM_K892_THROWN_t1525_sp18fa18sp20.root
+hadd compression setting for all output: 1
+hadd Source file 1: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t1525_sp18.root
+hadd Source file 2: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t1525_fa18.root
+hadd Source file 3: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_THROWN_SKIM_K892_t1525_sp20.root
+hadd Target path: /work/halld/home/dbarton/gluex/KShortPipLambda/fitSourceFiles/tree_pipkslamb_SIGNAL_SKIM_K892_THROWN_t1525_sp18fa18sp20.root:/
+==================================================
+runSKIMS finished: Sun Oct 18 19:14:54 EDT 2026
+Exit status: 0
+==================================================
