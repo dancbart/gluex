@@ -1,3 +1,4 @@
+import math
 import sys, os
 import time
 import ROOT
@@ -139,6 +140,8 @@ T_BIN_EVENT_SELECTION = EVENT_SELECTION_T_BINS
 setup(T_BINS, T_BIN_EVENT_SELECTION)          # registers all reconstructed cuts
 setup_genmc(T_BINS, T_BIN_EVENT_SELECTION)
 ROOT.FSTree.addFriendTree("HybridChi2Rank") # pull in friend trees to access 'bestCombo' cut
+ROOT.FSTree.defineFourVector("MCGLUEXBEAM", "MCEnPB", "MCPxPB", "MCPyPB", "MCPzPB")
+
 
 
 
@@ -685,52 +688,69 @@ def tRange(pdf_path):
     p = panels[0]
     p["plot"].cd()
 
-    # uvMass = f"(MASS(DecayingKShort,PiPlus2))"
+    T_VAR       = f"abs(-1*MASS2(GLUEXBEAM,-{DecayingKShort},-{PiPlus1}))"   # reco t
+    T_VAR_THROWN = "abs(-1*MCMASS2(MCGLUEXBEAM,-2,-3))"                        # thrown t  (see note)
+    T_BINS_STR  = "(100,0,3.0)"
 
-    h1 = fs_get_th1(
+    # ---- raw data (sideband-subtracted) ----
+    hData_raw = fs_get_th1(
         FND_eventSelectionCuts_ALLpols,
-        # f"abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))",
-        f"abs(-1*MASS2(GLUEXBEAM,-{DecayingKShort}, -{PiPlus1}))",
-        "(100,0,3.0)",
+        T_VAR, T_BINS_STR,
         "CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,selectKSTAR892,rf,KShort,Lambda)*CUTWT(rf,KShort,Lambda)"
     )
-    h1.SetXTitle("-t [GeV^{2}]")
-    h1.SetYTitle("Combos")
-    h1.SetMinimum(0.5)
-    h1.SetLineColor(ROOT.kBlack)
 
-    h2 = fs_get_th1(
+    # ---- accepted MC: binned in THROWN t, with reco selection cuts ----
+    hAccMC = fs_get_th1(
         FND_eventSelectionCuts_MC_sp18fa18sp20,
-        # f"abs(-1*MASS2(GLUEXTARGET,-{DecayingLambda}))",
-        f"abs(-1*MASS2(GLUEXBEAM,-{DecayingKShort}, -{PiPlus1}))",
-        "(100,0,3.0)",
+        T_VAR_THROWN, T_BINS_STR,           # <-- thrown t for binning (migration-free efficiency)
         "CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,selectKSTAR892,KShort,Lambda)*CUTWT(KShort,Lambda)"
     )
-    h2.SetXTitle("-t [GeV^{2}]")
-    h2.SetYTitle("Combos")
-    h2.SetLineColor(ROOT.kBlue)
-    h2.SetFillColor(ROOT.kBlue - 5)
 
-    integral_data = integral_between(h1, 0.0, 3.0)
-    integral_MC = integral_between(h2, 0.0, 3.0)
+    # ---- thrown MC: generated sample, thrown t ----
+    hGenMC = fs_get_th1(
+        FND_eventSelectionCuts_MC_sp18fa18sp20_THROWN,
+        T_VAR_THROWN, T_BINS_STR,
+        "CUT()"             # match whatever generation-level cuts define the sample
+    )
+
+    hEff = hAccMC.Clone("hEff_t"); keep(hEff)
+    hEff.Divide(hGenMC)
+
+    EFF_MIN = 0.001
+    for i in range(1, hEff.GetNbinsX() + 1):
+        if hGenMC.GetBinContent(i) == 0 or hEff.GetBinContent(i) < EFF_MIN:
+            hEff.SetBinContent(i, 0.0); hEff.SetBinError(i, 0.0)
+
+    hData_effCorr = hData_raw.Clone("hData_t_accCorr"); keep(hData_effCorr)
+    hData_effCorr.Divide(hEff)
+
+    hData_effCorr.SetXTitle("-t [GeV^{2}]")
+    hData_effCorr.SetYTitle("corrected yield / bin")
+    hData_effCorr.SetMinimum(0.5)
+    hData_effCorr.SetLineColor(ROOT.kBlack)
+
+    hGenMC.SetXTitle("-t [GeV^{2}]")
+    hGenMC.SetYTitle("Combos")
+    hGenMC.SetLineColor(ROOT.kBlue)
+    hGenMC.SetFillColor(ROOT.kBlue - 5)
+
+    integral_data = integral_between(hData_effCorr, 0.0, 3.0)
+    integral_MC = integral_between(hGenMC, 0.0, 3.0)
 
     if integral_MC > 0:
-        h2.Scale(integral_data / integral_MC)
-        integral_MC_scaled = integral_between(h2, 0.0, 3.0)
+        hGenMC.Scale(integral_data / integral_MC)
+        integral_MC_scaled = integral_between(hGenMC, 0.0, 3.0)
 
     else:
+        integral_MC_scaled = 0.0
         print("WARNING: MC integral is zero, not scaling")
 
-    h2.Draw("hist E")
-    h1.Draw("pE1 same")
-
-    # scaling option 1
-    # ymax = max(h1.GetMaximum(), h2.GetMaximum())
-    # h2.SetMaximum(1.1 * ymax)     # h2 owns the frame, so set it on h2
+    hGenMC.Draw("hist E")
+    hData_effCorr.Draw("pE1 same")
 
     # scaling option 2 (use this one)
-    h2.SetMinimum(0.5)
-    h2.SetMaximum(2.0 * h1.GetMaximum())     # h2 owns the frame, so set it on h2
+    # hAccMC.SetMinimum(0.5)
+    # hAccMC.SetMaximum(2.0 * hData_effCorr.GetMaximum())     # h2 owns the frame, so set it on h2
 
     p["plot"].SetLogy(1)                  # on the plot pad (already current from cd() at top)
     p["plot"].Modified()
@@ -738,11 +758,14 @@ def tRange(pdf_path):
 
 
     # --- fit DATA t-slope (straight line on log-y == exponential) ---
-    t_fit_lo, t_fit_hi = 0.5, 3.0
+    t_fit_lo, t_fit_hi = 0.5, 2.0
     fit_slope = ROOT.TF1("fit_tslope", "[0]*exp([1]*x)", t_fit_lo, t_fit_hi)
-    fit_slope.SetParameter(0, h1.GetMaximum())      # steep amplitude
-    fit_slope.SetParameter(1, -2.3)                 # steep slope
-    h1.Fit(fit_slope, "R0 L")                       # L = likelihood, better on the sparse tail
+    # fit_slope.SetParameter(0, hData_effCorr.GetMaximum())      # steep amplitude
+    # fit_slope.SetParameter(1, -2.3)                 # steep slope
+    b0 = hData_effCorr.GetBinContent(hData_effCorr.FindBin(t_fit_lo))     # value near the low edge
+    fit_slope.SetParameter(0, b0 / math.exp(-2.3 * t_fit_lo))  # back out the intercept
+    fit_slope.SetParameter(1, -2.3)
+    hData_effCorr.Fit(fit_slope, "R0")
     keep(fit_slope)
 
     fit_slope.SetLineColor(ROOT.kRed)
@@ -751,7 +774,7 @@ def tRange(pdf_path):
 
     b_slope1 = fit_slope.GetParameter(1); b_err1 = fit_slope.GetParError(1)
 
-    draw_vertical_lines(h1, [0.1, 0.3, 0.5, 0.7, 1.0, 1.5, 2.5], color=ROOT.kGray + 1)
+    draw_vertical_lines(hData_effCorr, [0.1, 0.3, 0.5, 0.7, 1.0, 1.5, 2.5], color=ROOT.kGray + 1)
 
     if bggen:
         draw_mc_same(
@@ -763,10 +786,10 @@ def tRange(pdf_path):
 
     draw_info_pad(
         p["info_main"],
-        "#bf{t-bins used in analysis:}",
+        "#bf{Acceptance-corrected data. t-bins used in analysis:}",
         legend_items=[
-            (h1, f"Data (integral: {integral_data:.0f})", "pE1"),
-            (h2, f"MC (integral: {integral_MC:.0f})", "f"),
+            (hData_effCorr, f"Data (integral: {integral_data:.0f})", "pE1"),
+            (hGenMC, f"THROWN MC (integral: {integral_MC_scaled:.0f})", "f"),
             (fit_slope, f"Data fit: slope = {b_slope1:.2f} #pm {b_err1:.2f}", "l"),
         ],
         notes=[" 0.1 < -t < 0.3",
@@ -812,6 +835,7 @@ def tRange(pdf_path):
     )
 
     c.Print(pdf_path)
+
 
 
 
@@ -3475,11 +3499,17 @@ def massPlots_KStar_FSROOTrelativisticFit(pdf_path):
     hData_accCorr.SetMarkerSize(0.7)
 
     # ---- phase-space MC background function template (same binning + selection) ----
+    # hMCbkg = fs_get_th1(
+    #     FND_eventSelectionCuts_MC_sp18fa18sp20,
+    #     f"MASS({DecayingKShort},{PiPlus1})",
+    #     BINS,
+    #     f"CUT(tRange0103,flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT({sidebandCuts})"
+    # )
     hMCbkg = fs_get_th1(
-        FND_eventSelectionCuts_MC_sp18fa18sp20,
-        f"MASS({DecayingKShort},{PiPlus1})",
+        FND_eventSelectionCuts_MC_sp18fa18sp20_THROWN,
+        f"MCMASS({DecayingKShort},{PiPlus1})",
         BINS,
-        f"CUT(tRange0103,flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT({sidebandCuts})"
+        "CUT(tRangeTHROWN0103)"
     )
     assert hData_accCorr.Integral() > 0,  "data histogram is empty"
     assert hMCbkg.Integral() > 0, "MC template histogram is empty"
@@ -3573,7 +3603,7 @@ def massPlots_KStar_FSROOTrelativisticFit(pdf_path):
         legend_items=[
             (hData_accCorr,   f"Data (int 0.8-1.0: {integral_data:.0f})", "pE"),
             (h_sig,   "Fit signal: 2 rel. BW (interfering)", "f"),
-            (h_bkg,   f"Fit bkg: phase-space MC (S={S_scale:.2f})", "f"),
+            (h_bkg,   f"Fit bkg: THROWN PS MC (S={S_scale:.2f})", "f"),
             (h_total, f"Total fit: (int 0.8-1.0: {integral_totalFit:.0f})", "f"),
         ],
         notes=[
