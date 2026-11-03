@@ -30,6 +30,7 @@ import glob
 import os
 import re
 import sys
+import csv
 
 import ROOT
 
@@ -43,18 +44,69 @@ ROOT.gROOT.SetBatch(True)
 
 SDME_PANELS = [
     ("rho000",  "#rho^{0}_{00}",     0.0,  -1.00,  1.00),
-    ("rho100",  "Re#rho^{0}_{10}",   0.0,  -1.00,  1.00),
+    ("rho100",  "Re #rho^{0}_{10}",   0.0,  -1.00,  1.00),
     ("rho1m10", "#rho^{0}_{1-1}",    0.0,  -1.00,  1.00),
     ("rho111",  "#rho^{1}_{11}",     0.0,  -1.00,  1.00),
     ("rho001",  "#rho^{1}_{00}",     0.0,  -1.00,  1.00),
-    ("rho101",  "Re#rho^{1}_{10}",   0.0,  -1.00,  1.00),
+    ("rho101",  "Re #rho^{1}_{10}",   0.0,  -1.00,  1.00),
     ("rho1m11", "#rho^{1}_{1-1}",    0.0,  -1.00,  1.00),
-    ("rho102",  "Im#rho^{2}_{10}",   0.0,  -1.00,  1.00),
-    ("rho1m12", "Im#rho^{2}_{1-1}",  0.0,  -1.00,  1.00),
+    ("rho102",  "Im #rho^{2}_{10}",   0.0,  -1.00,  1.00),
+    ("rho1m12", "Im #rho^{2}_{1-1}",  0.0,  -1.00,  1.00),
 ]
+
+# D.Barton Zlm->SDME projections for K*(892)
+MY_COLS = {
+    "rho000":"rho0_00", "rho100":"Re_rho0_10", "rho1m10":"rho0_1m1",
+    "rho111":"rho1_11", "rho001":"rho1_00",    "rho101":"Re_rho1_10",
+    "rho1m11":"rho1_1m1","rho102":"Im_rho2_10","rho1m12":"Im_rho2_1m1",
+}
 
 # filename token: t<2 digits><2 digits>, each read as tenths of GeV^2
 T_TOKEN_RE = re.compile(r"t(\d{2})(\d{2})")
+
+def load_my_zlm_ref(csv_path, variant):
+    """My Zlm->SDME projections for one waveset.
+       variant: 'onlyPwave_BW', 'SPwave_BW', or 'SPwave' (no BW).
+       Returns {par: [(t_center, value, err), ...]} sorted by t."""
+    ref = {p: [] for p in MY_COLS}
+    with open(csv_path) as fh:
+        for row in csv.DictReader(fh):
+            tag = row["folder"].split("fit_PWA_")[1].rsplit("_t", 1)[0]
+            if tag != variant:          # exact match: 'SPwave' != 'SPwave_BW'
+                continue
+            tok = T_TOKEN_RE.search(row["folder"])
+            if not tok:
+                continue
+            t = 0.5 * (int(tok.group(1))/10.0 + int(tok.group(2))/10.0)
+            for par, col in MY_COLS.items():
+                ref[par].append((t, float(row[col]), float(row[col + "_err"])))
+    for p in ref:
+        ref[p].sort(key=lambda x: x[0])
+    return ref
+
+MY_CSV = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/fits/sdme_from_zlm_combined.csv"
+MY_PONLY   = load_my_zlm_ref(MY_CSV, "onlyPwave_BW")
+MY_SP_BW   = load_my_zlm_ref(MY_CSV, "SPwave_BW")
+MY_SP_NOBW = load_my_zlm_ref(MY_CSV, "SPwave")
+
+
+# Schilling fits from Hao (09/30/2026)
+def load_schilling_ref(csv_path):
+    """Hao's Schilling-model SDMEs -> {par: [(t_center, value, err), ...]}."""
+    pars = ["rho000","rho100","rho1m10","rho111","rho001",
+            "rho101","rho1m11","rho102","rho1m12"]
+    ref = {p: [] for p in pars}
+    with open(csv_path) as fh:
+        for row in csv.DictReader(fh):
+            t = float(row["t_center"])
+            for p in pars:
+                ref[p].append((t, float(row[p]), float(row[p + "_err"])))
+    return ref
+
+HAO_DIR = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/fits/Hao_fit_results"
+SCHILLING_REF = load_schilling_ref(f"{HAO_DIR}/SDMEs_SchillingModel_Hao_09302026.csv")
+ZLM_P_REF     = load_schilling_ref(f"{HAO_DIR}/SDMEs_ZLM_P_only_Hao.csv")
+ZLM_SP_REF    = load_schilling_ref(f"{HAO_DIR}/SDMEs_ZLM_SP_Hao.csv")
 
 _KEEP = []  # keep ROOT objects alive
 
@@ -165,12 +217,126 @@ def read_sdmes_from_fit(fit_path, par_names):
         out[name] = (results.parValue(name), results.parError(name))
     return out
 
+def read_parity_asym_from_fit(fit_path):
+    """P_sigma = 2*rho^1_{1-1} - rho^1_{00}, with full 2-parameter error propagation.
+       Returns (P_sigma, error)."""
+    r = ROOT.FitResults(fit_path)
+    if not r.valid():
+        raise RuntimeError(f"Invalid fit results: {fit_path}")
+    a, b = "rho1m11", "rho001"          # rho^1_{1-1}, rho^1_{00}
+    va, vb = r.parValue(a), r.parValue(b)
+    ea, eb = r.parError(a), r.parError(b)
+    cov    = r.covariance(a, b)
+    P   = 2.0*va - vb
+    var = 4.0*ea*ea + eb*eb - 4.0*cov   # sigma_P^2 = 4 var_a + var_b - 4 cov
+    return P, (var**0.5 if var > 0 else 0.0)
+
+def parity_from_csv(ref_dict):
+    """P_sigma per t-bin from a loaded SDME dict (naive error, no covariance)."""
+    out = []
+    for (t, a, ea), (_, b, eb) in zip(ref_dict["rho1m11"], ref_dict["rho001"]):
+        out.append((t, 2.0*a - b, (4.0*ea*ea + eb*eb)**0.5))
+    return out
+
+
+def parity_asym_plot(fit_bins, out_path="plots/parity_asym.pdf",
+                     tmin=0.0, tmax=2.5, ref="mine"):
+    outdir = os.path.dirname(out_path)
+    if outdir:
+        os.makedirs(outdir, exist_ok=True)
+    ROOT.gStyle.SetEndErrorSize(5)
+
+    # --- your Schilling points, exact propagation from the .fit files ---
+    my_t, my_th, my_P, my_E = [], [], [], []
+    for fit_path, t_lo, t_hi in fit_bins:
+        P, E = read_parity_asym_from_fit(fit_path)
+        my_t.append(0.5*(t_lo+t_hi)); my_th.append(0.5*(t_hi-t_lo))
+        my_P.append(P); my_E.append(E)
+    n = len(my_t)
+
+    # --- overlay series (naive errors from CSVs) ---
+    if ref == "hao":
+        overlays = [
+            (SCHILLING_REF, ROOT.kGreen+2,  24, -0.03, "Schilling (K+pi0)"),
+            (ZLM_P_REF,     ROOT.kOrange+7, 24,  0.00, "Zlm P only (K+pi0)"),
+            (ZLM_SP_REF,    ROOT.kBlue+1,   24,  0.03, "Zlm S+P (K+pi0)"),
+        ]
+    else:
+        overlays = [
+            (MY_PONLY,   ROOT.kOrange+7, 25, -0.01, "Zlm P-only, BW"),
+            (MY_SP_BW,   ROOT.kBlue+1,   26,  0.01, "Zlm S+P, BW"),
+            (MY_SP_NOBW, ROOT.kRed+1,    32,  0.03, "Zlm S+P, no BW"),
+        ]
+
+    c = ROOT.TCanvas("c_parity", "Parity asymmetry", 1100, 850)
+
+    leg_pad = ROOT.TPad("pleg_pad", "pleg_pad", 0.0, 0.90, 1.0, 1.0)
+    leg_pad.SetFillStyle(0); leg_pad.SetBorderMode(0); leg_pad.Draw()
+
+    pad = ROOT.TPad("pplot_pad", "pplot_pad", 0.0, 0.0, 1.0, 0.90)
+    pad.SetFillStyle(0); pad.SetBorderMode(0)
+    pad.SetLeftMargin(0.15); pad.SetRightMargin(0.05)
+    pad.SetBottomMargin(0.14); pad.SetTopMargin(0.02)
+    pad.Draw(); pad.cd()
+    _KEEP.extend([leg_pad, pad])
+
+    ymin, ymax = -1.2, 1.2
+    frame = pad.DrawFrame(tmin, ymin, tmax, ymax)
+    frame.SetLineWidth(1)
+    frame.GetXaxis().SetTitle("#minus t (GeV^{2})"); frame.GetXaxis().CenterTitle(True)
+    frame.GetYaxis().SetTitle("P_{#sigma} = 2#rho^{1}_{1-1} #minus #rho^{1}_{00}")
+    for ax in (frame.GetXaxis(), frame.GetYaxis()):
+        ax.SetTitleFont(132); ax.SetLabelFont(132); ax.SetTitleSize(0.05); ax.SetLabelSize(0.045)
+    frame.GetYaxis().SetTitleOffset(1.35)
+
+    draw_grid(pad, tmin, tmax, ymin, ymax,
+              xticks=[0.5, 1.0, 1.5, 2.0], yticks=[-1.0, -0.5, 0.0, 0.5, 1.0])
+
+    # reference line: pure natural-parity-exchange limit
+    for yref in (1.0,):            # add -1.0 here if you want the UPE line too
+        l = ROOT.TLine(tmin, yref, tmax, yref)
+        l.SetLineColor(ROOT.kGray+2); l.SetLineStyle(2); l.SetLineWidth(1); l.Draw()
+        _KEEP.append(l)
+
+    # your black points (exact errors)
+    gr = ROOT.TGraphErrors(n)
+    for j in range(n):
+        gr.SetPoint(j, my_t[j], my_P[j]); gr.SetPointError(j, my_th[j], my_E[j])
+    gr.SetMarkerStyle(20); gr.SetMarkerSize(1.0)
+    gr.SetMarkerColor(ROOT.kBlack); gr.SetLineColor(ROOT.kBlack); gr.SetLineWidth(2)
+    gr.Draw("P same"); _KEEP.append(gr)
+
+    # overlays
+    handles = {}
+    for ref_dict, col, mk, dx, lbl in overlays:
+        pts = parity_from_csv(ref_dict)
+        if not pts: continue
+        go = ROOT.TGraphErrors(len(pts))
+        for j, (t, P, E) in enumerate(pts):
+            go.SetPoint(j, t+dx, P); go.SetPointError(j, 0.0, E)
+        go.SetMarkerStyle(mk); go.SetMarkerSize(1.0)
+        go.SetMarkerColor(col); go.SetLineColor(col); go.SetLineWidth(2)
+        go.Draw("P same"); _KEEP.append(go); handles[lbl] = go
+
+    leg_pad.cd()
+    leg = ROOT.TLegend(0.10, 0.05, 0.90, 0.95)   # fills the strip
+    leg.SetBorderSize(0); leg.SetFillStyle(0); leg.SetTextFont(132); leg.SetTextSize(0.40)
+    leg.SetNColumns(2)
+    leg.AddEntry(gr, "Schilling (this analysis)", "pe")
+    for _d,_c,_m,_dx,lbl in overlays:
+        if lbl in handles: leg.AddEntry(handles[lbl], lbl, "pe")
+    leg.Draw(); _KEEP.append(leg)
+
+    pad.RedrawAxis()
+    c.Update(); c.Print(out_path); _KEEP.append(c)
+    return c
+
 
 # -----------------------------------------------------------------------------
 # Plotting
 # -----------------------------------------------------------------------------
 def sdme_vs_t_plots(fit_bins, out_path="plots/sdme_fit_plots.pdf",
-                    tmin=0.0, tmax=2.5, fixed_ranges=False):
+                    tmin=0.0, tmax=2.5, fixed_ranges=False, ref="mine"):
     """
     fit_bins: list of (fit_path, t_low, t_high). Point drawn at bin center with
               a horizontal bar over [t_low, t_high].
@@ -214,30 +380,40 @@ def sdme_vs_t_plots(fit_bins, out_path="plots/sdme_fit_plots.pdf",
     grid_pad.Divide(3, 3, 0.001, 0.001)
     _KEEP.extend([leg_pad, grid_pad])
 
+    legend_handles = {}
     for i, (name, ylabel, schc, pymin, pymax) in enumerate(SDME_PANELS):
         pad = grid_pad.cd(i + 1)   # was c.cd(i + 1)
         pad.SetLeftMargin(0.17)
         pad.SetRightMargin(0.04)
         pad.SetBottomMargin(0.14)
         pad.SetTopMargin(0.13)
+        pad.SetBottomMargin(0.20 if i in (6, 7, 8) else 0.14) # bottom row has x-axis labels, so bigger bottom margin
 
         ymin, ymax = -1.0, 1.0
 
         frame = pad.DrawFrame(tmin, ymin, tmax, ymax)
         frame.SetLineWidth(1)
-        frame.GetXaxis().SetTitle("#minus t (GeV^{2})")
         frame.GetYaxis().SetTitle("") # was SetTitle(ylabel)
-        frame.GetXaxis().SetTitleSize(0.06)
         frame.GetYaxis().SetTitleSize(0.06)
-        frame.GetXaxis().SetLabelSize(0.05)
         frame.GetYaxis().SetLabelSize(0.05)
         frame.GetYaxis().SetTitleOffset(1.25)
         frame.GetYaxis().SetNdivisions(-4)   # negative = "optimize off", use exactly N
+        if i in (6, 7, 8):                     # x-axis labels on bottom row only
+            frame.GetXaxis().SetTitle("#minus t (GeV^{2})")
+            frame.GetXaxis().CenterTitle(True)
+        else:
+            frame.GetXaxis().SetTitle("")
+            frame.GetXaxis().SetLabelSize(0) # removes tick labels on all but bottom row
+        frame.GetXaxis().SetTitleSize(0.085)   # was 0.06 — bigger title
+        frame.GetXaxis().SetLabelSize(0.070)   # was 0.05 — bigger tick numbers
+        frame.GetXaxis().SetTitleOffset(0.965)
         frame.GetXaxis().SetNdivisions(408)
-        frame.GetXaxis().SetTitleOffset(1.00)
         draw_grid(pad, tmin, tmax, ymin, ymax,
                   xticks=[0.5, 1.0, 1.5, 2.0],
                   yticks=[-0.5, 0.0, 0.5])
+        for ax in (frame.GetXaxis(), frame.GetYaxis()):
+            ax.SetTitleFont(132)
+            ax.SetLabelFont(132)
 
         # to drop the outer tick labels, but keep the ticks.
         frame.GetYaxis().ChangeLabel(1,  -1,-1,-1,-1,-1, " ")
@@ -247,7 +423,7 @@ def sdme_vs_t_plots(fit_bins, out_path="plots/sdme_fit_plots.pdf",
 
         lab = ROOT.TLatex()
         lab.SetNDC(True)                 # coordinates are now 0-1 across the pad
-        lab.SetTextFont(42)
+        lab.SetTextFont(132)
         lab.SetTextSize(0.075)
         lab.SetTextAlign(23)             # centered horizontally, top-aligned
         # x = center of the plotting area (between the L/R margins); y just above the frame
@@ -265,12 +441,44 @@ def sdme_vs_t_plots(fit_bins, out_path="plots/sdme_fit_plots.pdf",
         for j in range(n):
             gr.SetPoint(j, t_centers[j], values[name][j])
             gr.SetPointError(j, t_halfwidths[j], errors[name][j])
-        gr.SetMarkerStyle(20)
+        gr.SetMarkerStyle(1)
+        # gr.SetMarkerStyle(20)
         gr.SetMarkerSize(1.0)
         gr.SetMarkerColor(ROOT.kBlack)
         gr.SetLineColor(ROOT.kBlack)
         gr.SetLineWidth(1)
         gr.Draw("P same")
+
+        # (ref dict, color, marker, t-nudge, legend label)
+        if ref == "hao":
+            overlays = [
+                (SCHILLING_REF, ROOT.kGreen+2,  24, -0.03, "Schilling SDME fit"),
+                (ZLM_P_REF,     ROOT.kOrange+7, 24,  0.00, "Zlm PWA, P only"),
+                (ZLM_SP_REF,    ROOT.kBlue+1,   24,  0.03, "Zlm PWA, S+P"),
+            ]
+        else:  # mine
+            overlays = [
+                (MY_PONLY,   ROOT.kOrange+7, 25, -0.01, "Zlm P-only, BW"),
+                (MY_SP_BW,   ROOT.kBlue+1,   26,  0.01, "Zlm S+P, BW"),
+                (MY_SP_NOBW, ROOT.kRed-1,    32,  0.03, "Zlm S+P, no BW"),
+            ]
+        
+        for ref_dict, col, mk, dx, _lab in overlays:
+            pts = ref_dict.get(name, [])
+            if not pts:
+                continue
+            go = ROOT.TGraphErrors(len(pts))
+            for j, (t, v, e) in enumerate(pts):
+                go.SetPoint(j, t + dx, v)
+                go.SetPointError(j, 0.0, e)   # vertical only
+            go.SetMarkerStyle(mk)
+            go.SetMarkerSize(1.0)
+            go.SetMarkerColor(col)
+            go.SetLineColor(col)
+            go.SetLineWidth(2)
+            go.Draw("P same")
+            _KEEP.append(go)
+            legend_handles[_lab] = go   # overwrites each panel; any one works
 
         # pad.SetFrameLineWidth(1)
         pad.RedrawAxis()   # redraw the frame box/ticks on top of the grid
@@ -278,20 +486,21 @@ def sdme_vs_t_plots(fit_bins, out_path="plots/sdme_fit_plots.pdf",
         _KEEP.extend([frame, line, gr])
 
     leg_pad.cd()
-    leg = ROOT.TLegend(0.30, 0.05, 0.70, 0.95)  # fills the strip vertically
+    leg = ROOT.TLegend(0.10, 0.05, 0.90, 0.95)  # fills the strip vertically
     leg.SetBorderSize(0)
     leg.SetFillStyle(0)
+    leg.SetTextFont(132)   # in the i==2 / legend block
     leg.SetTextSize(0.3)          # strip is short, so text size is large in its NDC
-    leg.AddEntry(gr, "Schilling SDME fit", "pe")
+    leg.AddEntry(gr, "Schilling (Ks Pi+), BW", "pe")
+    for _d, _c, _m, _dx, lbl in overlays:
+        if lbl in legend_handles:
+            leg.AddEntry(legend_handles[lbl], lbl, "pe")
+    leg.SetNColumns(len(overlays) + 1)
     leg.Draw()
     _KEEP.append(leg)
 
     c.Update()
-
-    c.Update()
     c.Print(out_path)
-    if out_path.lower().endswith(".pdf"):
-        c.Print(out_path)
     _KEEP.append(c)
     return c
 
@@ -303,6 +512,11 @@ def main():
     ap = argparse.ArgumentParser(
         description="Plot K*(892) SDMEs vs -t from a folder of AmpTools .fit files."
     )
+    ap.add_argument("--ref", choices=["hao", "mine"], default="mine",
+                    help="Overlay Hao's K+pi0 results (hao) or my own Zlm "
+                         "projections (mine).")
+    ap.add_argument("--parity", action="store_true",
+                help="Plot the parity asymmetry P_sigma instead of the 9 SDMEs.")
     ap.add_argument("fit_dir", nargs="+",
                     help="One or more folders, each containing the .fit files "
                         "for a t-bin. Point at several to build the -t scan.")
@@ -321,6 +535,8 @@ def main():
                         "e.g. --t-range 0.1 0.3. Use if the bin can't be read "
                         "from the filename or config.")
     args = ap.parse_args()
+    if args.parity and args.output == "plots/sdme_fit_plots.pdf":
+        args.output = "plots/parity_asym.pdf"
 
     for d in args.fit_dir:
         if not os.path.isdir(d):
@@ -347,9 +563,13 @@ def main():
     for f, lo, hi in bins:
         print(f"    -t = {lo:.2f}-{hi:.2f}   {os.path.basename(f)}")
 
-    sdme_vs_t_plots(bins, out_path=args.output,
-                    tmin=args.tmin, tmax=args.tmax,
-                    fixed_ranges=args.fixed_ranges)
+    if args.parity:
+        parity_asym_plot(bins, out_path=args.output,
+                         tmin=args.tmin, tmax=args.tmax, ref=args.ref)
+    else:
+        sdme_vs_t_plots(bins, out_path=args.output,
+                        tmin=args.tmin, tmax=args.tmax,
+                        fixed_ranges=args.fixed_ranges, ref=args.ref)
     print(f"Wrote {args.output}")
 
 
