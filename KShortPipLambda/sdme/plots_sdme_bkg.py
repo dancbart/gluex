@@ -11,14 +11,14 @@ allPlots = "plots/sdme_plots_bkg.pdf"
 # -----------------------------
 # Files / globals
 # -----------------------------
-t_bin = "#bf{-t = (1.5 - 2.5) GeV^{2}}" # t_bin label for plots.  MUST match the t_bin used to create the ROOT file.
+t_bin = "#bf{-t = (0.3 - 0.5) GeV^{2}}" # t_bin label for plots.  MUST match the t_bin used to create the ROOT file.
 
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_SDME_bkg_t0103_20260917_0930/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_SDME_bkg_t0305_20260917_0930/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_SDME_bkg_t0507_20260917_0930/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_SDME_bkg_t0710_20260917_0930/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_SDME_bkg_t1015_20260917_0930/KsPipLamb_ALL.root"
-FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_SDME_bkg_t1525_20260917_0930/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/fit_TwoPiAngles_allPol_bkg_0103_20260927_211600/KsPipLamb_ALL.root"
+FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/fit_TwoPiAngles_allPol_bkg_0305_20260927_211600/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/fit_TwoPiAngles_allPol_bkg_0507_20260927_211600/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/fit_TwoPiAngles_allPol_bkg_0710_20260927_211600/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/fit_TwoPiAngles_allPol_bkg_1015_20260927_211600/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/fit_TwoPiAngles_allPol_bkg_1525_20260927_211600/KsPipLamb_ALL.root"
 
 NT = "ntFSGlueX_MODECODE"
 TREENAME = "ntFSGlueX_100000000_1100"

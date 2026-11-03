@@ -11,23 +11,26 @@ allPlots = "plots/PWA_plots.pdf"
 # -----------------------------
 # Files / globals
 # -----------------------------
-t_bin = "#bf{-t = (1.5 - 2.5) GeV^{2}} w/BW" # t_bin label for plots.  MUST match the t_bin used to create the ROOT file.
-
-# NO BREIT-WIGNER
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_no_bkg_t0103_20260917_1019/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_no_bkg_t0305_20260917_1019/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_no_bkg_t0507_20260917_1019/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_no_bkg_t0710_20260917_1019/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_no_bkg_t1015_20260917_1019/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_no_bkg_t1525_20260917_1019/KsPipLamb_ALL.root"
+t_bin = "#bf{-t = (1.5 - 2.5) GeV^{2}} no BW" # t_bin label for plots.  MUST match the t_bin used to create the ROOT file.
 
 # WITH BREIT-WIGNER
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_BW_no_bkg_t0103_20260917_1019/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/withBreitWigner/FIT_pipkslamb_PWA_BW_no_bkg_t0305_20260917_1019/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_BW_no_bkg_t0507_20260917_1019/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_BW_no_bkg_t0710_20260917_1019/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_BW_no_bkg_t1015_20260917_1019/KsPipLamb_ALL.root"
-FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_BW_no_bkg_t1525_20260917_1019/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/fit_PWA_SPwave_BW_t0103_20261020_121959/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/fit_PWA_SPwave_BW_t0305_20261020_121959/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/fit_PWA_SPwave_BW_t0507_20261020_121959/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/fit_PWA_SPwave_BW_t0710_20261020_121959/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/fit_PWA_SPwave_BW_t1015_20261020_121959/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/fit_PWA_SPwave_BW_t1015_20261020_121959/KsPipLamb_ALL.root"
+
+
+# WITHOUT BREIT-WIGNER
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/fit_PWA_SPwave_t0103_20261020_121959/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/fit_PWA_SPwave_t0305_20261020_121959/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/fit_PWA_SPwave_t0507_20261020_121959/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/fit_PWA_SPwave_t0710_20261020_121959/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/fit_PWA_SPwave_t1015_20261020_121959/KsPipLamb_ALL.root"
+FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/fit_PWA_SPwave_t1525_20261020_121959/KsPipLamb_ALL.root"
+
+
 
 NT = "ntFSGlueX_MODECODE"
 TREENAME = "ntFSGlueX_100000000_1100"
@@ -392,8 +395,8 @@ def cosTheta_plots(hist, pdf_path):
 
     # Draw largest first so smaller layers appear on top
     h_data.Draw()
-    h_total.Draw("hist same")
-    h_bkg.Draw("hist same")
+    h_total.Draw("hist E same")
+    h_bkg.Draw("hist E same")
     h_acc_0S.Draw("same")
     h_acc_P_plus1.Draw("LP same")
     h_acc_P_plus0.Draw("LP same")
@@ -573,8 +576,8 @@ def phi_plots(hist, pdf_path):
 
     # Draw largest first so smaller layers appear on top
     h_data.Draw()
-    h_total.Draw("hist same")
-    h_bkg.Draw("hist same")
+    h_total.Draw("hist E same")
+    h_bkg.Draw("hist E same")
     h_acc_0S.Draw("LP same")
     h_acc_P_plus1.Draw("LP same")
     h_acc_P_plus0.Draw("LP same")
@@ -721,8 +724,8 @@ def bigPhi_plots(hist, pdf_path):
 
     # Draw largest first so smaller layers appear on top
     h_data.Draw()
-    h_total.Draw("hist same")
-    h_bkg.Draw("hist same")
+    h_total.Draw("hist E same")
+    h_bkg.Draw("hist E same")
     h_acc_0S.Draw("LP same")
     h_acc_P_plus1.Draw("LP same")
     h_acc_P_plus0.Draw("LP same")
@@ -868,8 +871,8 @@ def phi_minus_bigPhi_plots(hist, pdf_path):
 
     # Draw largest first so smaller layers appear on top
     h_data.Draw()
-    h_total.Draw("hist same")
-    h_bkg.Draw("hist same")
+    h_total.Draw("hist E same")
+    h_bkg.Draw("hist E same")
     h_acc_0S.Draw("LP same")
     h_acc_P_plus1.Draw("LP same")
     h_acc_P_plus0.Draw("LP same")

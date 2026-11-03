@@ -189,7 +189,7 @@ thrownCuts_eventSelection  = "CUT(coherentPeakTHROWN)"
 
 # ---------- USE FOR ROOFIT FITTING ONLY ---------- #
 # Usage: KPiSystemCuts.format(t_cut_name=t_cut_name)
-KPiSystemCuts         = "CUT(tRange0103,flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)"
+KPiSystemCuts         = "CUT({t_cut_name},flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort,Lambda)"
 KPiSystemCuts_weights = "CUTWT(rf,KShort,Lambda)"
 
 # ----------- USE FOR AMPTOOLS FITTING ------------ #

@@ -11,14 +11,14 @@ allPlots = "plots/sdme_plots.pdf"
 # -----------------------------
 # Files / globals
 # -----------------------------
-t_bin = "#bf{-t = (1.0 - 1.5) GeV^{2}}" # t_bin label for plots.  MUST match the t_bin used to create the ROOT file.
+t_bin = "#bf{-t = (0.1 - 0.3) GeV^{2}}" # t_bin label for plots.  MUST match the t_bin used to create the ROOT file.
 
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_SDME_no_bkg_t0103_20260917_0920/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_SDME_no_bkg_t0305_20260917_0920/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_SDME_no_bkg_t0507_20260917_0920/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_SDME_no_bkg_t0710_20260917_0920/KsPipLamb_ALL.root"
-FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_SDME_no_bkg_t1015_20260917_0920/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/FIT_pipkslamb_SDME_no_bkg_t1525_20260917_0920/KsPipLamb_ALL.root"
+FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/sdme/outputTrees/fitTest10202026/KsPipLamb_ALL.root"
+# FND = ""
+# FND = ""
+# FND = ""
+# FND = ""
+# FND = ""
 
 NT = "ntFSGlueX_MODECODE"
 TREENAME = "ntFSGlueX_100000000_1100"
@@ -352,7 +352,7 @@ def cosTheta_plots(hist, pdf_path):
     # Draw largest first so smaller layers appear on top
     h_data.Draw()
     h_total.Draw("hist E same")
-    # h_acc.Draw("hist E same")
+    h_acc.Draw("hist E same")
     # h_bkg_total.Draw("hist E same")
     h_accidental.Draw("hist E same")
 
@@ -364,9 +364,9 @@ def cosTheta_plots(hist, pdf_path):
         pad_info,
         label_text="Not acceptance-corrected",
         legend_items=[
-            (h_data,       "data",                   "l"),
+            (h_data,       "data",          "l"),
             (h_total,      "accmc + bkg",             "f"),
-            # (h_acc,         "accmc",                   "f"),
+            (h_acc,         "accmc",                  "f"),
             # (h_bkg_total,  "accidental + poly",  "f"),
             (h_accidental, "3D SB bkg",     "f"),
         ],
@@ -509,9 +509,9 @@ def phi_plots(hist, pdf_path):
     # h_data.GetYaxis().SetMaxDigits(1)
 
     h_data.Draw()
-    h_total.Draw("hist same")
-    h_bkg_total.Draw("hist same")
-    h_accidental.Draw("hist same")
+    h_total.Draw("hist E same")
+    h_bkg_total.Draw("hist E same")
+    h_accidental.Draw("hist E same")
 
     draw_bottom_info_pad(
         pad_info,
@@ -656,9 +656,9 @@ def bigPhi_plots(hist, pdf_path):
     # h_data.GetYaxis().SetMaxDigits(1)
 
     h_data.Draw()
-    h_total.Draw("hist same")
-    h_bkg_total.Draw("hist same")
-    h_accidental.Draw("hist same")
+    h_total.Draw("hist E same")
+    h_bkg_total.Draw("hist E same")
+    h_accidental.Draw("hist E same")
 
     draw_bottom_info_pad(
         pad_info,
@@ -803,9 +803,9 @@ def phi_minus_bigPhi_plots(hist, pdf_path):
     # h_data.GetYaxis().SetMaxDigits(1)
 
     h_data.Draw()
-    h_total.Draw("hist same")
-    h_bkg_total.Draw("hist same")
-    h_accidental.Draw("hist same")
+    h_total.Draw("hist E same")
+    h_bkg_total.Draw("hist E same")
+    h_accidental.Draw("hist E same")
 
     draw_bottom_info_pad(
         pad_info,

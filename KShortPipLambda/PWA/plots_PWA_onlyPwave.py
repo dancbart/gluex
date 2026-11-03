@@ -6,21 +6,21 @@ ROOT.gROOT.SetBatch(True)
 
 from pyamptools import atiSetup
 atiSetup.setup(globals(), use_fsroot=True)
-allPlots = "plots/PWA_plots.pdf"
+allPlots = "plots/PWA_plots_onlyPwave.pdf"
 
 # -----------------------------
 # Files / globals
 # -----------------------------
 t_bin = "#bf{-t = (1.5 - 2.5) GeV^{2}} w/BW P-wave only" # t_bin label for plots.  MUST match the t_bin used to create the ROOT file.
 
-
 # WITH BREIT-WIGNER P WAVE ONLY!!!!!!!!!!!
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_onlyPwave_BW_no_bkg_t0103_20260918_0853/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_onlyPwave_BW_no_bkg_t0305_20260918_0853/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_onlyPwave_BW_no_bkg_t0507_20260918_0853/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_onlyPwave_BW_no_bkg_t0710_20260918_0853/KsPipLamb_ALL.root"
-# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_onlyPwave_BW_no_bkg_t1015_20260918_0853/KsPipLamb_ALL.root"
-FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/FIT_pipkslamb_PWA_onlyPwave_BW_no_bkg_t1525_20260918_0853/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/fit_PWA_onlyPwave_BW_t0103_20261020_121959/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/fit_PWA_onlyPwave_BW_t0305_20261020_121959/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/fit_PWA_onlyPwave_BW_t0507_20261020_121959/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/fit_PWA_onlyPwave_BW_t0710_20261020_121959/KsPipLamb_ALL.root"
+# FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/fit_PWA_onlyPwave_BW_t1015_20261020_121959/KsPipLamb_ALL.root"
+FND = "/work/halld/home/dbarton/gluex/KShortPipLambda/PWA/outputTrees/fit_PWA_onlyPwave_BW_t1525_20261020_121959/KsPipLamb_ALL.root"
+
 
 
 NT = "ntFSGlueX_MODECODE"
@@ -386,8 +386,8 @@ def cosTheta_plots(hist, pdf_path):
 
     # Draw largest first so smaller layers appear on top
     h_data.Draw()
-    h_total.Draw("hist same")
-    h_bkg.Draw("hist same")
+    h_total.Draw("hist E same")
+    h_bkg.Draw("hist E same")
     # h_acc_0S.Draw("same")
     h_acc_P_plus1.Draw("LP same")
     h_acc_P_plus0.Draw("LP same")
@@ -567,8 +567,8 @@ def phi_plots(hist, pdf_path):
 
     # Draw largest first so smaller layers appear on top
     h_data.Draw()
-    h_total.Draw("hist same")
-    h_bkg.Draw("hist same")
+    h_total.Draw("hist E same")
+    h_bkg.Draw("hist E same")
     # h_acc_0S.Draw("LP same")
     h_acc_P_plus1.Draw("LP same")
     h_acc_P_plus0.Draw("LP same")
@@ -715,8 +715,8 @@ def bigPhi_plots(hist, pdf_path):
 
     # Draw largest first so smaller layers appear on top
     h_data.Draw()
-    h_total.Draw("hist same")
-    h_bkg.Draw("hist same")
+    h_total.Draw("hist E same")
+    h_bkg.Draw("hist E same")
     # h_acc_0S.Draw("LP same")
     h_acc_P_plus1.Draw("LP same")
     h_acc_P_plus0.Draw("LP same")
@@ -862,8 +862,8 @@ def phi_minus_bigPhi_plots(hist, pdf_path):
 
     # Draw largest first so smaller layers appear on top
     h_data.Draw()
-    h_total.Draw("hist same")
-    h_bkg.Draw("hist same")
+    h_total.Draw("hist E same")
+    h_bkg.Draw("hist E same")
     # h_acc_0S.Draw("LP same")
     h_acc_P_plus1.Draw("LP same")
     h_acc_P_plus0.Draw("LP same")

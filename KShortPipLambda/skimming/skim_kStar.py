@@ -185,10 +185,12 @@ def skim_THROWN_MC_EVENT_SELECTION_SKIMS():
 def skim_DATA_KPI_SYSTEM_SKIMS():
     setup(T_BINS, T_BIN_EVENT_SELECTION)
     ROOT.FSTree.addFriendTree("HybridChi2Rank")
-    ROOT.FSModeTree.skimTree(FND_eventSelectionCuts_ALLpols, NT, "",
-                             FND_eventSelectionCuts_KpiSystem_ALLpols, KPiSystemCuts)
-    friendTreeContents = [(ROOT.TString("weight"), ROOT.TString(KPiSystemCuts_weights))]
-    ROOT.FSModeTree.createFriendTree(FND_eventSelectionCuts_KpiSystem_ALLpols, NT, "", "weight", friendTreeContents)
+    for (label, t_cut_name, _, lo, hi) in T_BINS:
+        KPiSystemCuts_t = KPiSystemCuts.format(t_cut_name=t_cut_name)
+        kpi_out = f"{baseDir_eventSelection}tree_pipkslamb__B4_M16_M18_EVENT_SELECTION_SKIM_ALLpols_KPiSystem_{label}.root"
+        ROOT.FSModeTree.skimTree(FND_eventSelectionCuts_ALLpols, NT, "", kpi_out, KPiSystemCuts_t)
+        friendTreeContents = [(ROOT.TString("weight"), ROOT.TString(KPiSystemCuts_weights))]
+        ROOT.FSModeTree.createFriendTree(kpi_out, NT, "", "weight", friendTreeContents)
 
 
 # ---------------------------------------------------------
@@ -309,14 +311,14 @@ def skim_K892_genmc():
 
 def skim_K892():
     # skim_DATA_EVENT_SELECTION_SKIMS()
-    skim_MONTE_CARLO_EVENT_SELECTION_SKIMS()
-    skim_THROWN_MC_EVENT_SELECTION_SKIMS()
-    # skim_DATA_KPI_SYSTEM_SKIMS()
+    # skim_MONTE_CARLO_EVENT_SELECTION_SKIMS()
+    # skim_THROWN_MC_EVENT_SELECTION_SKIMS()
+    skim_DATA_KPI_SYSTEM_SKIMS()
     # skim_K892_data_GENERAL_SKIMS()
-    skim_K892_accmc_GENERAL_SKIMS()
+    # skim_K892_accmc_GENERAL_SKIMS()
     # skim_K892_data_SIG_BKGND_SKIMS()
-    skim_K892_accmc()
-    skim_K892_genmc()
+    # skim_K892_accmc()
+    # skim_K892_genmc()
 
 if __name__ == "__main__":
     skim_K892()
