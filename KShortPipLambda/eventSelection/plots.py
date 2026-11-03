@@ -68,10 +68,10 @@ def main():
     # massPlots_KStar_unusedEnergyStudy(allPlots)
     # missingMassPlots_KStar_sidebands(allPlots)
     # massPlots_KStar_FINAL_SELECTION(allPlots)
-    massPlots_KStar_FSROOTrelativisticFit(allPlots)
+    # massPlots_KStar_FSROOTrelativisticFit(allPlots)
     # massPlots_KStar_nonRelFIT(allPlots)
     # massPlots_KStar_relROOFIT(allPlots)
-    # massPlots_KStar_Signal_DATA_and_MC(allPlots)
+    massPlots_KStar_Signal_DATA_and_MC(allPlots)
     # massPlots_KStar_DATA_and_MC_eventSelectionCuts(allPlots)
     # cosThetaGJ_KShort(allPlots)
     # cosThetaHelicity_KShort_eventSelectionPlot(allPlots)
@@ -1826,43 +1826,47 @@ def massPlots_KShort_sideBands(pdf_path):
         FND_eventSelectionCuts_ALLpols,
         f"MASS({DecayingKShort})",
         "(60,0.35,0.65)",
-        "CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,selectKSTAR892,rf,Lambda)",
+        "CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,Lambda)",
     )
     hSig = fs_get_th1(
         FND_eventSelectionCuts_ALLpols,
         f"MASS({DecayingKShort})",
         "(60,0.35,0.65)",
-        "CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,selectKSTAR892,rf,Lambda)*CUTWT(rf,KShort,Lambda)",
+        "CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,Lambda)*CUTWT(rf,KShort)",
     )
 
-    hBkg = fs_get_th1(
-        FND_eventSelectionCuts_ALLpols,
-        f"MASS({DecayingKShort})",
-        "(60,0.35,0.65)",
-        "CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,selectKSTAR892,rf,Lambda)*CUTSBWT(rf,KShort,Lambda)",
-    )
-    hBkgNegative = hBkg.Clone("hBkgNegative")
-    hBkgNegative.Scale(-1.0)
+    # hBkg = fs_get_th1(
+    #     FND_eventSelectionCuts_ALLpols,
+    #     f"MASS({DecayingKShort})",
+    #     "(60,0.35,0.65)",
+    #     "CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,Lambda)*CUTSBWT(rf,KShort)",
+    # )
+    # hBkgNegative = hBkg.Clone("hBkgNegative")
+    # hBkgNegative.Scale(-1.0)
 
     hData.SetXTitle("M(#pi^{+}#pi^{-}) [GeV/c^{2}]")
     hData.SetYTitle("combos / 5 MeV")
-    hData.SetMinimum(-1.2 * abs(hBkgNegative.GetMinimum()))
+    # hData.SetMinimum(-1.2 * abs(hBkgNegative.GetMinimum()))
 
     hData.SetLineColor(ROOT.kBlue)
     hData.SetFillColor(ROOT.kBlue - 5)
     hSig.SetLineColor(ROOT.kBlack)
-    hBkgNegative.SetLineColor(ROOT.kRed)
-    hBkgNegative.SetFillColor(ROOT.kRed - 3)
+    # hBkgNegative.SetLineColor(ROOT.kRed)
+    # hBkgNegative.SetFillColor(ROOT.kRed - 3)
 
 
     hData.Draw("hist")
     hSig.Draw("pE same")
-    hBkgNegative.Draw("hist same")
+    # hBkgNegative.Draw("hist same")
 
     xmin, xmax = 0.4976 - 0.03, 0.4976 + 0.03
     integral_ks = integral_between(hData, xmin, xmax)
     integral_ksSig = integral_between(hSig, xmin, xmax)
-    integral_ksBkg = integral_between(hBkg, xmin, xmax)
+    # integral_ksBkg = integral_between(hBkg, xmin, xmax)
+
+    draw_vertical_lines(hData, [xmin, xmax])
+    draw_vertical_lines(hData, [0.4976 + 0.0974 - 0.015, 0.4976 + 0.0974 + 0.015], color=ROOT.kRed)
+    draw_vertical_lines(hData, [0.4976 - 0.1226 - 0.015, 0.4976 - 0.1226 + 0.015], color=ROOT.kRed)
 
     draw_info_pad(
         p["info_main"],
@@ -1870,7 +1874,7 @@ def massPlots_KShort_sideBands(pdf_path):
         legend_items=[
             (hData, "M(#pi^{+} #pi^{-}) " "(Integral: " f"{integral_ks:.0f})", "f"),
             (hSig, "K_{s} Signal " "(Integral: " f"{integral_ksSig:.0f})", "pE"),
-            (hBkgNegative, "K_{s} Background " "(Integral: " f"{integral_ksBkg:.0f})", "f"),
+            # (hBkgNegative, "K_{s} Background " "(Integral: " f"{integral_ksBkg:.0f})", "f"),
         ],
         notes=["K_{S} Sideband study"],
 
@@ -1891,12 +1895,11 @@ def massPlots_KShort_sideBands(pdf_path):
         title="Cuts used",
         notes=[
             (0.06, f"Global cuts: {generalCuts_eventSelection}"),
-            (0.06, "M(#pi^{+} #pi^{-}): CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,selectKSTAR892,"),
-            (0.18, "rf,Lambda)"),
-            (0.06, "Signal: CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,selectKSTAR892,"),
-            (0.18, "rf,Lambda)*CUTWT(rf,KShort,Lambda)"),
-            (0.06, "Background: CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,selectKSTAR892,"),
-            (0.18, "rf,Lambda)*CUTSBWT(rf,KShort,Lambda)"),
+            (0.06, "M(#pi^{+} #pi^{-}): CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,Lambda)"),
+            (0.06, "Signal: CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,Lambda)"),
+            (0.18, "*CUTWT(rf,KShort)"),
+            # (0.06, "Background: CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,selectKSTAR892,"),
+            # (0.18, "rf,Lambda)*CUTSBWT(rf,KShort,Lambda)"),
         ],
 
         # --- bottom pad tweaks ---
@@ -2040,9 +2043,7 @@ def massPlots_KShort_FINAL_SELECTION(pdf_path):
     integral_ks = integral_between(hData, xmin, xmax)
     integral_ksSig = integral_between(hSig,xmin, xmax)
 
-    draw_vertical_lines(hData, [xmin, xmax])
-    draw_vertical_lines(hData, [0.4976 + 0.0974 - 0.015, 0.4976 + 0.0974 + 0.015], color=ROOT.kRed)
-    draw_vertical_lines(hData, [0.4976 - 0.1226 - 0.015, 0.4976 - 0.1226 + 0.015], color=ROOT.kRed)
+
 
     draw_info_pad(
         p["info_main"],
@@ -2267,41 +2268,45 @@ def massPlots_Lambda_sideBands(pdf_path):
         FND_eventSelectionCuts_ALLpols,
         f"MASS({DecayingLambda})",
         "(90,1.07,1.16)",
-        "CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,selectKSTAR892,rf,KShort)",
+        "CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort)",
     )
     hSig = fs_get_th1(
         FND_eventSelectionCuts_ALLpols,
         f"MASS({DecayingLambda})",
         "(90,1.07,1.16)",
-        "CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,selectKSTAR892,rf,KShort)*CUTWT(rf,KShort,Lambda)",
+        "CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort)*CUTWT(rf,Lambda)",
     )
-    hBkg = fs_get_th1(
-        FND_eventSelectionCuts_ALLpols,
-        f"MASS({DecayingLambda})",
-        "(90,1.07,1.16)",
-        "CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,selectKSTAR892,rf,KShort)*CUTSBWT(rf,KShort,Lambda)",
-    )
-    hBkgNegative = hBkg.Clone("hLambBkgNegative")
-    hBkgNegative.Scale(-1.0)
+    # hBkg = fs_get_th1(
+    #     FND_eventSelectionCuts_ALLpols,
+    #     f"MASS({DecayingLambda})",
+    #     "(90,1.07,1.16)",
+    #     "CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort)*CUTSBWT(rf,KShort,Lambda)",
+    # )
+    # hBkgNegative = hBkg.Clone("hLambBkgNegative")
+    # hBkgNegative.Scale(-1.0)
 
     hData.SetXTitle("M(p#pi^{-}) [GeV/c^{2}]")
     hData.SetYTitle("combos / 1 MeV")
-    hData.SetMinimum(-1.2 * abs(hBkgNegative.GetMinimum()))
+    # hData.SetMinimum(-1.2 * abs(hBkgNegative.GetMinimum()))
 
     hData.SetLineColor(ROOT.kBlue)
     hData.SetFillColor(ROOT.kBlue - 5)
     hSig.SetLineColor(ROOT.kBlack)
-    hBkgNegative.SetLineColor(ROOT.kRed)
-    hBkgNegative.SetFillColor(ROOT.kRed - 3)
+    # hBkgNegative.SetLineColor(ROOT.kRed)
+    # hBkgNegative.SetFillColor(ROOT.kRed - 3)
 
     hData.Draw("hist")
     hSig.Draw("pE same")
-    hBkgNegative.Draw("hist same")
+    # hBkgNegative.Draw("hist same")
 
     xmin, xmax = 1.115 - 0.010, 1.115 + 0.010   # Lambda mass 1.115 +/- 0.01
     integral_Lamb = integral_between(hData, xmin, xmax)
     integral_LambSig = integral_between(hSig, xmin, xmax)
-    integral_LambBkg = integral_between(hBkg, xmin, xmax)
+    # integral_LambBkg = integral_between(hBkg, xmin, xmax)
+
+    draw_vertical_lines(hData, [1.115, xmin, xmax])
+    draw_vertical_lines(hData, [1.115 + 0.032875 - 0.006875, 1.115 + 0.032875 + 0.006875], color=ROOT.kRed)
+    draw_vertical_lines(hData, [1.115 - 0.032125 - 0.006875, 1.115 - 0.032125 + 0.006875], color=ROOT.kRed)
 
     draw_info_pad(
         p["info_main"],
@@ -2309,7 +2314,7 @@ def massPlots_Lambda_sideBands(pdf_path):
         legend_items=[
             (hData, "M(p #pi^{+}) " "(Integral: " f"{integral_Lamb:.0f})", "f"),
             (hSig, "Lambda Signal " "(Integral: " f"{integral_LambSig:.0f})", "pE"),
-            (hBkgNegative, "Lamb Backgnd " "(Integral: " f"{integral_LambBkg:.0f})", "f"),
+            # (hBkgNegative, "Lamb Backgnd " "(Integral: " f"{integral_LambBkg:.0f})", "f"),
         ],
         notes=["Lambda Sideband study"],
 
@@ -2329,12 +2334,12 @@ def massPlots_Lambda_sideBands(pdf_path):
         title="Cuts used",
         notes=[
             (0.06, f"Global cuts: {generalCuts_eventSelection}"),
-            (0.06, "M(p #pi^{-}): CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,selectKSTAR892,"),
-            (0.18, "rf,KShort)"),
-            (0.06, "Signal: CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,selectKSTAR892,"),
-            (0.18, "rf,KShort)*CUTWT(rf,KShort,Lambda)"),
-            (0.06, "Background: CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,selectKSTAR892,"),
-            (0.18, "rf,KShort)*CUTSBWT(rf,KShort,Lambda)"),
+            (0.06, "M(p #pi^{-}): CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort)"),
+            (0.18, ""),
+            (0.06, "Signal: CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,rf,KShort)"),
+            (0.18, "*CUTWT(rf,Lambda)"),
+            # (0.06, "Background: CUT(flightLengthKShort,flightLengthLambda,rejectSigma1385,selectKSTAR892,"),
+            # (0.18, "rf,KShort)*CUTSBWT(rf,KShort,Lambda)"),
         ],
 
         # --- bottom pad tweaks ---
@@ -2474,10 +2479,6 @@ def massPlots_Lambda_FINAL_SELECTION(pdf_path):
     xmin, xmax = 1.115 - 0.010, 1.115 + 0.010
     integral_ks = integral_between(hData, xmin, xmax)
     integral_ksSig = integral_between(hSig, xmin, xmax)
-
-    draw_vertical_lines(hData, [1.115, xmin, xmax])
-    draw_vertical_lines(hData, [1.115 + 0.032875 - 0.006875, 1.115 + 0.032875 + 0.006875], color=ROOT.kRed)
-    draw_vertical_lines(hData, [1.115 - 0.032125 - 0.006875, 1.115 - 0.032125 + 0.006875], color=ROOT.kRed)
 
     draw_info_pad(
         p["info_main"],
@@ -3442,203 +3443,208 @@ def massPlots_KStar_FINAL_SELECTION(pdf_path):
 
     c.Print(pdf_path)
 
+
+    
 # ------------------------------------------------------------
-# KSTAR MASS -- FSRoot 2BW + phase-space MC background
+# KSTAR MASS -- FSRoot 2BW + thrown phase-space MC bkg, looped over t-bins
 # ------------------------------------------------------------
 def massPlots_KStar_FSROOTrelativisticFit(pdf_path):
-    c = ROOT.TCanvas("c_kstar_relbw_mcbkg", "c_kstar_relbw_mcbkg", 1000, 1300)
-    keep(c)
-
-    panels = make_panel_grid(c, ncols=1, nrows=1, info_frac=0.36)
-    p = panels[0]
-    p["plot"].cd()
 
     BINS = "(60,0.5,2.0)"
     FIT_LO, FIT_HI = 0.5, 2.0
+    PLOT_T_BINS = [
+        # ("t0125", "tRange0125", "tRangeTHROWN0125", 0.1, 2.5),
+        ("t0103", "tRange0103", "tRangeTHROWN0103", 0.1, 0.3),
+        # ("t0305", "tRange0305", "tRangeTHROWN0305", 0.3, 0.5),
+        # ("t0507", "tRange0507", "tRangeTHROWN0507", 0.5, 0.7),
+        # ("t0710", "tRange0710", "tRangeTHROWN0710", 0.7, 1.0),
+        # ("t1015", "tRange1015", "tRangeTHROWN1015", 1.0, 1.5),
+        # ("t1525", "tRange1525", "tRangeTHROWN1525", 1.5, 2.5),
+    ]
 
-    
-    # ---- data (signal region, sideband-subtracted, acceptance-corrected) ----
-    hData_raw = fs_get_th1(
-        FND_eventSelectionCuts_ALLpols,
-        f"MASS({DecayingKShort},{PiPlus1})",
-        BINS,
-        f"CUT(tRange0103,flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT({sidebandCuts})"
-    )
-    hAccMC = fs_get_th1(
-        FND_eventSelectionCuts_MC_sp18fa18sp20,
-        f"MASS({DecayingKShort},{PiPlus1})",
-        BINS,
-        "CUT(tRange0103,flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(KShort,Lambda)"
-    )
-    hGenMC = fs_get_th1(
-        FND_eventSelectionCuts_MC_sp18fa18sp20_THROWN,
-        "MCMASS(2,3)",
-        BINS,
-        "CUT(tRangeTHROWN0103)"
-    )
+    for (label, trange, trange_thrown, t_lo, t_hi) in PLOT_T_BINS:
 
-    hEfficiency = hAccMC.Clone("hEfficiency"); keep(hEfficiency)
-    hEfficiency.Divide(hGenMC)
+        c = ROOT.TCanvas(f"c_kstar_relbw_{label}", f"c_kstar_relbw_{label}", 1000, 1300)
+        keep(c)
 
-    # Guard against zero efficiency bins (divide by zero) by setting them to zero.
-    EFF_MIN = 0.001
-    nkilled = 0
-    for i in range(1, hEfficiency.GetNbinsX() + 1):
-        if hGenMC.GetBinContent(i) == 0 or hEfficiency.GetBinContent(i) < EFF_MIN:
-            hEfficiency.SetBinContent(i, 0.0)
-            hEfficiency.SetBinError(i, 0.0)
-            nkilled += 1
-    print(f"efficiency guard zeroed {nkilled} bins (EFF_MIN={EFF_MIN})")
+        panels = make_panel_grid(c, ncols=1, nrows=1, info_frac=0.36)
+        p = panels[0]
+        p["plot"].cd()
 
-    hData_accCorr = hData_raw.Clone("hData_accCorr"); keep(hData_accCorr)
-    hData_accCorr.Divide(hEfficiency)
-    hData_accCorr.SetXTitle("M(K_{S}#pi^{+}) [GeV/c^{2}]")
-    hData_accCorr.SetYTitle("combos / 25 MeV")
-    hData_accCorr.SetLineColor(ROOT.kBlack)
-    hData_accCorr.SetMarkerStyle(20)
-    hData_accCorr.SetMarkerSize(0.7)
+        # ---- data (sideband-subtracted, acceptance-corrected) ----
+        hData_raw = fs_get_th1(
+            FND_eventSelectionCuts_ALLpols,
+            f"MASS({DecayingKShort},{PiPlus1})",
+            BINS,
+            f"CUT({trange},flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT({sidebandCuts})"
+        )
+        hAccMC = fs_get_th1(
+            FND_eventSelectionCuts_MC_sp18fa18sp20,
+            f"MASS({DecayingKShort},{PiPlus1})",
+            BINS,
+            f"CUT({trange},flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT(KShort,Lambda)"
+        )
+        hGenMC = fs_get_th1(
+            FND_eventSelectionCuts_MC_sp18fa18sp20_THROWN,
+            "MCMASS(2,3)",
+            BINS,
+            f"CUT({trange_thrown})"
+        )
 
-    # ---- phase-space MC background function template (same binning + selection) ----
-    # hMCbkg = fs_get_th1(
-    #     FND_eventSelectionCuts_MC_sp18fa18sp20,
-    #     f"MASS({DecayingKShort},{PiPlus1})",
-    #     BINS,
-    #     f"CUT(tRange0103,flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT({sidebandCuts})"
-    # )
-    hMCbkg = fs_get_th1(
-        FND_eventSelectionCuts_MC_sp18fa18sp20_THROWN,
-        f"MCMASS({DecayingKShort},{PiPlus1})",
-        BINS,
-        "CUT(tRangeTHROWN0103)"
-    )
-    assert hData_accCorr.Integral() > 0,  "data histogram is empty"
-    assert hMCbkg.Integral() > 0, "MC template histogram is empty"
+        hEfficiency = hAccMC.Clone(f"hEfficiency_{label}"); keep(hEfficiency)
+        hEfficiency.Divide(hGenMC)
+
+        EFF_MIN = 0.001
+        for i in range(1, hEfficiency.GetNbinsX() + 1):
+            if hGenMC.GetBinContent(i) == 0 or hEfficiency.GetBinContent(i) < EFF_MIN:
+                hEfficiency.SetBinContent(i, 0.0)
+                hEfficiency.SetBinError(i, 0.0)
+
+        hData_accCorr = hData_raw.Clone(f"hData_accCorr_{label}"); keep(hData_accCorr)
+        # hData_accCorr.Divide(hEfficiency)
+        hData_accCorr.SetXTitle("M(K_{S}#pi^{+}) [GeV/c^{2}]")
+        hData_accCorr.SetYTitle("combos / 25 MeV")
+        hData_accCorr.SetLineColor(ROOT.kBlack)
+        hData_accCorr.SetMarkerStyle(20)
+        hData_accCorr.SetMarkerSize(0.7)
 
 
-    # ============================================================
-    # FSRoot fit:  total = sig(2 rel. BW) + bkg(MC phase-space template)
-    # ============================================================
-    ROOT.FSFitUtilities.clear()
+        # ---- phase-space MC background function template (same binning + selection) ----
+        hMCbkg = fs_get_th1(
+            FND_eventSelectionCuts_MC_sp18fa18sp20,
+            f"MASS({DecayingKShort},{PiPlus1})",
+            BINS,
+            f"CUT({trange},flightLengthKShort,flightLengthLambda,rejectSigma1385)*CUTWT({sidebandCuts})"
+        )
 
-    # --- signal: two interfering relativistic BWs ---
-    ROOT.FSFitUtilities.createFunction(ROOT.FSFit2RELBW("sig", FIT_LO, FIT_HI))
-    
-    # params: N1, M1, W1, N2, M2, W2, PHI12
-    ROOT.FSFitUtilities.setParameters("sig", 50.0, 0.892, 0.050, 20.0, 1.430, 0.100, 0.0)
-    ROOT.FSFitUtilities.fixParameter("sig:M1", 0.892)   # K*(892) mass fixed
-    ROOT.FSFitUtilities.fixParameter("sig:W1", 0.050)   # K*(892) width fixed
-    ROOT.FSFitUtilities.fixParameter("sig:M2", 1.430)   # K*(1430) mass fixed
-    ROOT.FSFitUtilities.fixParameter("sig:W2", 0.100)   # K*(1430) width fixed
-    # ROOT.FSFitUtilities.fixParameter("sig:PHI12", 0.0)  # interference phase fixed
+        # ---- thrown phase-space MC background template ----
+        # hMCbkg = fs_get_th1(
+        #     FND_eventSelectionCuts_MC_sp18fa18sp20_THROWN,
+        #     f"MCMASS({DecayingKShort},{PiPlus1})",
+        #     BINS,
+        #     f"CUT({trange_thrown})"
+        # )
 
-    # --- background: phase-space MC template, scale-only ---
-    ROOT.FSFitUtilities.createFunction(ROOT.FSFitHIST("bkg", hMCbkg))
-    ROOT.FSFitUtilities.setParameters("bkg", 0.007)       # S starts at 0.01
+        assert hData_accCorr.Integral() > 0,  f"data empty in {label}"
+        assert hMCbkg.Integral() > 0,         f"MC template empty in {label}"
 
-    # --- total ---
-    ROOT.FSFitUtilities.createFunction("total", "sig+bkg")
+        # ---- FSRoot fit: total = sig(2 rel. BW) + bkg(MC template) ----
+        ROOT.FSFitUtilities.clear()
+        ROOT.FSFitUtilities.createFunction(ROOT.FSFit2RELBW("sig", FIT_LO, FIT_HI))
+        ROOT.FSFitUtilities.setParameters("sig", 50.0, 0.892, 0.050, 20.0, 1.430, 0.100, 0.0)
+        ROOT.FSFitUtilities.fixParameter("sig:M1", 0.892)
+        ROOT.FSFitUtilities.fixParameter("sig:W1", 0.050)
+        ROOT.FSFitUtilities.fixParameter("sig:M2", 1.430)
+        ROOT.FSFitUtilities.fixParameter("sig:W2", 0.100)
 
-    # --- fit ---
-    ROOT.FSFitUtilities.createDataSet("data", hData_accCorr)
-    ROOT.FSFitUtilities.createMinuit("minuit")
-    ROOT.FSFitUtilities.addFitComponent("minuit", "data", "total")
-    ROOT.FSFitUtilities.migrad("minuit")
+        ROOT.FSFitUtilities.createFunction(ROOT.FSFitHIST("bkg", hMCbkg))
+        ROOT.FSFitUtilities.setParameters("bkg", 0.007)
 
-    ROOT.FSFitUtilities.showParameters("total")
+        ROOT.FSFitUtilities.createFunction("total", "sig+bkg")
+        ROOT.FSFitUtilities.createDataSet("data", hData_accCorr)
+        ROOT.FSFitUtilities.createMinuit("minuit")
+        ROOT.FSFitUtilities.addFitComponent("minuit", "data", "total")
+        ROOT.FSFitUtilities.migrad("minuit")
+        ROOT.FSFitUtilities.showParameters("total")
 
-    # --- pull fit results ---
-    S_scale = ROOT.FSFitUtilities.getParameterValue("bkg:S")
-    N1      = ROOT.FSFitUtilities.getParameterValue("sig:N1")
-    N2      = ROOT.FSFitUtilities.getParameterValue("sig:N2")
-    phi12   = ROOT.FSFitUtilities.getParameterValue("sig:PHI12")
-    chi2    = ROOT.FSFitUtilities.chisquare("minuit")
-    ndof    = ROOT.FSFitUtilities.nDOF("minuit")
-    status  = ROOT.FSFitUtilities.fitStatus("minuit")
+        S_scale = ROOT.FSFitUtilities.getParameterValue("bkg:S")
+        N1      = ROOT.FSFitUtilities.getParameterValue("sig:N1")
+        N2      = ROOT.FSFitUtilities.getParameterValue("sig:N2")
+        phi12   = ROOT.FSFitUtilities.getParameterValue("sig:PHI12")
+        chi2    = ROOT.FSFitUtilities.chisquare("minuit")
+        ndof    = ROOT.FSFitUtilities.nDOF("minuit")
+        status  = ROOT.FSFitUtilities.fitStatus("minuit")
 
-    # --- draw components as TF1s (total, signal, background) ---
-    f_total = ROOT.FSFitUtilities.getTF1("total"); keep(f_total)
-    f_sig = ROOT.FSFitUtilities.getTF1("sig"); keep(f_sig)
-    f_bkg = ROOT.FSFitUtilities.getTF1("bkg"); keep(f_bkg)
+        f_total = ROOT.FSFitUtilities.getTF1("total"); keep(f_total)
+        f_sig   = ROOT.FSFitUtilities.getTF1("sig");   keep(f_sig)
+        f_bkg   = ROOT.FSFitUtilities.getTF1("bkg");   keep(f_bkg)
 
-    # make histrograms from fits for plotting (SAME binning as hData)
-    h_total = hData_accCorr.Clone("h_fit_total"); h_total.Reset(); keep(h_total)
-    h_sig   = hData_accCorr.Clone("h_fit_sig");   h_sig.Reset();   keep(h_sig)
-    h_bkg   = hData_accCorr.Clone("h_fit_bkg");   h_bkg.Reset();   keep(h_bkg)
+        h_total = hData_accCorr.Clone(f"h_fit_total_{label}"); h_total.Reset(); keep(h_total)
+        h_sig   = hData_accCorr.Clone(f"h_fit_sig_{label}");   h_sig.Reset();   keep(h_sig)
+        h_bkg   = hData_accCorr.Clone(f"h_fit_bkg_{label}");   h_bkg.Reset();   keep(h_bkg)
 
-    h_total.Add(f_total)   # fills each bin with the TF1 value at the bin center
-    h_sig.Add(f_sig)
-    h_bkg.Add(f_bkg)
+        h_total.Add(f_total)
+        h_sig.Add(f_sig)
+        h_bkg.Add(f_bkg)
 
-    h_bkg.SetLineColor(ROOT.kRed - 3)
-    h_bkg.SetFillColorAlpha(ROOT.kRed - 4, 0.60)
-    h_bkg.SetFillStyle(1001)
-    
-    h_sig.SetLineColor(ROOT.kBlue - 3)
-    h_sig.SetFillColorAlpha(ROOT.kBlue, 0.30)
-    h_sig.SetFillStyle(1001)
-    
-    h_total.SetLineColor(ROOT.kGreen - 6)
-    h_total.SetFillColorAlpha(ROOT.kGreen - 2, 0.50)
-    h_total.SetFillStyle(1001)
+        h_bkg.SetLineColor(ROOT.kRed - 3)
+        h_bkg.SetFillColorAlpha(ROOT.kRed - 4, 0.60); h_bkg.SetFillStyle(1001)
+        h_sig.SetLineColor(ROOT.kBlue - 3)
+        h_sig.SetFillColorAlpha(ROOT.kBlue, 0.30);    h_sig.SetFillStyle(1001)
+        h_total.SetLineColor(ROOT.kGreen - 6)
+        h_total.SetFillColorAlpha(ROOT.kGreen - 2, 0.50); h_total.SetFillStyle(1001)
 
-    ymax = max(hData_accCorr.GetMaximum(), h_total.GetMaximum())
-    hData_accCorr.SetMaximum(1.2 * ymax)
-    hData_accCorr.SetMinimum(0.0)
+        ymax = max(hData_accCorr.GetMaximum(), h_total.GetMaximum())
+        hData_accCorr.SetMaximum(1.2 * ymax)
+        hData_accCorr.SetMinimum(0.0)
 
-    hData_accCorr.Draw("pE")          # data sets frame
-    h_total.Draw("hist same")
-    h_sig.Draw("hist same")
-    h_bkg.Draw("hist same")
-    hData_accCorr.Draw("pE same")     # redraw data on top so points aren't hidden
-    p["plot"].Modified()
-    p["plot"].Update()
+        hData_accCorr.Draw("pE")
+        h_total.Draw("hist same")
+        h_sig.Draw("hist same")
+        h_bkg.Draw("hist same")
+        hData_accCorr.Draw("pE same")
+        p["plot"].Modified(); p["plot"].Update()
 
+        integral_data     = integral_between(hData_accCorr, 0.8, 1.0)
+        integral_totalFit = integral_between(h_total, 0.8, 1.0)
 
-    integral_data = integral_between(hData_accCorr, 0.8, 1.0)
-    integral_totalFit = integral_between(h_total, 0.8, 1.0)
+        draw_info_pad(
+            p["info_main"],
+            file_label(FND_eventSelectionCuts_ALLpols),
+            legend_items=[
+                (hData_accCorr, f"Data (int 0.8-1.0: {integral_data:.0f})", "pE"),
+                (h_sig,  "Fit signal: 2 rel. BW (interfering)", "f"),
+                (h_bkg,  f"Fit bkg: phase-space MC (S={S_scale:.2f})", "f"),
+                (h_total, f"Total fit: (int 0.8-1.0: {integral_totalFit:.0f})", "f"),
+            ],
+            notes=[
+                (0.08, f"#bf{{Current t-bin:}} {t_lo} < -t < {t_hi} GeV^{{2}}"),
+                (0.08, "#bf{NOT acceptance-corrected data, sideband-subtracted}"),
+                (0.08, "Hypothesis: background = K#pi phase space (MC)"),
+                (0.08, "K*(892), K*(1430) fixed"),
+                (0.08, f"#chi^{{2}}/dof = {chi2:.1f}/{ndof} = {chi2/ndof if ndof else 0:.2f}  (status {status})"),
+                (0.08, f"N1={N1:.1f}  N2={N2:.1f}  #phi_{{12}}={phi12:.2f}"),
+            ],
+            legend_box=(0.54, 0.18, 0.96, 0.84),
+            legend_text_size=0.10,
+            label_pos=(0.06, 0.90),
+            label_size=0.10,
+            notes_start_y=0.80,
+            notes_text_size=0.095,
+            notes_step=0.12,
+        )
+        draw_notes_pad(
+            p["info_notes"],
+            title="Cuts used",
+            notes=[
+                (0.08, f"Data: CUT({trange},flightLengthKShort,flightLengthLambda,rejectSigma1385)"),
+                (0.10, f"*CUTWT({sidebandCuts})"),
+                (0.08, f"MC template: phase-space PS MC, CUT({trange_thrown})"),
+                (0.08, "Fit range: M(K_{S}#pi^{+}) = [0.5, 2.0] GeV/c^{2}"),
+            ],
+            title_pos=(0.06, 0.88),
+            title_size=0.11,
+            notes_start_y=0.72,
+            notes_text_size=0.070,
+            notes_step=0.10,
+        )
 
-    draw_info_pad(
-        p["info_main"],
-        file_label(FND_eventSelectionCuts_ALLpols),
-        legend_items=[
-            (hData_accCorr,   f"Data (int 0.8-1.0: {integral_data:.0f})", "pE"),
-            (h_sig,   "Fit signal: 2 rel. BW (interfering)", "f"),
-            (h_bkg,   f"Fit bkg: THROWN PS MC (S={S_scale:.2f})", "f"),
-            (h_total, f"Total fit: (int 0.8-1.0: {integral_totalFit:.0f})", "f"),
-        ],
-        notes=[
-            (0.08, "#bf{Acceptance-corrected data, sideband-subtracted}"),
-            (0.08, "Hypothesis: background = K#pi phase space (MC)"),
-            (0.08, "K*(892), K*(1430) fixed"),
-            (0.08, f"#chi^{{2}}/dof = {chi2:.1f}/{ndof} = {chi2/ndof if ndof else 0:.2f}  (status {status})"),
-            (0.08, f"N1={N1:.1f}  N2={N2:.1f}  #phi_{{12}}={phi12:.2f}"),
-        ],
-        legend_box=(0.54, 0.18, 0.96, 0.84),
-        legend_text_size=0.10,
-        label_pos=(0.06, 0.90),
-        label_size=0.10,
-        notes_start_y=0.78,
-        notes_text_size=0.10,
-        notes_step=0.13,
-    )
-    draw_notes_pad(
-        p["info_notes"],
-        title="Cuts used",
-        notes=[
-            (0.08, "Data: CUT(tRange0103,flightLengthKShort,flightLengthLambda,rejectSigma1385)"),
-            (0.10, f"*CUTWT({sidebandCuts})"),
-            (0.08, "MC template: no 'rf' sideband cut, same binning, from phase-space MC"),
-            (0.08, "Fit range / gen range: M(K_{S}#pi^{+}) = [0.5, 2.0] GeV/c^{2}"),
-        ],
-        title_pos=(0.06, 0.88),
-        title_size=0.11,
-        notes_start_y=0.72,
-        notes_text_size=0.070,
-        notes_step=0.10,
-    )
+        # fout = ROOT.TFile("plots/kstar_relbw_hists.root", "RECREATE")
+        # hData_accCorr.Write("hData_accCorr")
+        # hEfficiency.Write("hEfficiency")
+        # hGenMC.Write("hGenMC_thrown")
+        # hMCbkg.Write("hMCbkg_template")
+        # h_sig.Write("h_fit_sig")
+        # h_bkg.Write("h_fit_bkg")
+        # h_total.Write("h_fit_total")
+        # f_total.Write("f_total")       # the TF1s too, if you want the fit curves
+        # f_sig.Write("f_sig")
+        # f_bkg.Write("f_bkg")
+        # fout.Close()
 
-    c.Print(pdf_path)
-    ROOT.FSHistogram.clearHistogramCache()
+        c.Print(pdf_path)
+        ROOT.FSHistogram.clearHistogramCache()
+
 
 # ------------------------------------------------------------
 # KSTAR MASS PLOTS -- non-relativistic fit
